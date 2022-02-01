@@ -9,7 +9,7 @@ import subprocess
 
 # Local constants.
 HANSEL_SSH_ID = "hansel@172.16.67.13"
-HANSEL_PATH_TO_BAT = "G:\\photogrammetry_e110a\\check_with_hansel.bat"
+HANSEL_PATH_TO_BAT = r"G:\photogrammetry_e110a\check_with_hansel.bat"
 
 #############
 # FUNCTIONS #
