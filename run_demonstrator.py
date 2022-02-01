@@ -13,6 +13,7 @@ PATH_TO_DEMONSTRATOR_LADY_BUG_INFO = r"G:\ladybug_frame_gps_info_23627.txt"
 PATH_TO_DEMONSTRATOR_LADY_BUG_IMAGES = r"G:\ladybug"
 PATH_TO_DEMONSTRATOR_POLYGON = r"G:\polygons\demo\demo_0.poly"
 PATH_TO_DEMONSTRATOR_OUTPUT = r"G:\demonstrator_output"
+PATH_TO_DEMONSTRATOR_SCRIPT = r"G:\photogrammetry_e110a\src\demonstrator.py"
 
 #############
 # FUNCTIONS #
@@ -24,7 +25,7 @@ def run_demonstrator():
         shutil.rmtree(PATH_TO_DEMONSTRATOR_OUTPUT)
     arguments = (
         "python",
-        "src\\demonstrator.py",
+        PATH_TO_DEMONSTRATOR_SCRIPT,
         PATH_TO_DEMONSTRATOR_GPS_DATA,
         PATH_TO_DEMONSTRATOR_LADY_BUG_INFO,
         PATH_TO_DEMONSTRATOR_LADY_BUG_IMAGES,
