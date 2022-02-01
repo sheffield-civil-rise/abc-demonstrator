@@ -10,7 +10,7 @@ import subprocess
 # Local constants.
 PATH_TO_DEMONSTRATOR_GPS_DATA = r"G:\gps\210513_113847.csv"
 PATH_TO_DEMONSTRATOR_LADY_BUG_INFO = r"G:\ladybug_frame_gps_info_23627.txt"
-PATH_TO_DEMONSTRATOR_LADY_BUG_IMAGES = r"G:\ladybug\"
+PATH_TO_DEMONSTRATOR_LADY_BUG_IMAGES = r"G:\ladybug"
 PATH_TO_DEMONSTRATOR_POLYGON = r"G:\polygons\demo\demo_0.poly"
 PATH_TO_DEMONSTRATOR_OUTPUT = r"G:\demonstrator_output"
 
@@ -24,7 +24,7 @@ def run_demonstrator():
         shutil.rmtree(PATH_TO_DEMONSTRATOR_OUTPUT)
     arguments = (
         "python",
-        "src\\demonstrator.py"
+        "src\\demonstrator.py",
         PATH_TO_DEMONSTRATOR_GPS_DATA,
         PATH_TO_DEMONSTRATOR_LADY_BUG_INFO,
         PATH_TO_DEMONSTRATOR_LADY_BUG_IMAGES,
