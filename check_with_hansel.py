@@ -4,34 +4,48 @@ is running correctly.
 """
 
 # Standard imports.
+import json
 import os
 import subprocess
+from pathlib import Path
 
-# Local constants.
-HANSEL_SSH_ID = "hansel@172.16.67.13"
-HANSEL_PATH_TO_BAT = r"G:\photogrammetry_e110a\check_with_hansel.bat"
+# Constants.
+PATH_TO_HOME = str(Path.home())
+DEFAULT_PATH_TO_REPO = os.path.join(PATH_TO_HOME, "photogrammetry_e110a")
+DEFAULT_PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "run_on_hansel.sh")
+DEFAULT_REPO_URL = "github.com/tomhosker/photogrammetry_e110a.git"
+DEFAULT_PATH_TO_SECURITY_FILE = \
+    os.path.join(PATH_TO_HOME, "hansel_security.json")
+DEFAULT_ENCODING = "utf-8"
 
 #############
 # FUNCTIONS #
 #############
 
-def run_on_hansel(arguments):
-    """ Run a given command on Hansel. """
-    arguments = ["ssh", HANSEL_SSH_ID]+arguments
+def get_personal_access_token(
+        path_to=DEFAULT_PATH_TO_SECURITY_FILE,
+        encoding=DEFAULT_ENCODING
+    ):
+    """ Read in the string from a file. """
+    with open(path_to, "r", encoding=encoding) as token_file:
+        json_str = token_file.read()
+    json_dict = json.loads(json_str)
+    result = json_dict["personal_access_token"]
+    return result
+
+def run_on_hansel(
+        personal_access_token,
+        repo_url=DEFAULT_REPO_URL,
+        path_to_script=DEFAULT_PATH_TO_SCRIPT,
+        hide_output=False
+    ):
+    """ Call the shell script with the correct arguments. """
+    git_url = "https://"+personal_access_token+"@"+repo_url
+    arguments = ["sh", path_to_script, "--git-url", git_url]
     try:
         subprocess.run(arguments, check=True)
     except subprocess.CalledProcessError:
-        print("Error running arguments:")
-        print(arguments)
         return False
-    return True
-
-def run_bat():
-    """ Run check_with_hansel.bat over SSH. """
-    if not run_on_hansel([HANSEL_PATH_TO_BAT]):
-        print("Sorry. That check has failed.")
-        return False
-    print("Check passed!")
     return True
 
 ###################
@@ -40,7 +54,8 @@ def run_bat():
 
 def run():
     """ Run this file. """
-    run_bat()
+    token = get_personal_access_token()
+    return run_on_hansel(token)
 
 if __name__ == "__main__":
     run()
