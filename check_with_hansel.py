@@ -43,7 +43,10 @@ def run_on_hansel(
     git_url = "https://"+personal_access_token+"@"+repo_url
     arguments = ["sh", path_to_script, "--git-url", git_url]
     try:
-        subprocess.run(arguments, check=True)
+        if hide_output:
+            subprocess.run(arguments, check=True, stdout=subprocess.DEVNULL)
+        else:
+            subprocess.run(arguments, check=True)
     except subprocess.CalledProcessError:
         return False
     return True
