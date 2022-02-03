@@ -500,7 +500,6 @@ def get_pallete():
     return label_color_dic, pallete
 
 
-def label_directory(directory, out_dir):
     label_color_dic, pallete = get_pallete()
 
     if not os.path.isdir(out_dir):
