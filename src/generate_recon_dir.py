@@ -528,7 +528,7 @@ def label_directory(directory, out_dir):
 
         input = cv2.cvtColor(input, cv2.COLOR_BGR2RGB) / 255.0
 
-        prediction = model.predict(np.asarray([np.array(input)]))
+        prediction = model.predict(np.asarray([np.array(input)])) # As of 03 Feb 2022, this is the line that crashes.
 
         bgr_mask = DigitMapToBGR(
             pallete, digit_map=np.squeeze(prediction, 0))()
@@ -622,7 +622,7 @@ def autogenerate(args):
     print("labelling images")
     label_directory(
         os.path.join(args.out, "images"),
-        os.path.join(args.out, "labels"))
+        os.path.join(args.out, "labels")) # As of 03 Feb 2022, this is where it crashes.
     print("\nmasking images")
     mask_all_images(
         os.path.join(args.out, "images"),
@@ -718,22 +718,17 @@ def verify_args(args):
 
     return args
 
-
 def main(args):
     """ """
     args = verify_args(args)
-
     try:
         outdir = autogenerate(args)
-
         print('saved reconstruction directory to \n%s' % outdir)
     except Exception as err:
         print('Error: {}'.format(err))
         print('cleaning up')
         if os.path.isdir(args.out):
             shutil.rmtree(args.out)
-
-
 
 if __name__ == '__main__':
     parser = generate_argparser()
