@@ -262,7 +262,7 @@ class ReconstructionDirGenerator:
         result = self.subset.copy()
         result["path"] = \
             self.subset.apply(
-                lambda r: self.filedict[int(r['cam'])][r['FRAME']], axis=1
+                lambda r: self.file_dict[int(r['cam'])][r['FRAME']], axis=1
             )
         self.file_paths = result
 
