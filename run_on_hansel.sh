@@ -21,6 +21,7 @@ for argument in $@; do
         next_is_git_url=true
     elif $next_is_git_url; then
         git_url=$argument
+        next_is_git_url=false
     fi
 done
 if [ ! git_url ]; then
