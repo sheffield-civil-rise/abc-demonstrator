@@ -294,7 +294,7 @@ class ReconstructionDirGenerator:
         print("Calculating focal point...")
         self.make_centroid()
         print("Selecting subset...")
-        self.select_subset()
+        self.select_the_subset()
         print("Generating file dictionary...")
         self.generate_file_dict()
         print("Selecting file paths...")
