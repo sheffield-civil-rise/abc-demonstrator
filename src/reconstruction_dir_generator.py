@@ -15,9 +15,9 @@ from typing import ClassVar
 
 # Non-standard imports.
 import cv2
-import geopandas as gpd
-import numpy as np
-import pandas as pd
+import geopandas
+import numpy
+import pandas
 from PIL import Image
 from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
