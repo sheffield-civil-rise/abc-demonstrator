@@ -411,3 +411,37 @@ def seconds_since(origin, time):
     """ Calculate the seconds between two times. """
     result = (time-origin).total_seconds()
     return result
+
+def theta(i):
+    # TODO: Ask what this does.
+    return (1+2*i)*np.pi/5.
+
+def build_rotation(
+        heading,
+        pitch,
+        roll,
+        number_of_cameras=DEFAULT_NUMBER_OF_CAMERAS
+    ):
+    # TODO: Ask what this does.
+    heading, pitch, roll = [
+        (lambda d: numpy.pi*d/config.SEMICIRCLE_DEGREES)(d) for d in [
+            heading, pitch, roll
+        ]
+    ]
+    cosa, cosb, cosg = numpy.cos(heading), numpy.cos(pitch), numpy.cos(roll)
+    sina, sinb, sing = numpy.sin(heading), numpy.sin(pitch), numpy.sin(roll)
+    R = np.array([
+        [cosa*cosb, cosa*sinb*sing-sina*cosg, cosa*sinb*cosg+sina*sing],
+        [sina*cosb, sina*sinb*sing+cosa*cosg, sina*sinb*sing-cosa*sing],
+        [-sinb, cosb*sing, cosb*cosg]
+    ])
+    result = [
+        R @ (
+            lambda i: np.array([
+                [np.cos(theta(i)), -np.sin(theta(i)), 0.],
+                [np.sin(theta(i)), np.cos(theta(i)), 0.],
+                [0., 0., 1.]
+            ])
+        )(cam) for cam in range(number_of_cameras)
+    ]
+    return result
