@@ -32,6 +32,8 @@ fi
 
 # Let's get cracking.
 ssh $HANSEL_SSH_ID <<ENDSSH
+    git -C $PATH_TO_REPO status
+    git -C $PATH_TO_REPO checkout restructuring0
     git -C $PATH_TO_REPO pull $git_url
     IF %ERRORLEVEL% NEQ 0 ( 
         exit 1
