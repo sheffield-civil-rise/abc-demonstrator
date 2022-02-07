@@ -346,7 +346,7 @@ def append_orientation(data_frame, inplace=False):
         rotations = build_rotation(row["heading"], row["pitch"], row["roll"])
         new_data_frame.at[index, "rotations"] = rotations
     if inplace: # Append rotations to input dataframe.
-        data_frame["rotations"] = ndf["rotations"].values
+        data_frame["rotations"] = new_data_frame["rotations"].values
     else: # return copy with added rotations
         return new_data_frame
 
