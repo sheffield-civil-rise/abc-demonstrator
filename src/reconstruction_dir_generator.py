@@ -166,7 +166,6 @@ class ReconstructionDirGenerator:
         geox, geoy = [], []
         for index, row in data_frame.iterrows():
             rotations = row["rotations"]
-            print("rotations = "+str(rotations))
             nrow = row[self.EXPANDED_COLUMNS]
             for cam in range(len(rotations)):
                 nrow["cam"] = int(cam)
@@ -187,7 +186,7 @@ class ReconstructionDirGenerator:
                 geometry=geopandas.points_from_xy(geox, geoy),
                 crs=local_co_ref_sys
             )
-        print(result)
+        print(result.head())
         return result
 
     def create_seg(self, geo, heading, cam):
