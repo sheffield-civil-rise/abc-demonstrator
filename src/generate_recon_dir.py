@@ -192,6 +192,8 @@ def expand(df):
 
 def find_directions(heading, cam):
     ''' '''
+    print("heading = "+str(heading))
+    print("cam = "+str(cam))
     heading = np.pi * heading / 180.
     def theta(i):
 #         return np.pi + (1+2*i)*np.pi/5

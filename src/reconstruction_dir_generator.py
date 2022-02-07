@@ -191,6 +191,8 @@ class ReconstructionDirGenerator:
     def create_seg(self, geo, heading, cam):
         """ Create a segment polygon. """
         vector = numpy.array([geo.x, geo.y])
+        print("heading = "+str(heading))
+        print("cam = "+str(cam))
         angle0 = find_directions(heading, cam)
         points = [
             (
