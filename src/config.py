@@ -15,7 +15,7 @@ import numpy
 
 # Paths.
 #PATH_TO_HOME = str(Path.home())
-PATH_TO_HOME = r"G:\"
+PATH_TO_HOME = r"G:"
 PATH_TO_BINARIES = os.path.join(PATH_TO_HOME, "photogrammetry_binaries")
 PATH_TO_INPUT = os.path.join(PATH_TO_HOME, "photogrammetry_input")
 DEFAULT_PATH_TO_GPS_DATA = os.path.join(PATH_TO_INPUT, "210513_113847.csv")
