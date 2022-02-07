@@ -414,7 +414,7 @@ def seconds_since(origin, time):
 
 def theta(i):
     # TODO: Ask what this does.
-    return (1+2*i)*np.pi/5.
+    return (1+2*i)*numpy.pi/5.
 
 def build_rotation(
         heading,
@@ -430,16 +430,16 @@ def build_rotation(
     ]
     cosa, cosb, cosg = numpy.cos(heading), numpy.cos(pitch), numpy.cos(roll)
     sina, sinb, sing = numpy.sin(heading), numpy.sin(pitch), numpy.sin(roll)
-    R = np.array([
+    R = numpy.array([
         [cosa*cosb, cosa*sinb*sing-sina*cosg, cosa*sinb*cosg+sina*sing],
         [sina*cosb, sina*sinb*sing+cosa*cosg, sina*sinb*sing-cosa*sing],
         [-sinb, cosb*sing, cosb*cosg]
     ])
     result = [
         R @ (
-            lambda i: np.array([
-                [np.cos(theta(i)), -np.sin(theta(i)), 0.],
-                [np.sin(theta(i)), np.cos(theta(i)), 0.],
+            lambda i: numpy.array([
+                [numpy.cos(theta(i)), -numpy.sin(theta(i)), 0.],
+                [numpy.sin(theta(i)), numpy.cos(theta(i)), 0.],
                 [0., 0., 1.]
             ])
         )(cam) for cam in range(number_of_cameras)
