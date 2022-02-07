@@ -228,6 +228,8 @@ def find_views(df, dist = 20, fov=np.pi/2):
 
     xdf = df.to_crs('epsg:27700')
 
+    print(xdf)
+
     def create_seg(geo, heading, cam):
         v0 = np.array([geo.x, geo.y])
         th = find_directions(heading, cam)
