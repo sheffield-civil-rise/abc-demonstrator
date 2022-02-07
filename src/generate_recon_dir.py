@@ -527,6 +527,7 @@ def get_pallete():
 
         input = cv2.cvtColor(input, cv2.COLOR_BGR2RGB) / 255.0
 
+        print("THE NEXT IS THE LINE THAT USED TO CRASH")
         prediction = model.predict(np.asarray([np.array(input)])) # As of 03 Feb 2022, this is the line that crashes.
 
         bgr_mask = DigitMapToBGR(
