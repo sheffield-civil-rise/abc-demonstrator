@@ -453,6 +453,7 @@ def build_rotation(
 def theta_2(i):
     # TODO: Ask what this does.
     result = 2*numpy.pi-(1+(2*i))*numpy.pi/5.
+    return result
 
 def find_directions(heading, cam):
     # TODO: Ask what this does.
