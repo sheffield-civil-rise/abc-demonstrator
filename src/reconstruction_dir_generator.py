@@ -446,3 +446,19 @@ def build_rotation(
         )(cam) for cam in range(number_of_cameras)
     ]
     return result
+
+def theta_2(i):
+    # TODO: Ask what this does.
+    result = 2*numpy.pi-(1+(2*i))*numpy.pi/5.
+
+def find_directions(heading, cam):
+    # TODO: Ask what this does.
+    heading = numpy.pi*heading/180.
+    th = theta_2(cam)+heading
+    if th >= 2*numpy.pi:
+        result = th-2*numpy.pi
+    elif th < 0:
+        result = th+2*numpy.pi
+    else:
+        result = th
+    return result
