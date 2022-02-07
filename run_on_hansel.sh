@@ -16,12 +16,19 @@ set -e
 # Extract arguments.
 next_is_git_url=false
 git_url=false
+next_is_branch=false
+branch="master"
 for argument in $@; do
     if [ $argument = "--git-url" ]; then
         next_is_git_url=true
     elif $next_is_git_url; then
         git_url=$argument
         next_is_git_url=false
+    elif [ $argument = "--branch" ]; then
+        next_is_branch=true
+    elif $next_is_branch; then
+        branch=$argument
+        next_is_branch=false
     fi
 done
 if [ ! git_url ]; then
@@ -32,8 +39,8 @@ fi
 
 # Let's get cracking.
 ssh $HANSEL_SSH_ID <<ENDSSH
-    git -C $PATH_TO_REPO checkout restructuring0
-    git -C $PATH_TO_REPO pull $git_url restructuring0
+    git -C $PATH_TO_REPO checkout $branch
+    git -C $PATH_TO_REPO pull $git_url $branch
     IF %ERRORLEVEL% NEQ 0 ( 
         exit 1
     )

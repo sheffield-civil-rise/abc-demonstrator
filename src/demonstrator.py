@@ -106,5 +106,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print("SOMETHING EVEN SILLIER")
+    print("SOMETHING MOST SILLY")
     run(args)

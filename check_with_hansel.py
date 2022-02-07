@@ -17,6 +17,7 @@ DEFAULT_REPO_URL = "github.com/tomhosker/photogrammetry_e110a.git"
 DEFAULT_PATH_TO_SECURITY_FILE = \
     os.path.join(PATH_TO_HOME, "hansel_security.json")
 DEFAULT_ENCODING = "utf-8"
+DEFAULT_BRANCH = "restructuring0"
 
 #############
 # FUNCTIONS #
@@ -37,11 +38,12 @@ def run_on_hansel(
         personal_access_token,
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
+        branch=DEFAULT_BRANCH,
         hide_output=False
     ):
     """ Call the shell script with the correct arguments. """
     git_url = "https://"+personal_access_token+"@"+repo_url
-    arguments = ["sh", path_to_script, "--git-url", git_url]
+    arguments = ["sh", path_to_script, "--git-url", git_url, "--branch", branch]
     try:
         if hide_output:
             subprocess.run(arguments, check=True, stdout=subprocess.DEVNULL)
