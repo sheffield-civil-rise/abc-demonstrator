@@ -406,3 +406,8 @@ def filter_by_view(data_frame, centroid):
 def parse_time(time_string):
     """ Interpret a string giving a time. """
     return datetime.strptime(time_string, "%H:%M:%S.%f")
+
+def seconds_since(origin, time):
+    """ Calculate the seconds between two times. """
+    result = (time-origin).total_seconds()
+    return result
