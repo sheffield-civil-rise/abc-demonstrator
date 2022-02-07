@@ -420,7 +420,7 @@ def build_rotation(
         heading,
         pitch,
         roll,
-        number_of_cameras=DEFAULT_NUMBER_OF_CAMERAS
+        number_of_cameras=config.DEFAULT_NUMBER_OF_CAMERAS
     ):
     # TODO: Ask what this does.
     heading, pitch, roll = [
