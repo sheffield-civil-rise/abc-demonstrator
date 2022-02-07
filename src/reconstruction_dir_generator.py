@@ -166,7 +166,7 @@ class ReconstructionDirGenerator:
         geox, geoy = [], []
         for index, row in data_frame.iterrows():
             rotations = row["rotations"]
-            nrow = row[columns]
+            nrow = row[self.EXPANDED_COLUMNS]
             for cam in range(len(rotations)):
                 nrow["cam"] = int(cam)
                 nrow["rotation"] = rotations[cam]
