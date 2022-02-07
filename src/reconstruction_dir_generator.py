@@ -247,9 +247,9 @@ class ReconstructionDirGenerator:
         index2 = self.IMAGE_FILENAME_INDICES[2]
         return filename[index0:index1], filename[index2]
 
-    def generate_file_dict(self, path_to):
-        """ Generate a file dictionary given a path to a directory. """
-        file_list = os.listdir(path_to)
+    def generate_file_dict(self):
+        """ Generate a file dictionary for the image directory. """
+        file_list = os.listdir(self.path_to_ladybug_images)
         result = [{}, {}, {}, {}, {}]
         for index, filename in enumerate(file_list):
             frame, cam = self.framecam(filename)
