@@ -33,6 +33,7 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
+    print("***** THE NEXT LINE CRASHES *****")
     wd_path = generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
 
     image_dir = os.path.join(wd_path, 'images')
@@ -105,4 +106,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    print("SUPER DUPER")
     run(args)
