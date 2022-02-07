@@ -369,7 +369,7 @@ def create_circle(
         centroid,
         radius=config.DEFAULT_RADIUS,
         co_ref_sys=config.DEFAULT_COORDINATE_REFERENCE_SYSTEM,
-        src_co_ref_sys=config.SOURCE_DEFAULT_COORDINATE_REFERENCE_SYSTEM,
+        src_co_ref_sys=config.DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM,
         resolution=config.DEFAULT_CIRCLE_RESOLUTION,
         aspoints=False
     ):
