@@ -88,7 +88,7 @@ class ReconstructionDirGenerator:
             pandas.read_csv(self.path_to_gps_data, skipinitialspace=True)
         self.ladybug_data = \
             pandas.read_csv(
-                self.path_to_ladybug_gps_info,
+                self.path_to_ladybug_gps_data,
                 skipinitialspace=True,
                 usecols=self.LADYBUG_USECOLS
             )
