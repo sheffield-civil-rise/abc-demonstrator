@@ -166,7 +166,9 @@ class ReconstructionDirGenerator:
         geox, geoy = [], []
         for index, row in data_frame.iterrows():
             rotations = row["rotations"]
+            print("rotations = "+str(rotations))
             nrow = row[self.EXPANDED_COLUMNS]
+            print("nrow = "+str(nrow))
             for cam in range(len(rotations)):
                 nrow["cam"] = int(cam)
                 nrow["rotation"] = rotations[cam]
@@ -177,7 +179,6 @@ class ReconstructionDirGenerator:
                     geox.append(row.geometry.x)
                     geoy.append(row.geometry.y)
                 new_data_frame.append(nrow, ignore_index=True)
-        print(new_data_frame)
         local_co_ref_sys = self.co_ref_sys
         if type(data_frame) is geopandas.GeoDataFrame:
             local_co_ref_sys = data_frame.crs

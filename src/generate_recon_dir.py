@@ -167,7 +167,9 @@ def expand(df):
     geox, geoy = [], []
     for i, row in df.iterrows():
         rotations = row['rotations']
+        print("rotations = "+str(rotations))
         nrow = row[columns]
+        print("nrow = "+str(nrow))
         for cam in range(len(rotations)):
             nrow['cam'] = int(cam)
             nrow['rotation'] = rotations[cam]
@@ -179,7 +181,6 @@ def expand(df):
                 geox.append(row.geometry.x)
                 geoy.append(row.geometry.y)
             ndf = ndf.append(nrow, ignore_index=True)
-    print(ndf)
     if type(df) is not gpd.GeoDataFrame:
          gdf = gpd.GeoDataFrame(
             data=ndf,
