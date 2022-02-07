@@ -191,8 +191,6 @@ class ReconstructionDirGenerator:
     def create_seg(self, geo, heading, cam):
         """ Create a segment polygon. """
         vector = numpy.array([geo.x, geo.y])
-        print("heading = "+str(heading))
-        print("cam = "+str(cam))
         angle0 = find_directions(heading, cam)
         points = [
             (
@@ -200,8 +198,8 @@ class ReconstructionDirGenerator:
                 vector[1]+self.view_distance*numpy.sin(angle)
             ) for angle in numpy.linspace(
                 angle0-(self.field_of_view/2),
-                angle0+(self.SEGMENT_RESOLUTION/2),
-                res
+                angle0+(self.field_of_view/2),
+                self.SEGMENT_RESOLUTION
             )
         ]
         result = Polygon([vector, *points])
@@ -210,7 +208,6 @@ class ReconstructionDirGenerator:
     def find_views(self, data_frame):
         """ Find views for a given data frame. """
         data_frame_ = data_frame.to_crs(self.src_co_ref_sys)
-        print(data_frame_)
         data = \
             data_frame_.apply(
                 lambda r: self.create_seg(r.geometry, r.heading, r.cam),
