@@ -162,6 +162,8 @@ def as_gdf(df):
 
 
 def expand(df):
+    print(df)
+
     columns = ['FRAME', 'CAMERA TIME', 'latitude', 'longitude', 'altitude', 'heading',
        'pitch', 'roll']
 
@@ -227,8 +229,6 @@ def seg(v0, vd=None, t0=None, dist=1, fov=np.pi/2, res=20):
 def find_views(df, dist = 20, fov=np.pi/2):
 
     xdf = df.to_crs('epsg:27700')
-
-    print(xdf.cam)
 
     def create_seg(geo, heading, cam):
         v0 = np.array([geo.x, geo.y])
