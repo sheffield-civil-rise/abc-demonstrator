@@ -163,7 +163,6 @@ class ReconstructionDirGenerator:
     def expand_data_frame(self, data_frame):
         """ Expand a given data from to include the expanded columns. """
         new_data_frame = pandas.DataFrame(columns=self.EXPANDED_COLUMNS)
-        print(new_data_frame)
         geox, geoy = [], []
         for index, row in data_frame.iterrows():
             rotations = row["rotations"]
@@ -178,6 +177,7 @@ class ReconstructionDirGenerator:
                     geox.append(row.geometry.x)
                     geoy.append(row.geometry.y)
                 new_data_frame.append(nrow, ignore_index=True)
+        print(new_data_frame)
         local_co_ref_sys = self.co_ref_sys
         if type(data_frame) is geopandas.GeoDataFrame:
             local_co_ref_sys = data_frame.crs
