@@ -11,6 +11,7 @@ from calculate_wwr import calculate as calculate_wwr
 
 from generate_idf import main as generate_energy_model
 
+from reconstruction_dir_generator import ReconstructionDirGenerator
 
 TIME_TOO_LONG = 7200  # seconds (2 hours)
 
@@ -33,7 +34,9 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    wd_path = generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
+    rec_dir_gen = ReconstructionDirGenerator()
+    wd_path = rec_dir_gen.generate()
+#    wd_path = generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
 
     image_dir = os.path.join(wd_path, 'images')
     label_dir = os.path.join(wd_path, 'labels')
