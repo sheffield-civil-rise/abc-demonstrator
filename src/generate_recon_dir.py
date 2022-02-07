@@ -178,7 +178,6 @@ def expand(df):
             else:
                 geox.append(row.geometry.x)
                 geoy.append(row.geometry.y)
-            print(nrow)
             ndf = ndf.append(nrow, ignore_index=True)
     if type(df) is not gpd.GeoDataFrame:
          gdf = gpd.GeoDataFrame(
@@ -223,6 +222,7 @@ def seg(v0, vd=None, t0=None, dist=1, fov=np.pi/2, res=20):
 def find_views(df, dist = 20, fov=np.pi/2):
 
     xdf = df.to_crs('epsg:27700')
+    print(xdf)
 
     def create_seg(geo, heading, cam):
         v0 = np.array([geo.x, geo.y])

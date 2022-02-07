@@ -208,6 +208,7 @@ class ReconstructionDirGenerator:
     def find_views(self, data_frame):
         """ Find views for a given data frame. """
         data_frame_ = data_frame.to_crs(self.src_co_ref_sys)
+        print(data_frame_)
         data = \
             data_frame_.apply(
                 lambda r: self.create_seg(r.geometry, r.heading, r.cam),
