@@ -162,6 +162,7 @@ class ReconstructionDirGenerator:
 
     def expand_data_frame(self, data_frame):
         """ Expand a given data from to include the expanded columns. """
+        print(data_frame)
         new_data_frame = pandas.DataFrame(columns=self.EXPANDED_COLUMNS)
         geox, geoy = [], []
         for index, row in data_frame.iterrows():
@@ -186,7 +187,6 @@ class ReconstructionDirGenerator:
                 geometry=geopandas.points_from_xy(geox, geoy),
                 crs=local_co_ref_sys
             )
-        print(result.columns)
         return result
 
     def create_seg(self, geo, heading, cam):
