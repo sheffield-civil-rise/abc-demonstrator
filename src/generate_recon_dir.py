@@ -162,14 +162,9 @@ def as_gdf(df):
 
 
 def expand(df):
-    print(df)
-
-    columns = ['FRAME', 'CAMERA TIME', 'latitude', 'longitude', 'altitude', 'heading',
-       'pitch', 'roll']
-
-
+    columns = ['FRAME', 'CAMERA TIME', 'latitude', 'longitude', 'altitude', 'heading', 'pitch', 'roll']
     ndf = pd.DataFrame(columns=columns)
-
+    print(ndf)
     geox, geoy = [], []
     for i, row in df.iterrows():
         rotations = row['rotations']
@@ -185,7 +180,6 @@ def expand(df):
                 geox.append(row.geometry.x)
                 geoy.append(row.geometry.y)
             ndf = ndf.append(nrow, ignore_index=True)
-
     if type(df) is not gpd.GeoDataFrame:
          gdf = gpd.GeoDataFrame(
             data=ndf,

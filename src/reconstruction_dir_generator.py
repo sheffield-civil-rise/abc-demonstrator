@@ -162,8 +162,8 @@ class ReconstructionDirGenerator:
 
     def expand_data_frame(self, data_frame):
         """ Expand a given data from to include the expanded columns. """
-        print(data_frame)
         new_data_frame = pandas.DataFrame(columns=self.EXPANDED_COLUMNS)
+        print(new_data_frame)
         geox, geoy = [], []
         for index, row in data_frame.iterrows():
             rotations = row["rotations"]
