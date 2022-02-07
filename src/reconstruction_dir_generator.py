@@ -402,3 +402,7 @@ def filter_by_view(data_frame, centroid):
     inview = data_frame.apply(lambda r: centroid.within(r["view"]), axis=1)
     result = df[inview]
     return result
+
+def parse_time(time_string):
+    """ Interpret a string giving a time. """
+    return datetime.strptime(time_string, "%H:%M:%S.%f")
