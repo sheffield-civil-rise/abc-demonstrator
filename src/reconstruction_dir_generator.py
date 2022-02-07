@@ -176,8 +176,7 @@ class ReconstructionDirGenerator:
                 else:
                     geox.append(row.geometry.x)
                     geoy.append(row.geometry.y)
-                print(nrow)
-                new_data_frame.append(nrow, ignore_index=True)
+                new_data_frame = new_data_frame.append(nrow, ignore_index=True)
         local_co_ref_sys = self.co_ref_sys
         if type(data_frame) is geopandas.GeoDataFrame:
             local_co_ref_sys = data_frame.crs
