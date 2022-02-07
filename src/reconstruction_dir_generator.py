@@ -359,8 +359,8 @@ def to_geo_data_frame(
         geopandas.GeoDataFrame(
             data=data_frame,
             geometry=geopandas.points_from_xy(
-                df['longitude'],
-                df['latitude']),
+                data_frame["longitude"],
+                data_frame["latitude"]),
                 crs=co_ref_sys
         )
     return result
