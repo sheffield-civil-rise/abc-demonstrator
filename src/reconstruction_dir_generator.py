@@ -197,8 +197,9 @@ class ReconstructionDirGenerator:
                 vector[0]+self.view_distance*numpy.cos(angle),
                 vector[1]+self.view_distance*numpy.sin(angle)
             ) for angle in numpy.linspace(
-                angle0-self.field_of_view/2,
-                angle0+self.SEGMENT_RESOLUTION/2, res
+                angle0-(self.field_of_view/2),
+                angle0+(self.SEGMENT_RESOLUTION/2),
+                res
             )
         ]
         result = Polygon([vector, *points])
