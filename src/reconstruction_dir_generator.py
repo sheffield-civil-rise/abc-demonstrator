@@ -214,7 +214,7 @@ class ReconstructionDirGenerator:
             ).tolist()
         data_frame["view"] = \
             geopandas.GeoSeries(
-                data=data
+                data=data,
                 crs=self.src_co_ref_sys
             ).to_crs(self.co_ref_sys)
         return data_frame
