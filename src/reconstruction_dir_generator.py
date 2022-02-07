@@ -186,7 +186,7 @@ class ReconstructionDirGenerator:
                 geometry=geopandas.points_from_xy(geox, geoy),
                 crs=local_co_ref_sys
             )
-        print(result.head())
+        print(result.columns)
         return result
 
     def create_seg(self, geo, heading, cam):
