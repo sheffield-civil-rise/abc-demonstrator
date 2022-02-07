@@ -401,7 +401,7 @@ def filter_by_view(data_frame, centroid):
     if type(centroid) is not Point:
         centroid = Point(*centroid)
     inview = data_frame.apply(lambda r: centroid.within(r["view"]), axis=1)
-    result = df[inview]
+    result = data_frame[inview]
     return result
 
 def parse_time(time_string):
