@@ -87,7 +87,7 @@ class ReconstructionDirGenerator:
         self.gps_data = \
             pandas.read_csv(self.path_to_gps_data, skipinitialspace=True)
         self.ladybug_data = \
-            pd.read_csv(
+            pandas.read_csv(
                 self.path_to_ladybug_gps_info,
                 skipinitialspace=True,
                 usecols=self.LADYBUG_USECOLS
@@ -183,7 +183,7 @@ class ReconstructionDirGenerator:
         result = \
             geopandas.GeoDataFrame(
                 data=new_data_frame,
-                geometry=gpd.points_from_xy(geox, geoy),
+                geometry=geopandas.points_from_xy(geox, geoy),
                 crs=local_co_ref_sys
             )
         return result
