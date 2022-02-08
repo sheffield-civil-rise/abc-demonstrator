@@ -13,6 +13,9 @@ from pathlib import Path
 PATH_TO_HOME = str(Path.home())
 DEFAULT_PATH_TO_REPO = os.path.join(PATH_TO_HOME, "photogrammetry_e110a")
 DEFAULT_PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "run_on_hansel.sh")
+DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\photogrammetry_e110a"
+DEFAULT_PATH_TO_ACTIVATE_SCRIPT = r"C:\Users\hansel\Anaconda3\Scripts\activate"
+DEFAULT_ENV_NAME = "demonstrator"
 DEFAULT_REPO_URL = "github.com/tomhosker/photogrammetry_e110a.git"
 DEFAULT_PATH_TO_SECURITY_FILE = \
     os.path.join(PATH_TO_HOME, "hansel_security.json")
@@ -23,19 +26,23 @@ DEFAULT_BRANCH = "restructuring0"
 # FUNCTIONS #
 #############
 
-def get_personal_access_token(
+def get_security_dict(
         path_to=DEFAULT_PATH_TO_SECURITY_FILE,
         encoding=DEFAULT_ENCODING
     ):
-    """ Read in the string from a file. """
+    """ Read in the JSON file as a dictionary """
     with open(path_to, "r", encoding=encoding) as token_file:
         json_str = token_file.read()
-    json_dict = json.loads(json_str)
-    result = json_dict["personal_access_token"]
+    result = json.loads(json_str)
     return result
 
 def run_on_hansel(
         personal_access_token,
+        ssh_id,
+        ssh_password,
+        path_to_repo=DEFAULT_PATH_TO_REPO_ON_HANSEL,
+        path_to_activate_script=DEFAULT_PATH_TO_ACTIVATE_SCRIPT,
+        env_name=DEFAULT_ENV_NAME,
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
         branch=DEFAULT_BRANCH,
@@ -43,7 +50,16 @@ def run_on_hansel(
     ):
     """ Call the shell script with the correct arguments. """
     git_url = "https://"+personal_access_token+"@"+repo_url
-    arguments = ["sh", path_to_script, "--git-url", git_url, "--branch", branch]
+    arguments = [
+        "sh", path_to_script,
+        "--ssh-id", ssh_id,
+        "--ssh-password", ssh_password,
+        "--git-url", git_url,
+        "--branch", branch,
+        "--path-to-repo", path_to_repo,
+        "--path-to-activate-script", path_to_activate_script,
+        "--env-name", env_name
+    ]
     try:
         if hide_output:
             subprocess.run(arguments, check=True, stdout=subprocess.DEVNULL)
@@ -59,8 +75,14 @@ def run_on_hansel(
 
 def run():
     """ Run this file. """
-    token = get_personal_access_token()
-    return run_on_hansel(token)
+    security_dict = get_security_dict()
+    result = \
+        run_on_hansel(
+            security_dict["personal_access_token"],
+            security_dict["ssh_id"],
+            security_dict["ssh_password"]
+        )
+    return result
 
 if __name__ == "__main__":
     run()
