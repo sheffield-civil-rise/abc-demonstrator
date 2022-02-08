@@ -319,6 +319,8 @@ class ReconstructionDirGenerator:
                 "Output directory at "+self.path_to_output+" already exists."
             )
         os.makedirs(self.path_to_output)
+        self.path_to_output_images = \
+            os.path.join(self.path_to_output, "images")
         os.mkdir(self.path_to_output_images)
         for index, row in self.file_paths.iterrows():
             image = \
@@ -343,8 +345,6 @@ class ReconstructionDirGenerator:
 
     def label_images(self):
         """ Make the directory holding the labelled images, and fill it. """
-        self.path_to_output_images = \
-            os.path.join(self.path_to_output, "images")
         self.path_to_labelled_images = \
             os.path.join(self.path_to_output, "labelled")
         if not os.path.exists(self.path_to_labelled_images):
