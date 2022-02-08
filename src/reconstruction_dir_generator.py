@@ -592,6 +592,16 @@ def get_img_paths(
                 result.append(os.path.join(path_to_dir, path))
     return result
 
+def encode_color(to_encode, byte_length=config.DEFAULT_BYTE_LENGTH):
+    """ Encode a colour as an integer representation thereof. """
+    to_encode = numpy.array(to_encode).astype("int")
+    result = (
+        (to_encode[..., 2]<<byte_length*2)+
+        (to_encode[..., 1]<<byte_length)+
+        to_encode[..., 0]
+    )
+    return result
+
 def decode_color(to_decode, byte_length=config.DEFAULT_BYTE_LENGTH):
     """ Decode an integer representation of a colour. """
     result = \
