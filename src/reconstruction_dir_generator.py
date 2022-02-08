@@ -47,8 +47,8 @@ class ReconstructionDirGenerator:
     field_of_view: float = config.DEFAULT_FIELD_OF_VIEW
     output_image_extension: str = config.DEFAULT_OUTPUT_IMAGE_EXTENSION
     # Generated fields.
-    path_to_output_images: str = os.path.join(self.path_to_output, "images")
-    path_to_labelled_images: str = os.path.join(self.path_to_output, "labelled")
+    path_to_output_images: str = None
+    path_to_labelled_images: str = None
     gps_data: pandas.DataFrame = None
     ladybug_data: pandas.DataFrame = None
     localised_ladybug_data: pandas.DataFrame = None
@@ -331,6 +331,10 @@ class ReconstructionDirGenerator:
 
     def label_images(self):
         """ Make the directory holding the labelled images, and fill it. """
+        self.path_to_output_images = \
+            os.path.join(self.path_to_output, "images")
+        self.path_to_labelled_images = \
+            os.path.join(self.path_to_output, "labelled")
         if not os.path.exists(self.path_to_labelled_images):
             os.makedir(self.path_to_labelled_images)
         img_list = get_img_paths(self.path_to_output_images)
