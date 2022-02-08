@@ -162,8 +162,12 @@ def as_gdf(df):
 
 
 def expand(df):
-    columns = ['FRAME', 'CAMERA TIME', 'latitude', 'longitude', 'altitude', 'heading', 'pitch', 'roll']
+    columns = ['FRAME', 'CAMERA TIME', 'latitude', 'longitude', 'altitude', 'heading',
+       'pitch', 'roll']
+
+
     ndf = pd.DataFrame(columns=columns)
+
     geox, geoy = [], []
     for i, row in df.iterrows():
         rotations = row['rotations']
@@ -179,6 +183,7 @@ def expand(df):
                 geox.append(row.geometry.x)
                 geoy.append(row.geometry.y)
             ndf = ndf.append(nrow, ignore_index=True)
+
     if type(df) is not gpd.GeoDataFrame:
          gdf = gpd.GeoDataFrame(
             data=ndf,
@@ -192,8 +197,6 @@ def expand(df):
 
 def find_directions(heading, cam):
     ''' '''
-    print("heading = "+str(heading))
-    print("cam = "+str(cam))
     heading = np.pi * heading / 180.
     def theta(i):
 #         return np.pi + (1+2*i)*np.pi/5
@@ -224,7 +227,6 @@ def seg(v0, vd=None, t0=None, dist=1, fov=np.pi/2, res=20):
 def find_views(df, dist = 20, fov=np.pi/2):
 
     xdf = df.to_crs('epsg:27700')
-    print(xdf)
 
     def create_seg(geo, heading, cam):
         v0 = np.array([geo.x, geo.y])
@@ -498,6 +500,7 @@ def get_pallete():
     return label_color_dic, pallete
 
 
+def label_directory(directory, out_dir):
     label_color_dic, pallete = get_pallete()
 
     if not os.path.isdir(out_dir):
@@ -525,8 +528,7 @@ def get_pallete():
 
         input = cv2.cvtColor(input, cv2.COLOR_BGR2RGB) / 255.0
 
-        print("THE NEXT IS THE LINE THAT USED TO CRASH")
-        prediction = model.predict(np.asarray([np.array(input)])) # As of 03 Feb 2022, this is the line that crashes.
+        prediction = model.predict(np.asarray([np.array(input)]))
 
         bgr_mask = DigitMapToBGR(
             pallete, digit_map=np.squeeze(prediction, 0))()
@@ -620,7 +622,7 @@ def autogenerate(args):
     print("labelling images")
     label_directory(
         os.path.join(args.out, "images"),
-        os.path.join(args.out, "labels")) # As of 03 Feb 2022, this is where it crashes.
+        os.path.join(args.out, "labels"))
     print("\nmasking images")
     mask_all_images(
         os.path.join(args.out, "images"),
@@ -716,17 +718,22 @@ def verify_args(args):
 
     return args
 
+
 def main(args):
     """ """
     args = verify_args(args)
+
     try:
         outdir = autogenerate(args)
+
         print('saved reconstruction directory to \n%s' % outdir)
     except Exception as err:
         print('Error: {}'.format(err))
         print('cleaning up')
         if os.path.isdir(args.out):
             shutil.rmtree(args.out)
+
+
 
 if __name__ == '__main__':
     parser = generate_argparser()
