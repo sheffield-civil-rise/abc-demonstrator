@@ -348,7 +348,7 @@ class ReconstructionDirGenerator:
         self.path_to_labelled_images = \
             os.path.join(self.path_to_output, "labelled")
         if not os.path.exists(self.path_to_labelled_images):
-            os.makedir(self.path_to_labelled_images)
+            os.makedirs(self.path_to_labelled_images)
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
