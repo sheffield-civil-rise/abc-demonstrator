@@ -367,7 +367,7 @@ class ReconstructionDirGenerator:
             prediction = model.predict(numpy.asarray([numpy.array(new_img)]))
             bgr_mask = \
                 DigitMapToBGR(
-                    pallete, digit_map=np.squeeze(prediction, 0)
+                    self.PALETTE, digit_map=np.squeeze(prediction, 0)
                 )()
             out_path = \
                 os.path.join(
