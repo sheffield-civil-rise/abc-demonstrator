@@ -328,7 +328,7 @@ class ReconstructionDirGenerator:
                     os.path.join(self.path_to_ladybug_images, row["path"])
                 )
             image.transpose(Image.ROTATE_270).save(
-                os.path.join(new_img_dir, row["path"])
+                os.path.join(self.path_to_output_images, row["path"])
             )
 
     def make_model(self):
