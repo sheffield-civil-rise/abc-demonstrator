@@ -360,7 +360,7 @@ class ReconstructionDirGenerator:
                 cv2.resize(
                     img,
                     (img.shape[1]//2, img.shape[0]//2
-                ))[0:img_shape[0], 0:img_shape[1]]
+                ))[0:self.IMG_SHAPE[0], 0:self.IMG_SHAPE[1]]
             new_img = (
                 cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)/config.MAX_RGB_CHANNEL
             )
