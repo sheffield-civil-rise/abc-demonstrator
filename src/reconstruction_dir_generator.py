@@ -375,7 +375,6 @@ class ReconstructionDirGenerator:
                     os.path.splitext(os.path.split(path)[-1])[0]
                     +self.output_image_extension
                 )
-            print(out_path)
             pad_im = \
                 cv2.copyMakeBorder(
                     bgr_mask,
@@ -389,6 +388,7 @@ class ReconstructionDirGenerator:
                     self.PADDED_IMG_SHAPE,
                     interpolation=cv2.INTER_NEAREST
                 )
+            print(out_im)
             cv2.imwrite(self.path_to_labelled_images, out_im)
             sys.stdout.write("\r%5d/%5d"%(index+1, len(img_list)))
             sys.stdout.flush()
