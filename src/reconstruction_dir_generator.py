@@ -113,7 +113,7 @@ class ReconstructionDirGenerator:
                 decode_color(
                     numpy.linspace(
                         0,
-                        encode(self.RGB_MAX),
+                        encode_color(self.RGB_MAX),
                         len(self.LABEL_VALUE_DICT)
                     ).astype("int")
                 )
