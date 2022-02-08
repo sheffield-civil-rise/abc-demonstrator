@@ -94,7 +94,7 @@ class ReconstructionDirGenerator:
         "wall": 1
     }
     RGB_MAX: ClassVar[list] = [255, 192, 128]
-    LABEL_COLOUR_DICT: ClassVar[dict] = None
+    LABEL_COLOR_DICT: ClassVar[dict] = None
     PALETTE: ClassVar[dict] = None
     IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
     BORDER_BOTTOM: ClassVar[int] = 208
