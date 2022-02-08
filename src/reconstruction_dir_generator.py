@@ -576,7 +576,7 @@ def get_img_paths(
     ):
     """ Get the paths within a directory corresponding to image files. """
     result = []
-    for path in os.listdir(path):
+    for path in os.listdir(path_to_dir):
         if os.path.isdir(os.path.join(path_to_dir, path)):
             if recursive:
                 result = (
