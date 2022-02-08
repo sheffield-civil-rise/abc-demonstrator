@@ -97,7 +97,7 @@ class ReconstructionDirGenerator:
     LABEL_COLOUR_DICT: ClassVar[dict] = {
         i:[int(j_) for j_ in j]
         for i, j in zip(
-            label,
+            self.LABEL_VALUE_DICT.keys(),
             decode(
                 numpy.linspace(
                     0,
@@ -108,7 +108,9 @@ class ReconstructionDirGenerator:
         )
     }
     PALETTE: ClassVar[dict] = {
-        self.LABEL_VALUE_DICT[label]: numpy.flip(numpy.array(self.LABEL_COLOR_DICT[label])) for label in self.LABEL_VALUE_DICT.keys()
+        self.LABEL_VALUE_DICT[label]: \
+            numpy.flip(numpy.array(self.LABEL_COLOR_DICT[label]))
+        for label in self.LABEL_VALUE_DICT.keys()
     }
     IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
     BORDER_BOTTOM: ClassVar[int] = 208
