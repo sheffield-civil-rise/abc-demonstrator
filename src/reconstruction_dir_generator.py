@@ -444,6 +444,31 @@ class ReconstructionDirGeneratorError(Exception):
     """ A custom exception. """
     pass
 
+class DigitMapToBGR:
+    """ This class converts the output from the model to the BGR mask image. """
+    def __init__(self, palette, digit_map):
+        self.digit_map = digit_map
+        self.palette = palette
+
+    def digit_to_color(self, h, w, output_mask):
+        """ Convert a digit at the given coordinates to a colour. """
+        maximum_channel = self.get_maximum_channel(self.digit_map[h, w])
+        color = self.palette[int(maximum_channel)]
+        output_mask[h, w] = color
+        return output_mask
+
+    def get_maximum_channel(self, channel_vector):
+        """ Get the maximum channel in a given channel vector. """
+        return list(channel_vector).index(max(list(channel_vector)))
+
+    def __call__(self):
+        height, weight, channel = self.digit_map.shape
+        output_bgr = numpy.zeros([height, weight, 3])
+        for h in range(height):
+            for w in range(weight):
+                output_bgr = self.digit_to_color(h, w, output_bgr)
+        return output_bgr
+
 def append_orientation(data_frame, inplace=False):
     """ Append camera orientations to a given data frame. """
     new_data_frame = data_frame.copy()
