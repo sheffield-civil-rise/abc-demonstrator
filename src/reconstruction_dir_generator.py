@@ -563,13 +563,13 @@ def get_img_paths(
     for path in os.listdir(path):
         if os.path.isdir(os.path.join(path_to_dir, path)):
             if recursive:
-            result = (
-                result+
-                get_img_paths(
-                    os.path.join(path_to_dir, path),
-                    image_extensions=image_extension
+                result = (
+                    result+
+                    get_img_paths(
+                        os.path.join(path_to_dir, path),
+                        image_extensions=image_extension
+                    )
                 )
-            )
         else:
             _, ext = os.path.splitext(path)
             if ext.lower() in image_extensions:
