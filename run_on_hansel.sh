@@ -38,7 +38,7 @@ if [ ! git_url ]; then
 fi
 
 # Let's get cracking.
-ssh $HANSEL_SSH_ID <<ENDSSH
+ssh $HANSEL_SSH_ID < "password" <<ENDSSH
     git -C $PATH_TO_REPO checkout $branch
     git -C $PATH_TO_REPO pull $git_url $branch
     IF %ERRORLEVEL% NEQ 0 ( 

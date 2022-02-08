@@ -26,6 +26,8 @@ DEFAULT_PATH_TO_DEEPLAB_BINARY = \
     os.path.join(PATH_TO_BINARIES, "Deeplabv3plus-xception-ce.hdf5")
 DEFAULT_PATH_TO_POLYGON = os.path.join(PATH_TO_BINARIES, "polygon0.poly")
 DEFAULT_PATH_TO_OUTPUT = os.path.join(PATH_TO_HOME, "photogrammetry_output")
+DEFAULT_PATH_TO_DEMO_OUTPUT = \
+    os.path.join(PATH_TO_HOME, "photogrammetry_output_demo")
 
 # Other defaults.
 DEFAULT_ENCODING = "utf-8"
