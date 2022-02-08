@@ -383,7 +383,7 @@ class ReconstructionDirGenerator:
                     cv2.BORDER_CONSTANT,
                     value=self.LABEL_COLOR_DICT["background"]
                 )
-            out_im = \ # TODO: This is all zeroes, and perhaps shouldn't be.
+            out_im = \
                 cv2.resize(
                     pad_im,
                     self.PADDED_IMG_SHAPE,
