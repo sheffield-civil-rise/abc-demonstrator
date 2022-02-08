@@ -94,27 +94,39 @@ class ReconstructionDirGenerator:
         "wall": 1
     }
     RGB_MAX: ClassVar[list] = [255, 192, 128]
-    LABEL_COLOUR_DICT: ClassVar[dict] = {
-        i:[int(j_) for j_ in j]
-        for i, j in zip(
-            self.LABEL_VALUE_DICT.keys(),
-            decode(
-                numpy.linspace(
-                    0,
-                    encode(self.RGB_MAX),
-                    len(self.LABEL_VALUE_DICT)
-                ).astype("int")
-            )
-        )
-    }
-    PALETTE: ClassVar[dict] = {
-        self.LABEL_VALUE_DICT[label]: \
-            numpy.flip(numpy.array(self.LABEL_COLOR_DICT[label]))
-        for label in self.LABEL_VALUE_DICT.keys()
-    }
+    LABEL_COLOUR_DICT: ClassVar[dict] = None
+    PALETTE: ClassVar[dict] = None
     IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
     BORDER_BOTTOM: ClassVar[int] = 208
     PADDED_IMG_SHAPE: ClassVar[tuple] = (2048, 2464)
+
+    def __post_init__(self):
+        self.make_label_colour_dict()
+        self.make_palette()
+
+    def initialise_label_colour_dict(self):
+        """ Initialise this class attribute. """
+        self.LABEL_COLOUR_DICT = {
+            i:[int(j_) for j_ in j]
+            for i, j in zip(
+                self.LABEL_VALUE_DICT.keys(),
+                decode(
+                    numpy.linspace(
+                        0,
+                        encode(self.RGB_MAX),
+                        len(self.LABEL_VALUE_DICT)
+                    ).astype("int")
+                )
+            )
+        }
+
+    def initialise_palette(self):
+        """ Initialise this class attribute. """
+        self.PALETTE = {
+            self.LABEL_VALUE_DICT[label]: \
+                numpy.flip(numpy.array(self.LABEL_COLOR_DICT[label]))
+            for label in self.LABEL_VALUE_DICT.keys()
+        }
 
     def load_gps_data(self):
         """ Load the data from the paths. """
