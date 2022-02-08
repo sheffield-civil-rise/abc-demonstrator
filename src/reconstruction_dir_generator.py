@@ -110,7 +110,7 @@ class ReconstructionDirGenerator:
             i:[int(j_) for j_ in j]
             for i, j in zip(
                 self.LABEL_VALUE_DICT.keys(),
-                decode(
+                decode_color(
                     numpy.linspace(
                         0,
                         encode(self.RGB_MAX),
@@ -590,4 +590,16 @@ def get_img_paths(
             _, ext = os.path.splitext(path)
             if ext.lower() in image_extensions:
                 result.append(os.path.join(path_to_dir, path))
+    return result
+
+def decode_color(to_decode, byte_length=config.DEFAULT_BYTE_LENGTH):
+    """ Decode an integer representation of a colour. """
+    result = \
+        numpy.stack(
+            [
+                to_decode & 0xFF,
+                (to_decode & 0xFF00) >> byte_length,
+                (to_decode & 0xFF0000) >> byte_length*2
+            ], axis=-1
+        ).astype(numpy.uint8)
     return result
