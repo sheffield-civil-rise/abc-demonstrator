@@ -506,7 +506,7 @@ def label_directory(directory, out_dir):
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 
-    model_dir = r'G:\binaries\Deeplabv3plus-xception-ce.hdf5'
+    model_dir = r'G:\photogrammetry_binaries\Deeplabv3plus-xception-ce.hdf5'
 
     img_list = get_img_paths(directory)
 

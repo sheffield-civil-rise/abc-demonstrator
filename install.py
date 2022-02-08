@@ -24,6 +24,7 @@ def install(path_to_pip_requirements=DEFAULT_PATH_TO_PIP_REQUIREMENTS):
         [PIP_COMMAND, "install", "-r", path_to_pip_requirements],
         check=True
     )
+    subprocess.run("sudo", "apt", "install", "sshpass")
 
 ###################
 # RUN AND WRAP UP #
