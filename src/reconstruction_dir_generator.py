@@ -101,10 +101,10 @@ class ReconstructionDirGenerator:
     PADDED_IMG_SHAPE: ClassVar[tuple] = (2048, 2464)
 
     def __post_init__(self):
-        self.make_label_colour_dict()
-        self.make_palette()
+        self.set_label_colour_dict()
+        self.set_palette()
 
-    def initialise_label_colour_dict(self):
+    def set_label_colour_dict(self):
         """ Initialise this class attribute. """
         self.LABEL_COLOUR_DICT = {
             i:[int(j_) for j_ in j]
@@ -120,7 +120,7 @@ class ReconstructionDirGenerator:
             )
         }
 
-    def initialise_palette(self):
+    def set_palette(self):
         """ Initialise this class attribute. """
         self.PALETTE = {
             self.LABEL_VALUE_DICT[label]: \
