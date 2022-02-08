@@ -39,12 +39,16 @@ class ReconstructionDirGenerator:
     path_to_ladybug_images: str = config.DEFAULT_PATH_TO_LADYBUG_IMAGES
     path_to_polygon: str = config.DEFAULT_PATH_TO_POLYGON
     path_to_output: str = config.DEFAULT_PATH_TO_OUTPUT
+    path_to_model: str = config.DEFAULT_PATH_TO_DEEPLAB_BINARY
     co_ref_sys: str = config.DEFAULT_COORDINATE_REFERENCE_SYSTEM
     src_co_ref_sys: str = config.DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM
     radius: int = config.DEFAULT_RADIUS
     view_distance: int = config.DEFAULT_VIEW_DISTANCE
     field_of_view: float = config.DEFAULT_FIELD_OF_VIEW
+    output_image_extension: str = config.DEFAULT_OUTPUT_IMAGE_EXTENSION
     # Generated fields.
+    path_to_output_images = os.path.join(self.path_to_output, "images")
+    path_to_labelled_images = os.path.join(self.path_to_output, "labelled")
     gps_data: pandas.DataFrame = None
     ladybug_data: pandas.DataFrame = None
     localised_ladybug_data: pandas.DataFrame = None
@@ -81,6 +85,36 @@ class ReconstructionDirGenerator:
     SEGMENT_RESOLUTION: ClassVar[int] = 20
     IMAGE_FILENAME_INDICES: ClassVar[tuple] = (46, 52, 56)
     MAX_CAM_INDEX: ClassVar[int] = 5
+    LABEL_VALUE_DICT: ClassVar[dict] = {
+        "background": 0,
+        "chimney": 3,
+        "door": 5,
+        "window": 4,
+        "roof": 2,
+        "wall": 1
+    }
+    RGB_MAX: ClassVar[list] = [255, 192, 128]
+    LABEL_COLOUR_DICT: ClassVar[dict] = {
+        i:[int(j_) for j_ in j]
+        for i, j in zip(
+            label,
+            decode(
+                numpy.linspace(
+                    0,
+                    encode(self.RGB_MAX),
+                    len(self.LABEL_VALUE_DICT)
+                ).astype("int")
+            )
+        )
+    }
+    PALETTE: ClassVar[dict] = {
+        self.LABEL_VALUE_DICT[label]: \
+            numpy.flip(numpy.array(self.LABEL_COLOR_DICT[label]))
+        for label in self.LABEL_VALUE_DICT.keys()
+    }
+    IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
+    BORDER_BOTTOM: ClassVar[int] = 208
+    PADDED_IMG_SHAPE: ClassVar[tuple] = (2048, 2464)
 
     def load_gps_data(self):
         """ Load the data from the paths. """
@@ -273,8 +307,7 @@ class ReconstructionDirGenerator:
                 "Output directory at "+self.path_to_output+" already exists."
             )
         os.makedirs(self.path_to_output)
-        new_img_dir = os.path.join(self.path_to_output, "images")
-        os.mkdir(new_img_dir)
+        os.mkdir(self.path_to_output_images)
         for index, row in self.file_paths.iterrows():
             image = \
                 Image.open(
@@ -283,6 +316,66 @@ class ReconstructionDirGenerator:
             image.transpose(Image.ROTATE_270).save(
                 os.path.join(new_img_dir, row["path"])
             )
+
+    def make_model(self):
+        """ Return the model object. """
+        result = \
+            Deeplabv3(
+                weights=None,
+                input_shape=(*self.IMG_SHAPE, 3),
+                classes=len(self.LABEL_VALUE_DICT),
+                backbone="xception",
+                activation="softmax"
+            )
+        return result
+
+    def label_images(self):
+        """ Make the directory holding the labelled images, and fill it. """
+        if not os.path.exists(self.path_to_labelled_images):
+            os.makedir(self.path_to_labelled_images)
+        img_list = get_img_paths(self.path_to_output_images)
+        model = self.make_model()
+        model.load_weights(self.path_to_model)
+        for index, path in enumerate(img_list):
+            img = cv2.imread(
+                path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
+            )
+            new_img = \
+                cv2.resize(
+                    img,
+                    (img.shape[1]//2, img.shape[0]//2
+                ))[0:img_shape[0], 0:img_shape[1]]
+            new_img = (
+                cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)/config.MAX_RGB_CHANNEL
+            )
+            prediction = model.predict(numpy.asarray([numpy.array(new_img)]))
+            bgr_mask = \
+                DigitMapToBGR(
+                    pallete, digit_map=np.squeeze(prediction, 0)
+                )()
+            out_path = \
+                os.path.join(
+                    self.path_to_labelled_images,
+                    os.path.splitext(os.path.split(path)[-1])[0]
+                    +self.output_image_extension
+                )
+            pad_im = \
+                cv2.copyMakeBorder(
+                    bgr_mask,
+                    0, self.BORDER_BOTTOM, 0, 0,
+                    cv2.BORDER_CONSTANT,
+                    value=label_color_dic["background"]
+                )
+            out_im = \
+                cv2.resize(
+                    pad_im,
+                    self.PADDED_IMG_SHAPE,
+                    interpolation=cv2.INTER_NEAREST
+                )
+            cv2.imwrite(self.path_to_labelled_images, out_im)
+            sys.stdout.write('\r%5d/%5d' % (index+1, len(img_list)))
+            sys.stdout.flush()
+        print(" ")
 
     def generate(self):
         """ Generate the reconstruction directory. """
@@ -302,12 +395,8 @@ class ReconstructionDirGenerator:
         self.select_file_paths()
         print("Generate output directory...")
         self.generate_output_directory()
-        print("THIS IS WHERE THE ORIGINAL SCRIPT CRASHES")
-        #print("labelling images")
-        #label_directory(
-        #    os.path.join(args.out, "images"),
-        #    os.path.join(args.out, "labels")
-        #)
+        print("Labelling images...")
+        self.label_images()
         #print("\nmasking images")
         #mask_all_images(
         #    os.path.join(args.out, "images"),
@@ -462,4 +551,27 @@ def find_directions(heading, cam):
         result = th+2*numpy.pi
     else:
         result = th
+    return result
+
+def get_img_paths(
+        path_to_dir,
+        recursive=True,
+        image_extensions=config.DEFAULT_IMAGE_EXTENSIONS
+    ):
+    """ Get the paths within a directory corresponding to image files. """
+    result = []
+    for path in os.listdir(path):
+        if os.path.isdir(os.path.join(path_to_dir, path)):
+            if recursive:
+            result = (
+                result+
+                get_img_paths(
+                    os.path.join(path_to_dir, path),
+                    image_extensions=image_extension
+                )
+            )
+        else:
+            _, ext = os.path.splitext(path)
+            if ext.lower() in image_extensions:
+                result.append(os.path.join(path_to_dir, path))
     return result
