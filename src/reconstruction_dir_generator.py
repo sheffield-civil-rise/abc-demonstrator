@@ -382,13 +382,12 @@ class ReconstructionDirGenerator:
                     cv2.BORDER_CONSTANT,
                     value=self.LABEL_COLOR_DICT["background"]
                 )
-            out_im = \
+            out_im = \ # TODO: This is all zeroes, and perhaps shouldn't be.
                 cv2.resize(
                     pad_im,
                     self.PADDED_IMG_SHAPE,
                     interpolation=cv2.INTER_NEAREST
                 )
-            print(out_im)
             cv2.imwrite(self.path_to_labelled_images, out_im)
             sys.stdout.write("\r%5d/%5d"%(index+1, len(img_list)))
             sys.stdout.flush()
