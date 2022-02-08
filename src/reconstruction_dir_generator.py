@@ -380,7 +380,7 @@ class ReconstructionDirGenerator:
                     bgr_mask,
                     0, self.BORDER_BOTTOM, 0, 0,
                     cv2.BORDER_CONSTANT,
-                    value=label_color_dic["background"]
+                    value=self.LABEL_COLOR_DICT["background"]
                 )
             out_im = \
                 cv2.resize(
