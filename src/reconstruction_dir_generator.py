@@ -47,8 +47,8 @@ class ReconstructionDirGenerator:
     field_of_view: float = config.DEFAULT_FIELD_OF_VIEW
     output_image_extension: str = config.DEFAULT_OUTPUT_IMAGE_EXTENSION
     # Generated fields.
-    path_to_output_images = os.path.join(self.path_to_output, "images")
-    path_to_labelled_images = os.path.join(self.path_to_output, "labelled")
+    path_to_output_images: str = os.path.join(self.path_to_output, "images")
+    path_to_labelled_images: str = os.path.join(self.path_to_output, "labelled")
     gps_data: pandas.DataFrame = None
     ladybug_data: pandas.DataFrame = None
     localised_ladybug_data: pandas.DataFrame = None
