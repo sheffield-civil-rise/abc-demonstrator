@@ -455,7 +455,6 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_img)
-            break
             print_progress(index, len(img_list))
 
     def mask_images(self):
