@@ -354,7 +354,7 @@ class ReconstructionDirGenerator:
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
-        for index in progressbar(range(100)):
+        for index in progressbar.progressbar(range(100)):
             time.sleep(0.01)
         for path in progressbar.progressbar(img_list):
             img = cv2.imread(
