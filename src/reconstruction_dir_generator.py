@@ -46,6 +46,7 @@ class ReconstructionDirGenerator:
     view_distance: int = config.DEFAULT_VIEW_DISTANCE
     field_of_view: float = config.DEFAULT_FIELD_OF_VIEW
     output_image_extension: str = config.DEFAULT_OUTPUT_IMAGE_EXTENSION
+    number_of_cameras: int = config.DEFAULT_NUMBER_OF_CAMERAS
     # Generated fields.
     path_to_output_images: str = None
     path_to_labelled_images: str = None
@@ -179,10 +180,49 @@ class ReconstructionDirGenerator:
             result[ldb_cols[index]] = f_pos(times_new)
         self.localised_gps_data = result
 
+    def append_orientation(self, data_frame, inplace=False):
+        """ Append camera orientations to a given data frame. """
+        new_data_frame = data_frame.copy()
+        new_data_frame["rotations"] = None # Initialise empty column.
+        for index, row in data_frame.iterrows():
+            rotations = \
+                self.build_rotation(row["heading"], row["pitch"], row["roll"])
+            new_data_frame.at[index, "rotations"] = rotations
+        if inplace: # Append rotations to input dataframe.
+            data_frame["rotations"] = new_data_frame["rotations"].values
+        else: # return copy with added rotations
+            return new_data_frame
+
+    def build_rotation(self, heading, pitch, roll):
+        # TODO: Ask what this does.
+        heading, pitch, roll = [
+            (lambda d: numpy.pi*d/config.SEMICIRCLE_DEGREES)(d) for d in [
+                heading, pitch, roll
+            ]
+        ]
+        cosa, cosb, cosg = numpy.cos(heading), numpy.cos(pitch), numpy.cos(roll)
+        sina, sinb, sing = numpy.sin(heading), numpy.sin(pitch), numpy.sin(roll)
+        R = \
+            numpy.array([
+                [cosa*cosb, cosa*sinb*sing-sina*cosg, cosa*sinb*cosg+sina*sing],
+                [sina*cosb, sina*sinb*sing+cosa*cosg, sina*sinb*sing-cosa*sing],
+                [-sinb, cosb*sing, cosb*cosg]
+            ])
+        result = [
+            R @ (
+                lambda i: numpy.array([
+                    [numpy.cos(theta(i)), -numpy.sin(theta(i)), 0.],
+                    [numpy.sin(theta(i)), numpy.cos(theta(i)), 0.],
+                    [0., 0., 1.]
+                ])
+            )(cam) for cam in range(self.number_of_cameras)
+        ]
+        return result
+
     def make_localised_ladybug_gps_data(self):
         """ Localise the Ladybyg GPS data using the GPS CSV file. """
         self.interpolate_gps_data()
-        append_orientation(self.localised_gps_data, inplace=True)
+        self.append_orientation(self.localised_gps_data, inplace=True)
 
     def make_geo_data_frame(self):
         """ Add geometry to our localised data. """
@@ -445,6 +485,24 @@ class ReconstructionDirGenerator:
             )
         self.local_selection = result
 
+    def build_init_dict(df, base_dir=""):
+        """ Build the dictionary to be written to the JSON files. """
+        intrinsics = [
+            create_intrinsic(cam) for cam in range(self.number_of_cameras)
+        ]
+        views = []
+        poses = []
+        for row in self.local_selection.iterrows():
+            views.append(create_view(row, base_dir))
+            poses.append(create_pose(row))
+        result = {
+            "version": ["1","0","0"],
+            "views": views,
+            "intrinsics": intrinsics,
+            "poses": poses
+        }
+        return result
+
     def create_camera_init_files(self, path_to_source, output_filename):
         """ Ronseal. """
         init_dict = build_init_dict(self.local_selection, path_to_source)
@@ -522,18 +580,6 @@ class DigitMapToBGR:
                 output_bgr = self.digit_to_color(h, w, output_bgr)
         return output_bgr
 
-def append_orientation(data_frame, inplace=False):
-    """ Append camera orientations to a given data frame. """
-    new_data_frame = data_frame.copy()
-    new_data_frame["rotations"] = None # Initialise empty column.
-    for index, row in data_frame.iterrows():
-        rotations = build_rotation(row["heading"], row["pitch"], row["roll"])
-        new_data_frame.at[index, "rotations"] = rotations
-    if inplace: # Append rotations to input dataframe.
-        data_frame["rotations"] = new_data_frame["rotations"].values
-    else: # return copy with added rotations
-        return new_data_frame
-
 def to_geo_data_frame(
         data_frame,
         co_ref_sys=config.DEFAULT_COORDINATE_REFERENCE_SYSTEM
@@ -599,36 +645,6 @@ def seconds_since(origin, time):
 def theta(i):
     # TODO: Ask what this does.
     return (1+2*i)*numpy.pi/5.
-
-def build_rotation(
-        heading,
-        pitch,
-        roll,
-        number_of_cameras=config.DEFAULT_NUMBER_OF_CAMERAS
-    ):
-    # TODO: Ask what this does.
-    heading, pitch, roll = [
-        (lambda d: numpy.pi*d/config.SEMICIRCLE_DEGREES)(d) for d in [
-            heading, pitch, roll
-        ]
-    ]
-    cosa, cosb, cosg = numpy.cos(heading), numpy.cos(pitch), numpy.cos(roll)
-    sina, sinb, sing = numpy.sin(heading), numpy.sin(pitch), numpy.sin(roll)
-    R = numpy.array([
-        [cosa*cosb, cosa*sinb*sing-sina*cosg, cosa*sinb*cosg+sina*sing],
-        [sina*cosb, sina*sinb*sing+cosa*cosg, sina*sinb*sing-cosa*sing],
-        [-sinb, cosb*sing, cosb*cosg]
-    ])
-    result = [
-        R @ (
-            lambda i: numpy.array([
-                [numpy.cos(theta(i)), -numpy.sin(theta(i)), 0.],
-                [numpy.sin(theta(i)), numpy.cos(theta(i)), 0.],
-                [0., 0., 1.]
-            ])
-        )(cam) for cam in range(number_of_cameras)
-    ]
-    return result
 
 def theta_2(i):
     # TODO: Ask what this does.
