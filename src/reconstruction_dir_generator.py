@@ -561,7 +561,7 @@ class ReconstructionDirGenerator:
         ]
         views = []
         poses = []
-        for row in self.local_selection:
+        for _, row in self.local_selection.iterrows():
             views.append(self.create_view(row))
             poses.append(self.create_pose(row))
         result = {
