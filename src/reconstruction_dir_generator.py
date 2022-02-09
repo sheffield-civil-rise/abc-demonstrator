@@ -58,6 +58,7 @@ class ReconstructionDirGenerator:
     subset: geopandas.GeoDataFrame = None
     file_dict: dict = None
     file_paths: geopandas.GeoDataFrame = None
+    local_selection: geopandas.GeoDataFrame = None
 
     # Class attributes.
     LADYBUG_USECOLS: ClassVar[list] = ["FRAME", "CAMERA TIME"]
@@ -409,13 +410,35 @@ class ReconstructionDirGenerator:
                 )
             out_path = os.path.join(self.path_to_masked_images, file_path)
             if os.path.exists(mask_path):
-                img = cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
+                img = \
+                    cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
                 mask = cv2.imread(mask_path)
                 out = mask_image(img, mask)
                 if not os.path.exists(out_path):
                     os.makedirs(out_path)
                 cv2.imwrite(out_path, out)
             print_progress(index, len(img_list))
+
+    def generate_local_selection(self):
+        # TODO: Ask what the `local_selection` does.
+        result = self.file_paths.copy()
+        local_centroid = \
+            geopandas.GeoSeries(
+                geopandas.points_from_xy([centroid[0]], [centroid[1]]),
+                crs=self.co_ref_sys
+            ).to_crs(self.src_co_ref_sys)
+        tx, ty = local_centroid.geometry.x, local_centroid.geometry.y
+        data = \
+            self.file_paths.to_crs(
+                self.src_co_ref_sys
+            ).translate(-tx, -ty).tolist()
+        result["local"] = \
+            geopandas.GeoSeries(
+                data=data,
+                index=self.file_paths.index,
+                crs=self.src_co_ref_sys
+            )
+        self.local_selection = result
 
     def generate(self):
         """ Generate the reconstruction directory. """
@@ -439,6 +462,8 @@ class ReconstructionDirGenerator:
         self.label_images()
         print("Masking images...")
         self.mask_images()
+        print("Generating local selection...")
+        self.generate_local_selection()
         #print("\ncreating cameraInit files")
         #local_selection = generate_local_coords(selection, centroid)
         #generate_cameraInit(
