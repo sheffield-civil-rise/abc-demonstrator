@@ -17,7 +17,7 @@ import cv2
 import geopandas
 import numpy
 import pandas
-import progressbar
+from alive_progress import alive_it
 from PIL import Image
 from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
@@ -354,9 +354,7 @@ class ReconstructionDirGenerator:
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
-        for index in progressbar.progressbar(range(100)):
-            time.sleep(0.01)
-        for path in progressbar.progressbar(img_list):
+        for path in alive_it(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
             )
