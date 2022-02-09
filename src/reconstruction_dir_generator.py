@@ -516,7 +516,6 @@ class ReconstructionDirGenerator:
 
     def get_view_or_pose_index(self, row):
         # TODO: Ask what an "index" is in this context.
-        print(row)
         result = \
             str(int(row["FRAME"])*self.FRAME_ENCODING_FACTOR+int(row["cam"]))
         return result
@@ -580,8 +579,26 @@ class ReconstructionDirGenerator:
         with open(path_to_output_file, "w") as fid:
             json.dump(init_dict, fid, indent=self.JSON_INDENT)
 
+    def rename_labelled_images(self):
+        """ Rename the images in the "labelled" directory. """
+        for _, row in self.local_selection.iterrows():
+            filename, _ = os.path.splitext(row["path"])
+            file_path = \
+                os.path.join(
+                    self.path_to_labelled_images,
+                    filename+self.output_image_extension
+                )
+            index = self.get_view_or_pose_index(row)
+            new_name = \
+                os.path.join(
+                    self.path_to_labelled_images,
+                    index+self.output_image_extension
+                )
+            os.rename(file_path, new_name)
+
     def generate(self):
         """ Generate the reconstruction directory. """
+        print("Generating reconstuction directory...")
         print("Loading GPS data...")
         self.load_gps_data()
         print("Localising Ladybug GPS data...")
@@ -611,10 +628,10 @@ class ReconstructionDirGenerator:
         self.create_camera_init_files(
             self.path_to_masked_images, self.CAMERA_INIT_LABEL_FILENAME
         )
-        #print("renaming label data")
-        #rename_labels(local_selection, os.path.join(args.out, "labels"))
-        #print("done.")
-        #return os.path.abspath(args.out)
+        print("Renaming labelled images...")
+        self.rename_labelled_images()
+        print("Reconstruction directory generated.")
+        return self.path_to_output # TODO: Ask why this is necessary.
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
