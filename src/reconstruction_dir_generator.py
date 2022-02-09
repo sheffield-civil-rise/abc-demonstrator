@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from typing import ClassVar
@@ -17,7 +18,6 @@ import cv2
 import geopandas
 import numpy
 import pandas
-from alive_progress import alive_it
 from PIL import Image
 from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
@@ -25,8 +25,6 @@ from shapely.geometry import Point, Polygon
 # Local imports.
 import config
 from deeplab.Deeplabv3 import Deeplabv3
-
-import time
 
 ##############
 # MAIN CLASS #
@@ -354,15 +352,15 @@ class ReconstructionDirGenerator:
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
-        for path in alive_it(img_list):
+        for index, path in enumerate(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
             )
             new_img = \
                 cv2.resize(
                     img,
-                    (img.shape[1]//2, img.shape[0]//2)
-                )[0:self.IMG_SHAPE[0], 0:self.IMG_SHAPE[1]]
+                    (img.shape[1]//2, img.shape[0]//2
+                ))[0:self.IMG_SHAPE[0], 0:self.IMG_SHAPE[1]]
             new_img = (
                 cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)/config.MAX_RGB_CHANNEL
             )
@@ -391,6 +389,9 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_im)
+            sys.stdout.write("    "+str(index+1)+"/"+str(len(img_list)))
+            sys.stdout.flush()
+        print(" ")
 
     def generate(self):
         """ Generate the reconstruction directory. """
