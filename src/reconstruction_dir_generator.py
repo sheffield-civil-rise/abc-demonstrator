@@ -535,7 +535,8 @@ class ReconstructionDirGenerator:
 
     def create_pose(self, row):
         # TODO: Ask what a "pose" is in this context.
-        index = self.get_view_or_pose_index(row)
+        #index = self.get_view_or_pose_index(row)
+        index = str(int(row['FRAME'])*10 + int(row['cam']))
         result = {
             "poseId": index,
             "pose": {
