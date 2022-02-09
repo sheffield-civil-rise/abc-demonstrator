@@ -19,6 +19,7 @@ import geopandas
 import numpy
 import pandas
 from PIL import Image
+from progressbar import progressbar
 from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
 
@@ -352,7 +353,7 @@ class ReconstructionDirGenerator:
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
-        for index, path in enumerate(img_list):
+        for path in progressbar(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
             )
@@ -389,9 +390,6 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_im)
-            sys.stdout.write("\r%5d/%5d"%(index+1, len(img_list)))
-            sys.stdout.flush()
-        print(" ")
 
     def generate(self):
         """ Generate the reconstruction directory. """
@@ -409,7 +407,7 @@ class ReconstructionDirGenerator:
         self.generate_file_dict()
         print("Selecting file paths...")
         self.select_file_paths()
-        print("Generate output directory...")
+        print("Generating output directory...")
         self.generate_output_directory()
         print("Labelling images...")
         self.label_images()
