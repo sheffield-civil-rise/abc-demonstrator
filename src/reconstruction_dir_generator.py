@@ -49,6 +49,7 @@ class ReconstructionDirGenerator:
     # Generated fields.
     path_to_output_images: str = None
     path_to_labelled_images: str = None
+    path_to_masked_images: str = None
     gps_data: pandas.DataFrame = None
     ladybug_data: pandas.DataFrame = None
     localised_ladybug_data: pandas.DataFrame = None
@@ -359,8 +360,8 @@ class ReconstructionDirGenerator:
             new_img = \
                 cv2.resize(
                     img,
-                    (img.shape[1]//2, img.shape[0]//2
-                ))[0:self.IMG_SHAPE[0], 0:self.IMG_SHAPE[1]]
+                    (img.shape[1]//2, img.shape[0]//2)
+                )[0:self.IMG_SHAPE[0], 0:self.IMG_SHAPE[1]]
             new_img = (
                 cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)/config.MAX_RGB_CHANNEL
             )
@@ -372,24 +373,49 @@ class ReconstructionDirGenerator:
             out_path = \
                 os.path.join(
                     self.path_to_labelled_images,
-                    os.path.splitext(os.path.split(path)[-1])[0]
-                    +self.output_image_extension
+                    os.path.splitext(os.path.split(path)[-1])[0]+
+                    self.output_image_extension
                 )
-            pad_im = \
+            pad_img = \
                 cv2.copyMakeBorder(
                     bgr_mask,
                     0, self.BORDER_BOTTOM, 0, 0,
                     cv2.BORDER_CONSTANT,
                     value=self.LABEL_COLOR_DICT["background"]
                 )
-            out_im = \
+            out_img = \
                 cv2.resize(
-                    pad_im,
+                    pad_img,
                     self.PADDED_IMG_SHAPE,
                     interpolation=cv2.INTER_NEAREST
                 )
-            cv2.imwrite(out_path, out_im)
+            cv2.imwrite(out_path, out_img)
             print_progress(index, len(img_list))
+
+    def mask_images(self):
+        """ Make the directory holding the masked images, and fill it. """
+        self.path_to_masked_images = \
+            os.path.join(self.path_to_output, "masked")
+        if not os.path.exists(self.path_to_masked_images):
+            os.makedirs(self.path_to_masked_images)
+        img_list = get_img_paths(self.path_to_output_images)
+        for index, path in enumerate(img_list):
+            base, file_path = os.path.split(path)
+            filename, _ = os.path.splitext(file_path)
+            mask_path = \
+                os.path.join(
+                    self.path_to_masked_images,
+                    filename+self.output_image_extension
+                )
+            out_path = os.path.join(self.path_to_masked_images, file_path)
+            if os.path.exists(mask_path):
+                img = cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
+                mask = cv2.imread(mask_path)
+                out = mask_image(img, mask)
+                if not os.path.exists(out_path):
+                    os.makedirs(out_path)
+                cv2.imwrite(out_path, out)
+                print_progress(index, len(img_list))
 
     def generate(self):
         """ Generate the reconstruction directory. """
@@ -412,11 +438,7 @@ class ReconstructionDirGenerator:
         print("Labelling images...")
         self.label_images()
         print("Masking images...")
-        #mask_all_images(
-        #    os.path.join(args.out, "images"),
-        #    os.path.join(args.out, "labels"),
-        #    os.path.join(args.out, "masked")
-        #)
+        self.mask_images()
         #print("\ncreating cameraInit files")
         #local_selection = generate_local_coords(selection, centroid)
         #generate_cameraInit(
@@ -644,3 +666,11 @@ def print_progress(index, loops):
     sys.stdout.flush()
     if index_to_print == loops:
         print(" ")
+
+def mask_image(img, mask):
+    """ Apply a given mask to a given image. """
+    binmask = numpy.any(mask, axis=2).astype("int")
+    maskdim = img*numpy.stack(3*[binmask], axis=2)
+    result = cv2.cvtColor(maskdim.astype("uint8"), cv2.COLOR_BGR2BGRA)
+    result[:, :, 3] = binmask*config.MAX_RGB_CHANNEL
+    return result
