@@ -424,7 +424,9 @@ class ReconstructionDirGenerator:
         result = self.file_paths.copy()
         local_centroid = \
             geopandas.GeoSeries(
-                geopandas.points_from_xy([centroid[0]], [centroid[1]]),
+                geopandas.points_from_xy(
+                    [self.centroid[0]], [self.centroid[1]]
+                ),
                 crs=self.co_ref_sys
             ).to_crs(self.src_co_ref_sys)
         tx, ty = local_centroid.geometry.x, local_centroid.geometry.y
