@@ -101,6 +101,9 @@ class ReconstructionDirGenerator:
     IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
     BORDER_BOTTOM: ClassVar[int] = 208
     PADDED_IMG_SHAPE: ClassVar[tuple] = (2048, 2464)
+    CAMERA_INIT_FILENAME: ClassVar[str] = "cameraInit.sfm"
+    CAMERA_INIT_LABEL_FILENAME: ClassVar[str] = "cameraInit_label.sfm"
+    JSON_INDENT: ClassVar[int] = 2
 
     def __post_init__(self):
         self.set_label_color_dict()
@@ -442,6 +445,14 @@ class ReconstructionDirGenerator:
             )
         self.local_selection = result
 
+    def create_camera_init_files(self, path_to_source, output_filename):
+        """ Ronseal. """
+        init_dict = build_init_dict(self.local_selection, path_to_source)
+        path_to_output_file = \
+            os.path.join(self.path_to_output, output_filename)
+        with open(path_to_output_file, "w") as fid:
+            json.dump(init_dict, fid, indent=self.JSON_INDENT)
+
     def generate(self):
         """ Generate the reconstruction directory. """
         print("Loading GPS data...")
@@ -466,18 +477,13 @@ class ReconstructionDirGenerator:
         self.mask_images()
         print("Generating local selection...")
         self.generate_local_selection()
-        #print("\ncreating cameraInit files")
-        #local_selection = generate_local_coords(selection, centroid)
-        #generate_cameraInit(
-        #    local_selection,
-        #    os.path.join(args.out, "images"),
-        #    output=os.path.join(args.out, 'cameraInit.sfm')
-        #)
-        #generate_cameraInit(
-        #    local_selection,
-        #    os.path.join(args.out, "masked"),
-        #    output=os.path.join(args.out, 'cameraInit_label.sfm')
-        #)
+        print("Creating CameraInit files.")
+        self.create_camera_init_files(
+            self.path_to_output_images, self.CAMERA_INIT_FILENAME
+        )
+        self.create_camera_init_files(
+            self.path_to_masked_images, self.CAMERA_INIT_LABEL_FILENAME
+        )
         #print("renaming label data")
         #rename_labels(local_selection, os.path.join(args.out, "labels"))
         #print("done.")
