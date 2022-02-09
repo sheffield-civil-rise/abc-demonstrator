@@ -389,10 +389,7 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_im)
-#            sys.stdout.write("\r%5d/%5d"%(index+1, len(img_list)))
-            sys.stdout.write("\r"+str(index+1)+"/"+str(len(img_list)))
-            sys.stdout.flush()
-        print(" ")
+            print_progress(index, len(img_list))
 
     def generate(self):
         """ Generate the reconstruction directory. """
@@ -639,3 +636,11 @@ def decode_color(to_decode, byte_length=config.DEFAULT_BYTE_LENGTH):
             ], axis=-1
         ).astype(numpy.uint8)
     return result
+
+def print_progress(index, loops):
+    """ Tell the user how far along the process we are. """
+    index_to_print = index+1
+    sys.stdout.write("\r    "+str(index_to_print)+"/"+str(loops))
+    sys.stdout.flush()
+    if index_to_print == loops:
+        print(" ")
