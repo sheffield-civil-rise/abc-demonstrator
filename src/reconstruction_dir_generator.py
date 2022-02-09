@@ -516,14 +516,14 @@ class ReconstructionDirGenerator:
 
     def get_view_or_pose_index(self, row):
         # TODO: Ask what an "index" is in this context.
+        print(row)
         result = \
             str(int(row["FRAME"])*self.FRAME_ENCODING_FACTOR+int(row["cam"]))
         return result
 
     def create_view(self, row):
         # TODO: Ask what a "view" is in this context.
-        #index = self.get_view_or_pose_index(row)
-        index = str(int(row['FRAME'])*10 + int(row['cam']))
+        index = self.get_view_or_pose_index(row)
         result = {
             "viewId": index,
             "poseId": index,
@@ -537,8 +537,7 @@ class ReconstructionDirGenerator:
 
     def create_pose(self, row):
         # TODO: Ask what a "pose" is in this context.
-        #index = self.get_view_or_pose_index(row)
-        index = str(int(row['FRAME'])*10 + int(row['cam']))
+        index = self.get_view_or_pose_index(row)
         result = {
             "poseId": index,
             "pose": {
