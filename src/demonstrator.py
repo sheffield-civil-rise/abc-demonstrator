@@ -25,7 +25,8 @@ def generate_reconstruction_dir(
     if os.path.exists(path_to_output):
         shutil.rmtree(path_to_output)
     rec_dir_gen = ReconstructionDirGenerator(path_to_output=path_to_output)
-    wd_path = rec_dir_gen.generate()
+    result = rec_dir_gen.generate()
+    return result
 
 def run(args):
 
@@ -45,8 +46,10 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    generate_reconstruction_dir()
+    wd_path = generate_reconstruction_dir()
     #wd_path = generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
+    print("THIS IS AS FAR AS THE SCRIPT SHOULD GET RIGHT NOW")
+    sys.exit(0)
 
     image_dir = os.path.join(wd_path, 'images')
     label_dir = os.path.join(wd_path, 'labels')
