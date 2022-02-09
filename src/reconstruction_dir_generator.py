@@ -26,6 +26,8 @@ from shapely.geometry import Point, Polygon
 import config
 from deeplab.Deeplabv3 import Deeplabv3
 
+import time
+
 ##############
 # MAIN CLASS #
 ##############
@@ -352,6 +354,8 @@ class ReconstructionDirGenerator:
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
+        for index in progressbar(range(100)):
+            time.sleep(0.01)
         for path in progressbar.progressbar(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
@@ -389,7 +393,6 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_im)
-            progressbar.streams.flush()
 
     def generate(self):
         """ Generate the reconstruction directory. """
