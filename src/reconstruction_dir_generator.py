@@ -399,6 +399,7 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
         img_list = get_img_paths(self.path_to_output_images)
+        print("MASKING "+str(len(img_list))+" images.")
         for index, path in enumerate(img_list):
             base, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
