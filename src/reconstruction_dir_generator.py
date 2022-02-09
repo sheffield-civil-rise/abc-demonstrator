@@ -106,6 +106,26 @@ class ReconstructionDirGenerator:
     CAMERA_INIT_LABEL_FILENAME: ClassVar[str] = "cameraInit_label.sfm"
     JSON_INDENT: ClassVar[int] = 2
     FRAME_ENCODING_FACTOR: ClassVar[int] = 10
+    INTRINSIC_BASE: ClassVar[dict] = {
+        "width": "2048",
+        "height": "2464",
+        "sensorWidth": "-1",
+        "sensorHeight": "-1",
+        "type": "radial3",
+        "initializationMode": "unknown",
+        "pxInitialFocalLength": "-1",
+        "pxFocalLength": "1244.8954154464859",
+        "principalPoint": [
+            "1009.5173249704193",
+            "1249.8800458307971"
+        ],
+        "distortionParams": [
+            "-0.32180396146710027",
+            "0.13839127303452359",
+            "-0.032403246994346345"
+        ],
+        "locked": "0"
+    }
 
     def __post_init__(self):
         self.set_label_color_dict()
@@ -486,6 +506,13 @@ class ReconstructionDirGenerator:
             )
         self.local_selection = result
 
+    def create_intrinsic(self, cam):
+        """ Return a modified copy of the base intrinsic dictionary. """
+        result = self.INTRINSIC_BASE.copy()
+        result["intrinsicId"] = str(cam)
+        result["serialNumber"] = str(cam)
+        return result
+
     def get_view_or_pose_index(self, row):
         # TODO: Ask what an "index" is in this context.
         result = \
@@ -528,7 +555,7 @@ class ReconstructionDirGenerator:
     def build_init_dict(self, base_dir=""):
         """ Build the dictionary to be written to the JSON files. """
         intrinsics = [
-            create_intrinsic(cam) for cam in range(self.number_of_cameras)
+            self.create_intrinsic(cam) for cam in range(self.number_of_cameras)
         ]
         views = []
         poses = []
