@@ -105,6 +105,7 @@ class ReconstructionDirGenerator:
     CAMERA_INIT_FILENAME: ClassVar[str] = "cameraInit.sfm"
     CAMERA_INIT_LABEL_FILENAME: ClassVar[str] = "cameraInit_label.sfm"
     JSON_INDENT: ClassVar[int] = 2
+    FRAME_ENCODING_FACTOR: ClassVar[int] = 10
 
     def __post_init__(self):
         self.set_label_color_dict()
@@ -485,7 +486,46 @@ class ReconstructionDirGenerator:
             )
         self.local_selection = result
 
-    def build_init_dict(df, base_dir=""):
+    def get_view_or_pose_index(self, row):
+        # TODO: Ask what an "index" is in this context.
+        result = \
+            str(int(row["FRAME"])*self.FRAME_ENCODING_FACTOR+int(row["cam"]))
+        return result
+
+    def create_view(self, row):
+        # TODO: Ask what a "view" is in this context.
+        index = self.get_view_or_pose_index(row)
+        result = {
+            "viewId": index,
+            "poseId": index,
+            "intrinsicId": str(int(row["cam"])),
+            "path": row["path"],
+            "width": str(self.PADDED_IMG_SHAPE[0]),
+            "height": str(self.PADDED_IMG_SHAPE[1]),
+            "metadata": ""
+        }
+        return result
+
+    def create_pose(self, row):
+        # TODO: Ask what a "pose" is in this context.
+        index = self.get_view_or_pose_index(row)
+        result = {
+            "poseId": index,
+            "pose": {
+                "transform": {
+                    "rotation": [str(v) for v in row["rotation"].ravel()],
+                    "center": [
+                        str(row["local"].x),
+                        str(row["local"].y),
+                        str(row["altitude"])
+                    ]
+                },
+                "locked": "1"
+            }
+        }
+        return result
+
+    def build_init_dict(self, base_dir=""):
         """ Build the dictionary to be written to the JSON files. """
         intrinsics = [
             create_intrinsic(cam) for cam in range(self.number_of_cameras)
@@ -493,10 +533,10 @@ class ReconstructionDirGenerator:
         views = []
         poses = []
         for row in self.local_selection.iterrows():
-            views.append(create_view(row, base_dir))
-            poses.append(create_pose(row))
+            views.append(self.create_view(row))
+            poses.append(self.create_pose(row))
         result = {
-            "version": ["1","0","0"],
+            "version": ["1", "0", "0"],
             "views": views,
             "intrinsics": intrinsics,
             "poses": poses
@@ -505,7 +545,7 @@ class ReconstructionDirGenerator:
 
     def create_camera_init_files(self, path_to_source, output_filename):
         """ Ronseal. """
-        init_dict = build_init_dict(self.local_selection, path_to_source)
+        init_dict = self.build_init_dict(path_to_source)
         path_to_output_file = \
             os.path.join(self.path_to_output, output_filename)
         with open(path_to_output_file, "w") as fid:
