@@ -388,9 +388,7 @@ class ReconstructionDirGenerator:
                     self.PADDED_IMG_SHAPE,
                     interpolation=cv2.INTER_NEAREST
                 )
-            print(self.path_to_labelled_images)
-            print(out_im)
-            cv2.imwrite(self.path_to_labelled_images, out_im)
+            cv2.imwrite(out_path, out_im)
             sys.stdout.write("\r%5d/%5d"%(index+1, len(img_list)))
             sys.stdout.flush()
         print(" ")
