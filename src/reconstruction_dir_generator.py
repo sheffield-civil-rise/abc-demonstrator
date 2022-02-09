@@ -455,6 +455,7 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_img)
+            break
             print_progress(index, len(img_list))
 
     def mask_images(self):
@@ -521,7 +522,8 @@ class ReconstructionDirGenerator:
 
     def create_view(self, row):
         # TODO: Ask what a "view" is in this context.
-        index = self.get_view_or_pose_index(row)
+        #index = self.get_view_or_pose_index(row)
+        index = str(int(row['FRAME'])*10 + int(row['cam']))
         result = {
             "viewId": index,
             "poseId": index,
