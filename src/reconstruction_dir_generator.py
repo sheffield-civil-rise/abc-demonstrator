@@ -390,6 +390,7 @@ class ReconstructionDirGenerator:
                 )
             cv2.imwrite(out_path, out_im)
             sys.stdout.write("\r%5d/%5d"%(index+1, len(img_list)))
+            sys.stdout.write("\r"+str(index+1)+"/"+str(len(img_list)))
             sys.stdout.flush()
         print(" ")
 
@@ -413,7 +414,7 @@ class ReconstructionDirGenerator:
         self.generate_output_directory()
         print("Labelling images...")
         self.label_images()
-        #print("\nmasking images")
+        print("Masking images...")
         #mask_all_images(
         #    os.path.join(args.out, "images"),
         #    os.path.join(args.out, "labels"),
