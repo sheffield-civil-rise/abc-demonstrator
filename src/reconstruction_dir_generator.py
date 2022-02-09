@@ -356,7 +356,6 @@ class ReconstructionDirGenerator:
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
             )
-            print(img)
             new_img = \
                 cv2.resize(
                     img,
@@ -389,6 +388,7 @@ class ReconstructionDirGenerator:
                     self.PADDED_IMG_SHAPE,
                     interpolation=cv2.INTER_NEAREST
                 )
+            print(self.path_to_labelled_images)
             print(out_im)
             cv2.imwrite(self.path_to_labelled_images, out_im)
             sys.stdout.write("\r%5d/%5d"%(index+1, len(img_list)))

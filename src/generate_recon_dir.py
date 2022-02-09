@@ -521,9 +521,6 @@ def label_directory(directory, out_dir):
     for i, path in enumerate(img_list):
         img = cv2.imread(
             path,  cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
-
-        print(img)
-
         input = cv2.resize(
             img, (img.shape[1]//2, img.shape[0]//2))[
                 0:img_shape[0], 0:img_shape[1]]
@@ -547,6 +544,7 @@ def label_directory(directory, out_dir):
             pad_im, (2048, 2464),
             interpolation=cv2.INTER_NEAREST)
 
+        print(out_path)
         print(out_im)
 
         cv2.imwrite(out_path, out_im)
