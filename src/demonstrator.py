@@ -49,7 +49,8 @@ def run(args):
     #generate_reconstruction_dir()
     generate_recon_dir(args_0)
 
-    wd_path = r"G:\photogrammetry_output_demo"
+    #wd_path = r"G:\photogrammetry_output_demo"
+    wd_path = r"G:\demo_output\working_dir"
 
     image_dir = os.path.join(wd_path, 'images')
     label_dir = os.path.join(wd_path, 'labels')
