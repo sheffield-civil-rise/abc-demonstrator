@@ -577,7 +577,7 @@ class ReconstructionDirGenerator:
             base_path
         ):
         """ Ronseal. """
-        init_dict = self.build_init_dict(path_to_source, base_path)
+        init_dict = self.build_init_dict(base_path)
         path_to_output_file = \
             os.path.join(self.path_to_output, output_filename)
         with open(path_to_output_file, "w") as fid:
