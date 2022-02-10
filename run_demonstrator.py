@@ -21,8 +21,8 @@ import subprocess
 
 def run_demonstrator():
     """ Run the demonstrator script. """
-    if os.path.exists(PATH_TO_DEMONSTRATOR_OUTPUT):
-        shutil.rmtree(PATH_TO_DEMONSTRATOR_OUTPUT)
+#    if os.path.exists(PATH_TO_DEMONSTRATOR_OUTPUT):
+#        shutil.rmtree(PATH_TO_DEMONSTRATOR_OUTPUT)
     arguments = (
         "python",
         PATH_TO_DEMONSTRATOR_SCRIPT,
