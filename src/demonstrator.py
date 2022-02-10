@@ -15,6 +15,7 @@ import numpy
 # Local imports.
 import config
 from batch_process import run as batch_process
+from batch_processor import BatchProcessor
 from calculate_height import main as calculate_height
 from calculate_wwr import calculate as calculate_wwr
 from generate_idf import main as generate_energy_model

@@ -478,8 +478,6 @@ class ReconstructionDirGenerator:
                     cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
                 mask = cv2.imread(path_to_image_to_mask)
                 out = mask_image(img, mask)
-#                if not os.path.exists(out_path):
-#                    os.makedirs(out_path)
                 cv2.imwrite(out_path, out)
             print_progress(index, len(img_list))
 
