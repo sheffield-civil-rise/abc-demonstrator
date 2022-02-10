@@ -566,24 +566,12 @@ def mask_all_images(img_dir, mask_dir, out_dir):
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 
-    try:
-        print(os.listdir(mask_dir))
-    except:
-        print("Masked directory doesn't exist yet! (1)")
     img_list = get_img_paths(img_dir)
 
-    try:
-        print(os.listdir(mask_dir))
-    except:
-        print("Masked directory doesn't exist yet! (2)")
     if len(img_list) == 0:
         print('no images found')
         return
 
-    try:
-        print(os.listdir(mask_dir))
-    except:
-        print("Masked directory doesn't exist yet! (3)")
     for i, path in enumerate(img_list):
         base, filepath = os.path.split(path)
 
@@ -601,10 +589,6 @@ def mask_all_images(img_dir, mask_dir, out_dir):
 
         sys.stdout.write('\r%5d/%5d' % (i+1, len(img_list)))
         sys.stdout.flush()
-    try:
-        print(os.listdir(mask_dir))
-    except:
-        print("Masked directory doesn't exist yet! (4)")
 
 def rename_labels(df, label_dir):
 
@@ -636,11 +620,18 @@ def autogenerate(args):
     print("generating working directory")
     generate_working_directory(selection, args.dir, out_dir = args.out)
 
-    #print(os.listdir(os.path.join(args.out, "masked")))
+    try:
+        print(os.listdir(mask_dir))
+    except:
+        print("Masked directory doesn't exist yet! (A)")
     print("labelling images")
     label_directory(
         os.path.join(args.out, "images"),
         os.path.join(args.out, "labels"))
+    try:
+        print(os.listdir(mask_dir))
+    except:
+        print("Masked directory doesn't exist yet! (B)")
     print("\nmasking images")
     mask_all_images(
         os.path.join(args.out, "images"),
