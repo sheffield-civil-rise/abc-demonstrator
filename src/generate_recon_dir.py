@@ -641,6 +641,8 @@ def autogenerate(args):
         os.path.join(args.out, "masked"),
         output=os.path.join(args.out, 'cameraInit_label.sfm'))
 
+    print(args.out)
+
     print("renaming label data")
     rename_labels(local_selection, os.path.join(args.out, "labels"))
 
