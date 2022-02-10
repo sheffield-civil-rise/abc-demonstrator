@@ -46,8 +46,8 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    generate_reconstruction_dir()
-    #generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
+    #generate_reconstruction_dir()
+    generate_recon_dir(args_0)
 
     wd_path = r"G:\photogrammetry_output_demo"
 
@@ -60,7 +60,7 @@ def run(args):
 
     print('caching at {}'.format(cache_dir))
 
-    recon_thread_running = batch_process(
+    recon_thread_running = batch_process( # As of 10 Feb 2022, this is where the script crashes.
         image_dir,
         'custom',
         cache=cache_dir,
