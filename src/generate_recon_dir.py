@@ -618,7 +618,7 @@ def autogenerate(args):
     print("generating working directory")
     generate_working_directory(selection, args.dir, out_dir = args.out)
 
-    print(os.listdir(os.path.join(args.out, "masked")))
+    #print(os.listdir(os.path.join(args.out, "masked")))
     print("labelling images")
     label_directory(
         os.path.join(args.out, "images"),
