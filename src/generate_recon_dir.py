@@ -641,7 +641,6 @@ def autogenerate(args):
     label_directory(
         os.path.join(args.out, "images"),
         os.path.join(args.out, "labels"))
-    print(os.listdir(os.path.join(args.out, "masked")))
     print("\nmasking images")
     mask_all_images(
         os.path.join(args.out, "images"),
