@@ -74,7 +74,7 @@ class Demonstrator:
 def run():
     """ Run this file. """
     demonstrator = Demonstrator()
-    demonstratordemonstrate()
+    demonstrator.demonstrate()
 
 if __name__ == "__main__":
     run()
