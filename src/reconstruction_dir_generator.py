@@ -519,14 +519,14 @@ class ReconstructionDirGenerator:
             str(int(row["FRAME"])*self.FRAME_ENCODING_FACTOR+int(row["cam"]))
         return result
 
-    def create_view(self, row):
+    def create_view(self, row, base_path):
         # TODO: Ask what a "view" is in this context.
         index = self.get_view_or_pose_index(row)
         result = {
             "viewId": index,
             "poseId": index,
             "intrinsicId": str(int(row["cam"])),
-            "path": row["path"],
+            "path": os.path.join(base_path, row["path"]),
             "width": str(self.PADDED_IMG_SHAPE[0]),
             "height": str(self.PADDED_IMG_SHAPE[1]),
             "metadata": ""
@@ -552,7 +552,7 @@ class ReconstructionDirGenerator:
         }
         return result
 
-    def build_init_dict(self, base_dir=""):
+    def build_init_dict(self, base_path):
         """ Build the dictionary to be written to the JSON files. """
         intrinsics = [
             self.create_intrinsic(cam) for cam in range(self.number_of_cameras)
@@ -560,7 +560,7 @@ class ReconstructionDirGenerator:
         views = []
         poses = []
         for _, row in self.local_selection.iterrows():
-            views.append(self.create_view(row))
+            views.append(self.create_view(row, base_path))
             poses.append(self.create_pose(row))
         result = {
             "version": ["1", "0", "0"],
@@ -570,9 +570,14 @@ class ReconstructionDirGenerator:
         }
         return result
 
-    def create_camera_init_files(self, path_to_source, output_filename):
+    def create_camera_init_file(
+            self,
+            path_to_source,
+            output_filename,
+            base_path
+        ):
         """ Ronseal. """
-        init_dict = self.build_init_dict(path_to_source)
+        init_dict = self.build_init_dict(path_to_source, base_path)
         path_to_output_file = \
             os.path.join(self.path_to_output, output_filename)
         with open(path_to_output_file, "w") as fid:
@@ -621,11 +626,15 @@ class ReconstructionDirGenerator:
         print("Generating local selection...")
         self.generate_local_selection()
         print("Creating CameraInit files.")
-        self.create_camera_init_files(
-            self.path_to_output_images, self.CAMERA_INIT_FILENAME
+        self.create_camera_init_file(
+            self.path_to_output_images,
+            self.CAMERA_INIT_FILENAME,
+            self.path_to_output_images
         )
-        self.create_camera_init_files(
-            self.path_to_masked_images, self.CAMERA_INIT_LABEL_FILENAME
+        self.create_camera_init_file(
+            self.path_to_masked_images,
+            self.CAMERA_INIT_LABEL_FILENAME,
+            self.path_to_labelled_images
         )
         print("Renaming labelled images...")
         self.rename_labelled_images()
