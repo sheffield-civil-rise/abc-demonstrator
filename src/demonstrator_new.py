@@ -47,7 +47,7 @@ class Demonstrator:
             ReconstructionDirGenerator(path_to_output=self.path_to_output)
         self.rec_dir_gen.generate()
 
-    def run_batch_processes():
+    def run_batch_processes(self):
         camera_init_0 = \
             os.path.join(
                 self.path_to_output, self.rec_dir_gen.CAMERA_INIT_FILENAME
