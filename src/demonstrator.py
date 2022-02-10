@@ -46,8 +46,8 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    #generate_reconstruction_dir()
-    generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
+    generate_reconstruction_dir()
+    #generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
 
     wd_path = r"G:\demonstrator_output\working_dir"
 

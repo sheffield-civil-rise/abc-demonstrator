@@ -467,19 +467,19 @@ class ReconstructionDirGenerator:
         for index, path in enumerate(img_list):
             base, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
-            mask_path = \
+            path_to_image_to_mask = \
                 os.path.join(
-                    self.path_to_masked_images,
+                    self.path_to_labelled_images,
                     filename+self.output_image_extension
                 )
             out_path = os.path.join(self.path_to_masked_images, file_path)
-            if os.path.exists(mask_path):
+            if os.path.exists(path_to_image_to_mask):
                 img = \
                     cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
-                mask = cv2.imread(mask_path)
+                mask = cv2.imread(path_to_image_to_mask)
                 out = mask_image(img, mask)
-                if not os.path.exists(out_path):
-                    os.makedirs(out_path)
+#                if not os.path.exists(out_path):
+#                    os.makedirs(out_path)
                 cv2.imwrite(out_path, out)
             print_progress(index, len(img_list))
 
