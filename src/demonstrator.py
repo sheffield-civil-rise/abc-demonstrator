@@ -46,11 +46,11 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    #generate_reconstruction_dir()
-    #wd_path = r"G:\photogrammetry_output_demo"
+    generate_reconstruction_dir()
+    wd_path = r"G:\photogrammetry_output_demo"
 
-    generate_recon_dir(args_0)
-    wd_path = r"G:\demonstrator_output\working_dir"
+    #generate_recon_dir(args_0)
+    #wd_path = r"G:\demonstrator_output\working_dir"
 
     image_dir = os.path.join(wd_path, 'images')
     label_dir = os.path.join(wd_path, 'labels')
