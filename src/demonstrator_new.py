@@ -80,6 +80,7 @@ class Demonstrator:
     def demonstrate(self):
         """ Run the demonstrator script. """
         self.make_and_run_reconstruction_dir_generator()
+        self.run_batch_processes()
         print("THIS IS AS FAR AS THE SCRIPT SHOULD GET RIGHT NOW")
         sys.exit(0)
 
