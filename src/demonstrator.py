@@ -49,7 +49,7 @@ def run(args):
     #generate_reconstruction_dir()
     generate_recon_dir(args_0) # As of 03 Feb 2022, this is the line that crashes.
 
-    wd_path = r"G:\photogrammetry_output_demo"
+    wd_path = r"G:\demonstrator_output\working_dir"
 
     image_dir = os.path.join(wd_path, 'images')
     label_dir = os.path.join(wd_path, 'labels')
