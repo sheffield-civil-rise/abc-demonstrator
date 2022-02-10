@@ -630,7 +630,6 @@ class ReconstructionDirGenerator:
         print("Renaming labelled images...")
         self.rename_labelled_images()
         print("Reconstruction directory generated.")
-        return self.path_to_output # TODO: Ask why this is necessary.
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #

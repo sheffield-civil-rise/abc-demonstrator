@@ -42,6 +42,7 @@ DEFAULT_IMAGE_EXTENSIONS = (".exr", ".jpeg", ".jpg", ".png")
 DEFAULT_OUTPUT_IMAGE_EXTENSION = ".png"
 DEFAULT_BYTE_LENGTH = 8
 DEFAULT_DEMO_TIMEOUT = 7200 # I.e. two hours in seconds.
+DEFAULT_CHECK_EVERY = 30 # I.e. thirty seconds.
 
 # Other.
 SEMICIRCLE_DEGREES = 180
