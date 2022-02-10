@@ -559,16 +559,31 @@ def mask_image(im, mask):
 
 
 def mask_all_images(img_dir, mask_dir, out_dir):
-
+    if os.path.exists(mask_dir):
+        print(os.listdir(mask_dir))
+    else:
+        print("Masked directory doesn't exist yet! (0)")
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 
+    if os.path.exists(mask_dir):
+        print(os.listdir(mask_dir))
+    else:
+        print("Masked directory doesn't exist yet! (1)")
     img_list = get_img_paths(img_dir)
 
+    if os.path.exists(mask_dir):
+        print(os.listdir(mask_dir))
+    else:
+        print("Masked directory doesn't exist yet! (2)")
     if len(img_list) == 0:
         print('no images found')
         return
 
+    if os.path.exists(mask_dir):
+        print(os.listdir(mask_dir))
+    else:
+        print("Masked directory doesn't exist yet! (3)")
     for i, path in enumerate(img_list):
         base, filepath = os.path.split(path)
 
@@ -586,7 +601,10 @@ def mask_all_images(img_dir, mask_dir, out_dir):
 
         sys.stdout.write('\r%5d/%5d' % (i+1, len(img_list)))
         sys.stdout.flush()
-
+    if os.path.exists(mask_dir):
+        print(os.listdir(mask_dir))
+    else:
+        print("Masked directory doesn't exist yet! (4)")
 
 def rename_labels(df, label_dir):
 
