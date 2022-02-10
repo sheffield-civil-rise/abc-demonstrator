@@ -618,10 +618,12 @@ def autogenerate(args):
     print("generating working directory")
     generate_working_directory(selection, args.dir, out_dir = args.out)
 
+    print(os.listdir(os.path.join(args.out, "masked")))
     print("labelling images")
     label_directory(
         os.path.join(args.out, "images"),
         os.path.join(args.out, "labels"))
+    print(os.listdir(os.path.join(args.out, "masked")))
     print("\nmasking images")
     mask_all_images(
         os.path.join(args.out, "images"),
@@ -640,8 +642,6 @@ def autogenerate(args):
         local_selection,
         os.path.join(args.out, "masked"),
         output=os.path.join(args.out, 'cameraInit_label.sfm'))
-
-    print(args.out)
 
     print("renaming label data")
     rename_labels(local_selection, os.path.join(args.out, "labels"))
