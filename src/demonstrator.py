@@ -63,7 +63,7 @@ class Demonstrator:
                 paths_to_init_files=[camera_init0, camera_init1],
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
-        batch_processor.run()
+        self.batch_processor.run()
 
     def demonstrate(self):
         """ Run the demonstrator script. """

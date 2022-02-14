@@ -4,8 +4,8 @@ import argparse
 import time
 import numpy as np
 
-from generate_recon_dir import autogenerate as generate_recon_dir
-from batch_process import run as batch_process
+from o_generate_recon_dir import autogenerate as generate_recon_dir
+from o_batch_process import run as batch_process
 from calculate_height import main as calculate_height
 from calculate_wwr import calculate as calculate_wwr
 
