@@ -17,7 +17,7 @@ from batch_processor import BatchProcessor
 from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
 
-from calculate_height import main as calculate_height
+from o_calculate_height import main as calculate_height
 from calculate_wwr import calculate as calculate_wwr
 from generate_idf import main as generate_energy_model
 
