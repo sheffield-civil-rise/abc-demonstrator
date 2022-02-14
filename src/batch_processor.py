@@ -5,6 +5,7 @@ This code defines a class which runs some of the more time-consuming processes.
 # Standard imports.
 import os
 import sys
+import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Callable, ClassVar
@@ -35,6 +36,8 @@ class BatchProcessor:
     path_to_cache: str = os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "cache")
     paths_to_init_files: list = field(default_factory=list) # I.e. SFM files.
     path_to_labelled_images: str = None
+    timeout: int = config.DEFAULT_BATCH_PROCESS_TIMEOUT
+    check_interval: int = config.DEFAULT_CHECK_INTERVAL
     # Generated fields.
     has_searched_for_images: bool = False
     two_way: bool = False
@@ -159,6 +162,23 @@ class BatchProcessor:
         task_manager = TaskManager()
         task_manager.compute(self.graph, toNodes=None)
         self.thread = task_manager._thread
+
+    def monitor_thread(self):
+        """ Enter a loop, and stay in it until the process is finished, or we
+        decide it's timed out. """
+        start_time = time.time()
+        while self.thread.isRunning():
+            elapsed = time.time()-start_time
+            if elapsed > self.timeout:
+                raise DemonstratorException(
+                    "Timed out after "+str(self.timeout)+" seconds."
+                )
+            time.sleep(self.check_every-(elapsed%self.check_interval)))
+
+    def run(self):
+        """ Run the batch process. """
+        self.start_thread()
+        self.monitor_thread()
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #

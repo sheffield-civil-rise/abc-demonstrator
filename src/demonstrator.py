@@ -66,50 +66,7 @@ class Demonstrator:
                 paths_to_init_files=[camera_init0, camera_init1],
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
-        batch_pcssr.start_thread()
-        recon_thread_running = batch_pcssr.thread.isRunning
-        # Pause execution while photogrammetry running externally.
-        start_time = time.time()
-        while True:
-            if not recon_thread_running():
-                break
-            if (time.time()-start_time) > self.timeout:
-                raise DemonstratorException(
-                    "Timed out after "+str(self.timeout)+" seconds."
-                )
-            time.sleep(
-                self.check_every-((time.time()-start_time)%self.check_every)
-            )
-
-#    def run_batch_processes(self):
-#        camera_init_0 = \
-#            os.path.join(
-#                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_FILENAME
-#            )
-#        camera_init_1 = \
-#            os.path.join(
-#                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_LABEL_FILENAME
-#            )
-#        recon_thread_running = \
-#            batch_process(
-#                self.rec_dir_gen.path_to_output_images,
-#                "custom",
-#                cache=self.path_to_cache,
-#                init=[camera_init_0, camera_init_1],
-#                label_dir=self.rec_dir_gen.path_to_labelled_images
-#            )
-#        # Pause execution while photogrammetry running externally.
-#        start_time = time.time()
-#        while True:
-#            if not recon_thread_running():
-#                break
-#            if (time.time()-start_time) > self.timeout:
-#                raise DemonstratorException(
-#                    "Timed out after "+str(self.timeout)+" seconds."
-#                )
-#            time.sleep(
-#                self.check_every-((time.time()-start_time)%self.check_every)
-#            )
+        batch_pcssr.run()
 
     def demonstrate(self):
         """ Run the demonstrator script. """
