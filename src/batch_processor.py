@@ -86,6 +86,8 @@ class BatchProcessor:
     def get_views_and_instrinsics(self):
         """ Fill in these fields. """
         if self.two_way:
+            self.views = [None, None]
+            self.intrinsics = [None, None]
             self.views[0], self.intrinsics[0] = \
                 check_and_read_sfm(self.paths_to_init_files[0])
             self.views[1], self.intrinsics[1] = \
