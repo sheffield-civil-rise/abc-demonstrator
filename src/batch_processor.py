@@ -60,6 +60,8 @@ class BatchProcessor:
         self.discern_pipeline()
         self.files_by_type = multiview.FilesByType()
         self.graph = Graph(name=self.pipeline)
+        self.modify_graph()
+        self.make_function_to_run()
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
