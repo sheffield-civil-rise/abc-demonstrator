@@ -6,7 +6,7 @@ import numpy as np
 
 from o_generate_recon_dir import autogenerate as generate_recon_dir
 from o_batch_process import run as batch_process
-from calculate_height import main as calculate_height
+from o_calculate_height import main as calculate_height
 from calculate_wwr import calculate as calculate_wwr
 
 from generate_idf import main as generate_energy_model
