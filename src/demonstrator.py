@@ -7,7 +7,6 @@ import argparse
 import os
 import shutil
 import sys
-import time
 
 # Non-standard imports.
 import numpy
@@ -29,12 +28,8 @@ class Demonstrator:
     """ The class in question. """
     def __init__(
             self,
-            timeout=config.DEFAULT_DEMO_TIMEOUT,
-            check_every=config.DEFAULT_CHECK_EVERY,
             path_to_output=config.DEFAULT_PATH_TO_DEMO_OUTPUT
         ):
-        self.timeout = timeout # In seconds.
-        self.check_every = check_every # In seconds.
         self.path_to_output = path_to_output
         self.rec_dir_gen = None
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
