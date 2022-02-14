@@ -50,7 +50,6 @@ class BatchProcessor:
     def __post_init__(self):
         meshroom.setupEnvironment()
         self.auto_initialise_path_to_cache()
-        self.
 
     if args.cameraInit_mask is not None:
         if args.cameraInit is not None:
