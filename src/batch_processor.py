@@ -154,7 +154,7 @@ class BatchProcessor:
                     else meshroom.core.defaultCacheFolder
             )
 
-    def make_function_to_run(self):
+    def start_thread(self):
         """ Return the batch processing function. """
         task_manager = TaskManager()
         task_manager.compute(self.graph, toNodes=None)
