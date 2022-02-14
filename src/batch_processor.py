@@ -59,6 +59,7 @@ class BatchProcessor:
         self.auto_initialise_path_to_cache()
         self.discern_pipeline()
         self.files_by_type = multiview.FilesByType()
+        self.get_views_and_instrinsics()
         self.graph = Graph(name=self.pipeline)
         self.modify_graph()
         self.make_function_to_run()
