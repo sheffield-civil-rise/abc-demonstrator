@@ -137,7 +137,7 @@ class BatchProcessor:
                 camera_init.viewpoints.extend(self.views)
                 camera_init.intrinsics.resetValue()
                 camera_init.intrinsics.extend(self.intrinsics)
-            if not graph.canComputeLeaves:
+            if not self.graph.canComputeLeaves:
                 raise BatchProcessorError(
                     "Graph cannot be computed. Check compatibility."
                 )
