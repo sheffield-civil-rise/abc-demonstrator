@@ -49,7 +49,6 @@ class Demonstrator:
                 self.path_to_output, self.rec_dir_gen.CAMERA_INIT_LABEL_FILENAME
             )
         ]
-        return result
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
