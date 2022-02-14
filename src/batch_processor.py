@@ -149,9 +149,6 @@ class BatchProcessor:
                     camera_init.nodeDesc.buildIntrinsics(
                         cameraInit, self.files_by_type.images
                     )
-            if self.paths_to_init_files:
-                camera_init.viewpoints.value = self.views
-                camera_init.intrinsics.value = self.intrinsics
             self.graph.cacheDir = (
                 self.path_to_cache
                     if self.path_to_cache
