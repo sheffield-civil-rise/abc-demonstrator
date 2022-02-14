@@ -7,7 +7,7 @@ import os
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import ClassVar
+from typing import Callable, ClassVar
 
 # Non-standard imports.
 import meshroom
@@ -33,11 +33,17 @@ class BatchProcessor:
     pipeline: str = "custom"
     node_output: list = field(default_factory=list) # TODO: Ask about renaming this.
     path_to_cache: str = os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "cache")
-    paths_to_structure_from_motion_files: list = field(default_factory=list)
+    paths_to_init_files: list = field(default_factory=list) # I.e. SFM files.
     path_to_labelled_images: str = None
     # Generated fields.
     has_searched_for_images: bool = False
-    flag_two_way: bool = False
+    two_way: bool = False
+    single_track: bool = False
+    views: list = field(default_factory=list)
+    intrinsics: list = field(default_factory=list)
+    files_by_type: list = None
+    graph: Graph = None
+    function_to_run: Callable = None
 
     # Class attributes.
     SWITCH_NODE: ClassVar[dict] = {
@@ -46,33 +52,14 @@ class BatchProcessor:
         "panoramafisheyehdr": multiview.panoramaFisheyeHdr,
         "custom": build_graph
     }
+    INIT_NODE_TYPE: ClassVar[str] = "CameraInit"
 
     def __post_init__(self):
         meshroom.setupEnvironment()
         self.auto_initialise_path_to_cache()
-
-    if args.cameraInit_mask is not None:
-        if args.cameraInit is not None:
-            print('running twoway pipeline')
-            run(
-                input, 'custom',
-                cache=os.path.abspath(cache),
-                init=[args.cameraInit_mask, args.cameraInit],
-                label_dir=args.labels)
-        else:
-            print('running only masked cameraInit')
-            run(
-                input, 'custom',
-                cache=os.path.abspath(cache),
-                init=args.cameraInit_mask,
-                label_dir=args.labels)
-    else:
-        print('running single pipeline')
-        run(
-            input, 'custom',
-            cache=os.path.abspath(cache),
-            init=args.cameraInit,
-            label_dir=args.labels)
+        self.discern_pipeline()
+        self.files_by_type = multiview.FilesByType()
+        self.graph = Graph(name=self.pipeline)
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
@@ -82,74 +69,94 @@ class BatchProcessor:
         if not os.path.exists(self.path_to_cache):
             os.makedirs(self.path_to_cache)
 
-    def run(self):
-        """ Run the batch processes in question. """
-        views, intrinsics = [], []  # todo: autocalculate
-        files_by_type = multiview.FilesByType()
-        if len(self.paths_to_structure_from_motion_files) >= 2:
-            views_0, intrinsics_0 = check_and_read_sfm(self.paths_to_structure_from_motion_files[0])
-            views_1, intrinsics_1 = check_and_read_sfm(self.paths_to_structure_from_motion_files[1])
-        elif len(self.paths_to_structure_from_motion_files) == 1:
-            views, intrinsics = check_and_read_sfm(self.paths_to_structure_from_motion_files[0])
+    def discern_pipeline(self):
+        """ Find out what kind of pipleline we're running. """
+        if len(self.paths_to_init_files) == 2:
+            print("Running two-way pipeline...")
+            self.two_way = True
+        elif len(self.paths_to_init_files) == 1:
+            print("Running only masked cameraInit...") # TODO: Ask about rephrasing this.
         else:
-            print(search_recursively)
-            files_by_type.extend(
+            print("Running single pipeline...")
+            self.single_track = True
+
+    def get_views_and_instrinsics(self):
+        """ Fill in these fields. """
+        if self.two_way:
+            self.views[0], self.intrinsics[0] = \
+                check_and_read_sfm(self.paths_to_init_files[0])
+            self.views[1], self.intrinsics[1] = \
+                check_and_read_sfm(self.paths_to_init_files[1])
+        elif self.single_track:
+            self.files_by_type.extend(
                 multiview.findFilesByTypeInFolder(
-                    input, recursive=search_recursively
+                    self.path_to_output_images,
+                    recursive=self.search_recursively
                 )
             )
-            if not files_by_type.images:
+            if not self.files_by_type.images:
                 print("Input unable to complete.")
                 sys.exit(1)
-        graph = Graph(name=pipeline)
-        with multiview.GraphModification(graph):
+        else:
+            self.views, self.intrinsics = \
+                check_and_read_sfm(self.paths_to_init_files[0])
+
+    def modify_graph(self):
+        """ Make some final modifications to our graph field. """
+        with multiview.GraphModification(self.graph):
             try:
-                switchNode[pipeline.lower()](
-                    inputViewpoints=views,
-                    inputIntrinsics=intrinsics,
+                self.SWITCH_NODE[self.pipeline.lower()](
+                    inputViewpoints=self.views,
+                    inputIntrinsics=self.intrinsics,
                     output=self.node_output,
-                    graph=graph,
-                    init=self.paths_to_structure_from_motion_files,
+                    graph=self.graph,
+                    init=self.paths_to_init_files,
                     label_dir=self.path_to_labelled_images
                 )
             except KeyError:
-                graph.load(pipeline)
+                self.graph.load(self.pipeline)
             if self.flag_two_way:
-                camera_inits = graph.nodesOfType("CameraInit")
+                camera_inits = graph.nodesOfType(self.INIT_NODE_TYPE)
                 camera_inits[0].viewpoints.resetValue()
-                camera_inits[0].viewpoints.extend(views_0)
+                camera_inits[0].viewpoints.extend(self.views[0])
                 camera_inits[0].intrinsics.resetValue()
-                camera_inits[0].intrinsics.extend(intrinsics_0)
+                camera_inits[0].intrinsics.extend(self.intrinsics[0])
                 camera_inits[1].viewpoints.resetValue()
-                camera_inits[1].viewpoints.extend(views_1)
+                camera_inits[1].viewpoints.extend(self.views[1])
                 camera_inits[1].intrinsics.resetValue()
-                camera_inits[1].intrinsics.extend(intrinsics_1)
+                camera_inits[1].intrinsics.extend(self.intrinsics[1])
             else:
-                camera_init = getOnlyNodeOfType(graph, "CameraInit")
+                camera_init = getOnlyNodeOfType(self.graph, self.INIT_NODE_TYPE)
                 camera_init.viewpoints.resetValue()
-                camera_init.viewpoints.extend(views)
+                camera_init.viewpoints.extend(self.views)
                 camera_init.intrinsics.resetValue()
-                camera_init.intrinsics.extend(intrinsics)
+                camera_init.intrinsics.extend(self.intrinsics)
             if not graph.canComputeLeaves:
                 raise BatchProcessorError(
-                    "Graph cannot be computed. Check compatibility"
+                    "Graph cannot be computed. Check compatibility."
                 )
             if self.node_output:
                 publish = get_only_node_of_type(graph, "Publish")
                 publish.output.value = self.node_output
-            if files_by_type.images:
-                views, intrinsics = \
+            if self.files_by_type.images:
+                self.views, self.intrinsics = \
                     camera_init.nodeDesc.buildIntrinsics(
-                        cameraInit, files_by_type.images
+                        cameraInit, self.files_by_type.images
                     )
-            if self.paths_to_structure_from_motion_files:
-                camera_init.viewpoints.value = views
-                camera_init.intrinsics.value = intrinsics
-            graph.cacheDir = cache if cache else meshroom.core.defaultCacheFolder
-        to_nodes = None
+            if self.paths_to_init_files:
+                camera_init.viewpoints.value = self.views
+                camera_init.intrinsics.value = self.intrinsics
+            self.graph.cacheDir = (
+                self.path_to_cache
+                    if self.path_to_cache
+                    else meshroom.core.defaultCacheFolder
+            )
+
+    def make_function_to_run(self):
+        """ Return the batch processing function. """
         task_manager = TaskManager()
-        task_manager.compute(graph, toNodes=to_nodes)
-        return (lambda: taskManager._thread.isRunning())
+        task_manager.compute(self.graph, toNodes=None)
+        self.function_to_run = lambda: taskManager._thread.isRunning()
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
