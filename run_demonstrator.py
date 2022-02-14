@@ -6,7 +6,7 @@ This code defines a script which in turn runs the demonstrator script.
 import subprocess
 
 # Local constants.
-PATH_TO_DEMONSTRATOR_SCRIPT = r"G:\photogrammetry_e110a\src\demonstrator.py"
+PATH_TO_DEMONSTRATOR_SCRIPT = r"G:\photogrammetry_e110a\src\demonstrator_old.py"
 
 ###################
 # RUN AND WRAP UP #
