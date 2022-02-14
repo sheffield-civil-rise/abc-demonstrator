@@ -75,9 +75,9 @@ class Demonstrator:
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
-        sfm_base = os.path.join(cache_dir, "SfMTransfer")
+        sfm_base = os.path.join(self.path_to_cache, "SfMTransfer")
         sfm_base = os.path.join(sfm_base, os.listdir(sfm_base)[-1])
-        mesh_base = os.path.join(cache_dir, "Texturing")
+        mesh_base = os.path.join(self.path_to_cache, "Texturing")
         mesh_base = os.path.join(mesh_base, os.listdir(mesh_base)[0])
         path_to_reference = self.paths_to_init_files[1]
         path_to_sfm = os.path.join(sfm_base, "cameras.sfm")
