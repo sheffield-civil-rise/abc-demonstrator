@@ -39,7 +39,7 @@ class Demonstrator:
         self.batch_processor = None
         self.height_calculator = None
 
-    def make_camera_init(self):
+    def make_paths_to_init_files(self):
         """ Make the paths to these special files. """
         self.paths_to_init_files = [
             os.path.join(
