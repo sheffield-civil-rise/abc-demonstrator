@@ -123,7 +123,6 @@ class BatchProcessor:
             except KeyError:
                 self.graph.load(self.pipeline)
             if self.two_way:
-                print(len(self.views))
                 camera_inits = self.graph.nodesOfType(self.INIT_NODE_TYPE)
                 camera_inits[0].viewpoints.resetValue()
                 camera_inits[0].viewpoints.extend(self.views[0])
@@ -173,7 +172,7 @@ class BatchProcessor:
                 raise DemonstratorException(
                     "Timed out after "+str(self.timeout)+" seconds."
                 )
-            time.sleep(self.check_every-(elapsed%self.check_interval))
+            time.sleep(self.check_interval-(elapsed%self.check_interval))
 
     def run(self):
         """ Run the batch process. """
