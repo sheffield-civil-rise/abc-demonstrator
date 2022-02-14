@@ -118,7 +118,7 @@ class BatchProcessor:
             except KeyError:
                 self.graph.load(self.pipeline)
             if self.two_way:
-                camera_inits = graph.nodesOfType(self.INIT_NODE_TYPE)
+                camera_inits = self.graph.nodesOfType(self.INIT_NODE_TYPE)
                 camera_inits[0].viewpoints.resetValue()
                 camera_inits[0].viewpoints.extend(self.views[0])
                 camera_inits[0].intrinsics.resetValue()
