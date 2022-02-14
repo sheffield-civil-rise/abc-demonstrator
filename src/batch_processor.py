@@ -173,7 +173,7 @@ class BatchProcessor:
                 raise DemonstratorException(
                     "Timed out after "+str(self.timeout)+" seconds."
                 )
-            time.sleep(self.check_every-(elapsed%self.check_interval)))
+            time.sleep(self.check_every-(elapsed%self.check_interval))
 
     def run(self):
         """ Run the batch process. """
