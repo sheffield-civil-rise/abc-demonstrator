@@ -14,7 +14,7 @@ import meshroom
 from meshroom import multiview
 from meshroom.nodes.aliceVision.CameraInit import readSfMData
 from meshroom.core.graph import Graph
-from meshroom.core.taskManager import TaskManager
+from meshroom.core.taskManager import TaskManager, TaskThread
 
 # Local imports.
 import config
@@ -43,7 +43,7 @@ class BatchProcessor:
     intrinsics: list = field(default_factory=list)
     files_by_type: list = None
     graph: Graph = None
-    function_to_run: Callable = None
+    thread: TaskThread = None
 
     # Class attributes.
     SWITCH_NODE: ClassVar[dict] = {
@@ -61,7 +61,6 @@ class BatchProcessor:
         self.files_by_type = multiview.FilesByType()
         self.get_views_and_instrinsics()
         self.make_graph()
-        self.make_function_to_run()
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
@@ -159,7 +158,7 @@ class BatchProcessor:
         """ Return the batch processing function. """
         task_manager = TaskManager()
         task_manager.compute(self.graph, toNodes=None)
-        self.function_to_run = (lambda: taskManager._thread.isRunning())
+        self.thread = task_manager._thread
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #

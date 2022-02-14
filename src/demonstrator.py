@@ -66,7 +66,8 @@ class Demonstrator:
                 paths_to_init_files=[camera_init0, camera_init1],
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
-        recon_thread_running = batch_pcssr.function_to_run
+        batch_pcssr.start_thread()
+        recon_thread_running = batch_pcssr.thread.isRunning
         # Pause execution while photogrammetry running externally.
         start_time = time.time()
         while True:
