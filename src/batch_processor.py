@@ -60,8 +60,7 @@ class BatchProcessor:
         self.discern_pipeline()
         self.files_by_type = multiview.FilesByType()
         self.get_views_and_instrinsics()
-        self.graph = Graph(name=self.pipeline)
-        self.modify_graph()
+        self.get_graph()
         self.make_function_to_run()
 
     def auto_initialise_path_to_cache(self):
@@ -106,8 +105,9 @@ class BatchProcessor:
             self.views, self.intrinsics = \
                 check_and_read_sfm(self.paths_to_init_files[0])
 
-    def modify_graph(self):
-        """ Make some final modifications to our graph field. """
+    def make_graph(self):
+        """ Make our graph field. """
+        self.graph = Graph(name=self.pipeline)
         with multiview.GraphModification(self.graph):
             try:
                 self.SWITCH_NODE[self.pipeline.lower()](
@@ -159,7 +159,7 @@ class BatchProcessor:
         """ Return the batch processing function. """
         task_manager = TaskManager()
         task_manager.compute(self.graph, toNodes=None)
-        self.function_to_run = lambda: taskManager._thread.isRunning()
+        self.function_to_run = (lambda: taskManager._thread.isRunning())
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
