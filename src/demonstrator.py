@@ -63,7 +63,7 @@ class Demonstrator:
                 path_to_output_images=self.rec_dir_gen.path_to_output_images,
                 pipeline="custom",
                 path_to_cache=self.path_to_cache,
-                paths_to_init_files: [camera_init0, camera_init1]
+                paths_to_init_files=[camera_init0, camera_init1]
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
         recon_thread_running = batch_pcssr.function_to_run
@@ -79,7 +79,6 @@ class Demonstrator:
             time.sleep(
                 self.check_every-((time.time()-start_time)%self.check_every)
             )
-
 
 #    def run_batch_processes(self):
 #        camera_init_0 = \
