@@ -157,6 +157,7 @@ class BatchProcessor:
                     if self.path_to_cache
                     else meshroom.core.defaultCacheFolder
             )
+        print(self.graph.toDict())
 
     def start(self):
         self.thread.start()
