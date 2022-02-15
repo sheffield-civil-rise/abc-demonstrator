@@ -140,7 +140,7 @@ def run(input, pipeline, output=[], cache=[], save=[], init=None, label_dir=None
     taskManager = TaskManager()
     taskManager.compute(graph, toNodes=toNodes)
 
-    print("GRAPH NODES: "+len(graph._nodes))
+    print("GRAPH NODES: "+str(len(graph._nodes)))
 
     return (lambda: taskManager._thread.isRunning())
 
