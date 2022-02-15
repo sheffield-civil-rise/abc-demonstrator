@@ -381,6 +381,8 @@ class ReconstructionDirGenerator:
 
     def generate_output_directory(self):
         """ Copy the files necessary to create the working environment. """
+        self.path_to_output_images = \
+            os.path.join(self.path_to_output, "images")
         if os.path.isdir(self.path_to_output):
             if self.expedite:
                 return
@@ -388,8 +390,6 @@ class ReconstructionDirGenerator:
                 "Output directory at "+self.path_to_output+" already exists."
             )
         os.makedirs(self.path_to_output)
-        self.path_to_output_images = \
-            os.path.join(self.path_to_output, "images")
         os.mkdir(self.path_to_output_images)
         for index, row in self.file_paths.iterrows():
             image = \
