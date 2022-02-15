@@ -30,7 +30,7 @@ class Demonstrator:
     def __init__(
             self,
             path_to_output=config.DEFAULT_PATH_TO_DEMO_OUTPUT,
-            expedite=True
+            expedite=False
         ):
         self.path_to_output = path_to_output
         self.expedite = expedite
