@@ -77,7 +77,7 @@ def run(input, pipeline, output=[], cache=[], save=[], init=None, label_dir=None
             print("Input unable to complete")
             sys.exit(-1)
 
-    graph = Graph(name=pipeline)
+    graph = Graph(name=pipeline) 
 
     print("views: "+str(len(views)))
     print("intrinsics: "+str(len(intrinsics)))
