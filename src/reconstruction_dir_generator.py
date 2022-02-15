@@ -603,7 +603,8 @@ class ReconstructionDirGenerator:
                     self.path_to_labelled_images,
                     index+self.output_image_extension
                 )
-            os.rename(file_path, new_name)
+            if not os.path.exists(new_name):
+                os.rename(file_path, new_name)
 
     def generate(self):
         """ Generate the reconstruction directory. """
