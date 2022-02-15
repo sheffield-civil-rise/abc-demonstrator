@@ -620,18 +620,10 @@ def autogenerate(args):
     print("generating working directory")
     generate_working_directory(selection, args.dir, out_dir = args.out)
 
-    try:
-        print(os.listdir(mask_dir))
-    except:
-        print("Masked directory doesn't exist yet! (A)")
     print("labelling images")
     label_directory(
         os.path.join(args.out, "images"),
         os.path.join(args.out, "labels"))
-    try:
-        print(os.listdir(mask_dir))
-    except:
-        print("Masked directory doesn't exist yet! (B)")
     print("\nmasking images")
     mask_all_images(
         os.path.join(args.out, "images"),
