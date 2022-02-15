@@ -204,5 +204,6 @@ def run_task_manager(graph):
     task_manager = TaskManager()
     task_manager.compute(graph, toNodes=None)
     while task_manager._thread.isRunning():
-        print("LOOP: "str(index))
+        index = index+1
+        print("LOOP: "+str(index))
         time.sleep(30)
