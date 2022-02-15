@@ -19,7 +19,7 @@ done
 # Let's get cracking...
 git add .
 git commit -m "Debugging..." || echo "Let's not worry about that..."
-git push origin $BRANCH || echo "Let's not worry about that..."
+git push origin $BRANCH
 if $old_flag; then
     python3 check_with_hansel.py --old
 else
