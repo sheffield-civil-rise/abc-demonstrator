@@ -125,7 +125,7 @@ def run(input, pipeline, output=[], cache=[], save=[], init=None, label_dir=None
             cameraInit.intrinsics.value = intrinsics
         #
         # print('===========')
-        # print(cache)
+        # print(cache) 
         # print('==========')
 
         graph.cacheDir = cache if cache else meshroom.core.defaultCacheFolder
