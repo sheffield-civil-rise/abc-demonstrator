@@ -159,8 +159,9 @@ class BatchProcessor:
             )
 
     def start(self):
-        self.thread.start()
-        self.thread.join(timeout=self.timeout)
+        #self.thread.start()
+        #self.thread.join(timeout=self.timeout)
+        run_task_manager(self.graph)
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
