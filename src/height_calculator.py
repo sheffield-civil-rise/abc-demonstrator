@@ -53,8 +53,8 @@ class HeightCalculator:
     def make_transform(self):
         """ Calculate the transformation between relative and reference
         spaces. """
-        reference = read_sfm(self.path_to_reference)
-        reconstruction = read_sfm(self.path_to_sfm)
+        reference = read_sfm_as_dict(self.path_to_reference)
+        reconstruction = read_sfm_as_dict(self.path_to_sfm)
         _, rcn_centers = get_geometries(reconstruction["poses"])
         _, ref_centers = get_geometries(reference["poses"], match=rcn_centers)
         self.transform, _, _ = \
@@ -122,4 +122,10 @@ def load_mesh(path_to):
     os.chdir(mesh_base)  # Change directory to read to avoid textures issues.
     result = open3d.io.read_triangle_mesh(filename)
     os.chdir(cwd)
+    return result
+
+def read_sfm_as_dict(path_to, encoding=config.DEFAULT_ENCODING):
+    """ Read an SFM file and return dictionary with the data therein. """
+    with open(path_to, "r", encoding=encoding) as sfm_file:
+        result = json.load(sfm_file)
     return result
