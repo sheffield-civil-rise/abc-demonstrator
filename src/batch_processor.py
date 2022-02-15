@@ -8,6 +8,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
+from threading import Thread
 from typing import Callable, ClassVar
 
 # Non-standard imports.
@@ -46,7 +47,7 @@ class BatchProcessor:
     intrinsics: list = field(default_factory=list)
     files_by_type: list = None
     graph: Graph = None
-    thread: TaskThread = None
+    thread: Thread = None
 
     # Class attributes.
     SWITCH_NODE: ClassVar[dict] = {
@@ -64,6 +65,7 @@ class BatchProcessor:
         self.files_by_type = multiview.FilesByType()
         self.get_views_and_instrinsics()
         self.make_graph()
+        self.thread = Thread(target=run_task_manager, args=(self.graph))
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
@@ -156,28 +158,9 @@ class BatchProcessor:
                     else meshroom.core.defaultCacheFolder
             )
 
-    def start_thread(self):
-        """ Return the batch processing function. """
-        task_manager = TaskManager()
-        task_manager.compute(self.graph, toNodes=None)
-        self.thread = task_manager._thread
-
-    def monitor_thread(self):
-        """ Enter a loop, and stay in it until the process is finished, or we
-        decide it's timed out. """
-        start_time = time.time()
-        while self.thread.isRunning():
-            elapsed = time.time()-start_time
-            if elapsed > self.timeout:
-                raise DemonstratorException(
-                    "Timed out after "+str(self.timeout)+" seconds."
-                )
-            time.sleep(self.check_interval-(elapsed%self.check_interval))
-
-    def run(self):
-        """ Run the batch process. """
-        self.start_thread()
-        self.monitor_thread()
+    def start(self):
+        self.thread.start()
+        self.thread.join(timeout=self.timeout)
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
@@ -215,3 +198,9 @@ def check_and_read_sfm(path_to):
             "File at "+path_to+" is not a structure from motion file."
         )
     return readSfMData(path_to)
+
+def run_task_manager(graph)
+    task_manager = TaskManager()
+    task_manager.compute(self.graph, toNodes=None)
+    while task_manager._thread.isRunning():
+        pass

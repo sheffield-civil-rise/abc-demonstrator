@@ -31,8 +31,6 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    #generate_recon_dir(args_0)
-    #wd_path = r"G:\demonstrator_output\working_dir"
     wd_path = generate_recon_dir(args_0)
 
     image_dir = os.path.join(wd_path, 'images')
@@ -44,7 +42,7 @@ def run(args):
 
     print('caching at {}'.format(cache_dir))
 
-    recon_thread_running = batch_process( # As of 10 Feb 2022, this is where the script crashes.
+    recon_thread_running = batch_process(
         image_dir,
         'custom',
         cache=cache_dir,
@@ -90,7 +88,7 @@ def run(args):
     args_2.output = os.path.join(args.wd, args.id + '_autogenerate.idf')
     args_2.outdir = os.path.join(args.wd, args.id + '_autogenerate')
 
-    generate_energy_model(args_2)
+    generate_energy_model(args_2) # As of 15 Feb 2022, this is where the script crashes.
 
 
 if __name__ == "__main__":
