@@ -122,6 +122,12 @@ class BatchProcessor:
                     init=self.paths_to_init_files,
                     label_dir=self.path_to_labelled_images
                 )
+            print("views: "+str(self.views))
+            print("intrinsics: "+str(self.views))
+            print("output: "+str(self.node_output))
+            print("graph: "+str(self.graph))
+            print("init: "+str(self.paths_to_init_files))
+            print("label_dir: "+str(self.path_to_labelled_images))
             except KeyError:
                 self.graph.load(self.pipeline)
             if self.two_way:
