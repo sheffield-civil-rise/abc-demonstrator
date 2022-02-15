@@ -559,10 +559,6 @@ def mask_image(im, mask):
 
 
 def mask_all_images(img_dir, mask_dir, out_dir):
-    try:
-        print(os.listdir(mask_dir))
-    except:
-        print("Masked directory doesn't exist yet! (0)")
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 
