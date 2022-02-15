@@ -79,6 +79,12 @@ def run(input, pipeline, output=[], cache=[], save=[], init=None, label_dir=None
 
     graph = Graph(name=pipeline)
 
+    print("views: "+str(len(views[0]))+", "+str(len(views[1])))
+    print("intrinsics: "+str(len(intrinsics[0]))+", "+str(len(intrinsics[1])))
+    print("output: "+str(output))
+    print("graph: "+str(graph))
+    print("init: "+str(init))
+    print("label_dir: "+str(label_dir))
     with multiview.GraphModification(graph):
         try:
             switchNode[pipeline.lower()](
