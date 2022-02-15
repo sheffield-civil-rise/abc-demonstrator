@@ -31,8 +31,9 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    generate_recon_dir(args_0)
-    wd_path = r"G:\demonstrator_output\working_dir"
+    #generate_recon_dir(args_0)
+    #wd_path = r"G:\demonstrator_output\working_dir"
+    wd_path = generate_recon_dir(args_0)
 
     image_dir = os.path.join(wd_path, 'images')
     label_dir = os.path.join(wd_path, 'labels')
