@@ -65,7 +65,7 @@ class BatchProcessor:
         self.files_by_type = multiview.FilesByType()
         self.get_views_and_instrinsics()
         self.make_graph()
-        self.thread = Thread(target=run_task_manager, args=(self.graph))
+        self.thread = Thread(target=run_task_manager, args=(self.graph,))
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
