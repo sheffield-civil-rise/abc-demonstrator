@@ -63,7 +63,7 @@ def run_on_hansel(
         "--env-name", env_name
     ]
     if old:
-        arguments = arguments.append("--old")
+        arguments.append("--old")
     try:
         if hide_output:
             subprocess.run(arguments, check=True, stdout=subprocess.DEVNULL)
