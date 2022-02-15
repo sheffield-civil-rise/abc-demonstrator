@@ -200,7 +200,9 @@ def check_and_read_sfm(path_to):
     return readSfMData(path_to)
 
 def run_task_manager(graph):
+    index = 0
     task_manager = TaskManager()
     task_manager.compute(graph, toNodes=None)
     while task_manager._thread.isRunning():
-        pass
+        print("LOOP: "str(index))
+        time.sleep(30)
