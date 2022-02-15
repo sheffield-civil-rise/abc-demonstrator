@@ -159,9 +159,7 @@ class BatchProcessor:
                         cameraInit, self.files_by_type.images
                     )
             self.graph.cacheDir = (
-                self.path_to_cache
-                    if self.path_to_cache
-                    else meshroom.core.defaultCacheFolder
+                self.path_to_cache if self.path_to_cache else meshroom.core.defaultCacheFolder
             )
 
     def start(self):
