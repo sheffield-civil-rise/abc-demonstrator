@@ -199,7 +199,7 @@ def check_and_read_sfm(path_to):
         )
     return readSfMData(path_to)
 
-def run_task_manager(graph)
+def run_task_manager(graph):
     task_manager = TaskManager()
     task_manager.compute(self.graph, toNodes=None)
     while task_manager._thread.isRunning():
