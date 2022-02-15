@@ -7,6 +7,7 @@ is running correctly.
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 # Constants.
@@ -46,6 +47,7 @@ def run_on_hansel(
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
         branch=DEFAULT_BRANCH,
+        old=False,
         hide_output=False
     ):
     """ Call the shell script with the correct arguments. """
@@ -60,6 +62,8 @@ def run_on_hansel(
         "--path-to-activate-script", path_to_activate_script,
         "--env-name", env_name
     ]
+    if old:
+        arguments = arguments.append("--old")
     try:
         if hide_output:
             subprocess.run(arguments, check=True, stdout=subprocess.DEVNULL)
@@ -75,12 +79,16 @@ def run_on_hansel(
 
 def run():
     """ Run this file. """
+    old = False
+    if "--old" in sys.argv:
+        old = True
     security_dict = get_security_dict()
     result = \
         run_on_hansel(
             security_dict["personal_access_token"],
             security_dict["ssh_id"],
-            security_dict["ssh_password"]
+            security_dict["ssh_password"],
+            old=old
         )
     return result
 

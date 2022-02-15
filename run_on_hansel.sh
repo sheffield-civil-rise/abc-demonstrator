@@ -27,6 +27,7 @@ next_is_path_to_activate_script=false
 path_to_activate_script=false
 next_is_env_name=false
 env_name=false
+old_flag=false
 for argument in $@; do
     if [ $argument = "--git-url" ]; then
         next_is_git_url=true
@@ -63,6 +64,8 @@ for argument in $@; do
     elif $next_is_env_name; then
         env_name=$argument
         next_is_env_name=false
+    elif [ $argument = "--old" ]; then
+        old_flag=true
     fi
 done
 if [ ! git_url ]; then
@@ -71,7 +74,17 @@ if [ ! git_url ]; then
     exit 1
 fi
 
+# Set variables.
+if $old_flag; then
+    path_to_demonstrator_script="$PATH_TO_REPO\run_demonstrator_old.py"
+else
+    path_to_demonstrator_script="$PATH_TO_REPO\run_demonstrator.py"
+fi
+
 # Let's get cracking.
+if $old_flag; then
+    echo "Running the OLD version!"
+fi
 sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
     git -C $PATH_TO_REPO checkout $branch
     git -C $PATH_TO_REPO pull $git_url $branch
@@ -79,5 +92,5 @@ sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
         exit 1
     )
     $PATH_TO_ACTIVATE_SCRIPT $ENV_NAME
-    python $PATH_TO_REPO\run_demonstrator_old.py
+    python $path_to_demonstrator_script
 ENDSSH
