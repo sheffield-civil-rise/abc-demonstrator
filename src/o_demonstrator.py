@@ -11,22 +11,7 @@ from calculate_wwr import calculate as calculate_wwr
 
 from generate_idf import main as generate_energy_model
 
-import shutil
-
-import config
-from reconstruction_dir_generator import ReconstructionDirGenerator
-
 TIME_TOO_LONG = 7200  # seconds (2 hours)
-
-def generate_reconstruction_dir(
-        path_to_output=config.DEFAULT_PATH_TO_DEMO_OUTPUT
-    ):
-    """ Run the generator class, deleting any existing output as necessary. """
-    if os.path.exists(path_to_output):
-        shutil.rmtree(path_to_output)
-    rec_dir_gen = ReconstructionDirGenerator(path_to_output=path_to_output)
-    result = rec_dir_gen.generate()
-    return result
 
 def run(args):
 
@@ -46,11 +31,8 @@ def run(args):
 
     args_0.polygon = os.path.abspath(args.polygon)
 
-    generate_reconstruction_dir()
-    wd_path = r"G:\photogrammetry_output_demo"
-
-    #generate_recon_dir(args_0)
-    #wd_path = r"G:\demonstrator_output\working_dir"
+    generate_recon_dir(args_0)
+    wd_path = r"G:\demonstrator_output\working_dir"
 
     image_dir = os.path.join(wd_path, 'images')
     label_dir = os.path.join(wd_path, 'labels')
