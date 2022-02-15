@@ -159,6 +159,7 @@ class BatchProcessor:
             )
 
     def start(self):
+        print("GRAPH NODES: "+len(self.graph._nodes))
         #self.thread.start()
         #self.thread.join(timeout=self.timeout)
         run_task_manager(self.graph)
@@ -204,7 +205,9 @@ def run_task_manager(graph):
     index = 0
     task_manager = TaskManager()
     task_manager.compute(graph, toNodes=None)
-    while task_manager._thread.isRunning():
-        index = index+1
-        print("LOOP: "+str(index))
-        time.sleep(30)
+    print("Sleeping for 8 minutes...")
+    time.sleep(480)
+    #while task_manager._thread.isRunning():
+    #    index = index+1
+    #    print("LOOP: "+str(index))
+    #    time.sleep(30)
