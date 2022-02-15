@@ -79,5 +79,5 @@ sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
         exit 1
     )
     $PATH_TO_ACTIVATE_SCRIPT $ENV_NAME
-    python $PATH_TO_REPO\run_demonstrator.py
+    python $PATH_TO_REPO\run_demonstrator_old.py
 ENDSSH
