@@ -30,10 +30,10 @@ class Demonstrator:
     def __init__(
             self,
             path_to_output=config.DEFAULT_PATH_TO_DEMO_OUTPUT,
-            from_the_top=False
+            expedite=True
         ):
         self.path_to_output = path_to_output
-        self.from_the_top = from_the_top
+        self.expedite = expedite
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
         # Generated fields.
         self.rec_dir_gen = None
@@ -44,10 +44,12 @@ class Demonstrator:
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
         necessary. """
-        if os.path.exists(self.path_to_output):
+        if os.path.exists(self.path_to_output) and not self.expedite:
             shutil.rmtree(self.path_to_output)
         self.rec_dir_gen = \
-            ReconstructionDirGenerator(path_to_output=self.path_to_output)
+            ReconstructionDirGenerator(
+                path_to_output=self.path_to_output, expedite=self.expedite
+            )
         self.rec_dir_gen.generate()
         self.make_paths_to_init_files()
 
@@ -93,8 +95,7 @@ class Demonstrator:
 
     def demonstrate(self):
         """ Run the demonstrator script. """
-        if self.from_the_top or not os.path.exists(self.path_to_output):
-            self.make_and_run_reconstruction_dir_generator()
+        self.make_and_run_reconstruction_dir_generator()
         self.make_and_run_batch_processor()
         self.make_and_run_height_calculator()
         print("THIS IS AS FAR AS THE SCRIPT SHOULD GET RIGHT NOW")

@@ -47,6 +47,7 @@ class ReconstructionDirGenerator:
     field_of_view: float = config.DEFAULT_FIELD_OF_VIEW
     output_image_extension: str = config.DEFAULT_OUTPUT_IMAGE_EXTENSION
     number_of_cameras: int = config.DEFAULT_NUMBER_OF_CAMERAS
+    expedite: bool = True
     # Generated fields.
     path_to_output_images: str = None
     path_to_labelled_images: str = None
@@ -418,6 +419,8 @@ class ReconstructionDirGenerator:
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
+        if os.path.exists(self.path_to_labelled_images) and self.expedite:
+            return
         for index, path in enumerate(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
@@ -464,6 +467,8 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
         img_list = get_img_paths(self.path_to_output_images)
+        if os.path.exists(self.path_to_masked_images) and self.expedite:
+            return
         for index, path in enumerate(img_list):
             base, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
