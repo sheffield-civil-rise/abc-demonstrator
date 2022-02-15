@@ -57,10 +57,10 @@ class Demonstrator:
         """ Make the paths to these special files. """
         self.paths_to_init_files = [
             os.path.join(
-                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_FILENAME
+                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_LABEL_FILENAME
             ),
             os.path.join(
-                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_LABEL_FILENAME
+                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_FILENAME
             )
         ]
 
