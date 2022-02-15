@@ -14,6 +14,9 @@ import numpy
 import scipy
 from sklearn.decomposition import PCA
 
+# Local imports.
+import config
+
 ##############
 # MAIN CLASS #
 ##############
