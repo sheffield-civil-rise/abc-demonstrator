@@ -80,7 +80,7 @@ def run(input, pipeline, output=[], cache=[], save=[], init=None, label_dir=None
     graph = Graph(name=pipeline)
 
     print("views: "+str(len(views)))
-    print("intrinsics: "+str(len(intrinsics[0])))
+    print("intrinsics: "+str(len(intrinsics)))
     print("output: "+str(output))
     print("graph: "+str(graph))
     print("init: "+str(init))
