@@ -59,13 +59,21 @@ class BatchProcessor:
     INIT_NODE_TYPE: ClassVar[str] = "CameraInit"
 
     def __post_init__(self):
+        print("You")
         meshroom.setupEnvironment()
+        print("Are")
         self.auto_initialise_path_to_cache()
+        print("A")
         self.discern_pipeline()
+        print("Great")
         self.files_by_type = multiview.FilesByType()
+        print("Player")
         self.get_views_and_instrinsics()
+        print("Tom")
         self.make_graph()
+        print("Bo")
         self.thread = Thread(target=run_task_manager, args=(self.graph,))
+        print("San")
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
