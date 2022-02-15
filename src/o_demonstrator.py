@@ -52,9 +52,12 @@ def run(args):
 
     ## Pause execution while photogrammetry running externally
     starttime = time.time()
+    index = 0
     while True:
         if not recon_thread_running():
             break
+        index = index+1
+        print("LOOP: "+str(index))
         if (time.time() - starttime) > TIME_TOO_LONG:
             # if it takes longer than two hours fail
             raise RuntimeError("this is taking too long, i'm giving up")
