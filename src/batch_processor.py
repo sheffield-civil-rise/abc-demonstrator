@@ -114,8 +114,8 @@ class BatchProcessor:
         self.graph = Graph(name=self.pipeline)
         with multiview.GraphModification(self.graph):
             try:
-                print("views: "+str(self.views))
-                print("intrinsics: "+str(self.views))
+                print("views: "+str(len(self.views)))
+                print("intrinsics: "+str(len(self.views)))
                 print("output: "+str(self.node_output))
                 print("graph: "+str(self.graph))
                 print("init: "+str(self.paths_to_init_files))
