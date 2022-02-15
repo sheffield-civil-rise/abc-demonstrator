@@ -381,7 +381,9 @@ class ReconstructionDirGenerator:
 
     def generate_output_directory(self):
         """ Copy the files necessary to create the working environment. """
-        if os.path.isdir(self.path_to_output) and not self.expedite:
+        if os.path.isdir(self.path_to_output):
+            if self.expedite:
+                return
             raise ReconstructionDirGeneratorError(
                 "Output directory at "+self.path_to_output+" already exists."
             )
