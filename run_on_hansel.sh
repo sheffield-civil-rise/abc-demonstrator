@@ -75,9 +75,9 @@ fi
 sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
     git -C $PATH_TO_REPO checkout $branch
     git -C $PATH_TO_REPO pull $git_url $branch
-    IF %ERRORLEVEL% NEQ 0 ( 
+    IF %ERRORLEVEL% NEQ 0 (
         exit 1
     )
     $PATH_TO_ACTIVATE_SCRIPT $ENV_NAME
-    python $PATH_TO_REPO\run_demonstrator_old.py
+    python $PATH_TO_REPO\run_demonstrator.py
 ENDSSH
