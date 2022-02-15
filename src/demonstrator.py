@@ -29,15 +29,27 @@ class Demonstrator:
     """ The class in question. """
     def __init__(
             self,
-            path_to_output=config.DEFAULT_PATH_TO_DEMO_OUTPUT
+            path_to_output=config.DEFAULT_PATH_TO_DEMO_OUTPUT,
+            from_the_top=False
         ):
         self.path_to_output = path_to_output
+        self.from_the_top = from_the_top
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
         # Generated fields.
         self.rec_dir_gen = None
         self.paths_to_init_files = None
         self.batch_processor = None
         self.height_calculator = None
+
+    def make_and_run_reconstruction_dir_generator(self):
+        """ Run the generator object, deleting any existing output as
+        necessary. """
+        if os.path.exists(self.path_to_output):
+            shutil.rmtree(self.path_to_output)
+        self.rec_dir_gen = \
+            ReconstructionDirGenerator(path_to_output=self.path_to_output)
+        self.rec_dir_gen.generate()
+        self.make_paths_to_init_files()
 
     def make_paths_to_init_files(self):
         """ Make the paths to these special files. """
@@ -49,16 +61,6 @@ class Demonstrator:
                 self.path_to_output, self.rec_dir_gen.CAMERA_INIT_LABEL_FILENAME
             )
         ]
-
-    def make_and_run_reconstruction_dir_generator(self):
-        """ Run the generator object, deleting any existing output as
-        necessary. """
-        if os.path.exists(self.path_to_output):
-            shutil.rmtree(self.path_to_output)
-        self.rec_dir_gen = \
-            ReconstructionDirGenerator(path_to_output=self.path_to_output)
-        self.rec_dir_gen.generate()
-        self.make_paths_to_init_files()
 
     def make_and_run_batch_processor(self):
         """ Build the batch processor object, and then run it. """
@@ -91,7 +93,8 @@ class Demonstrator:
 
     def demonstrate(self):
         """ Run the demonstrator script. """
-        self.make_and_run_reconstruction_dir_generator()
+        if self.from_the_top or not os.path.exists(self.path_to_output):
+            self.make_and_run_reconstruction_dir_generator()
         self.make_and_run_batch_processor()
         self.make_and_run_height_calculator()
         print("THIS IS AS FAR AS THE SCRIPT SHOULD GET RIGHT NOW")
