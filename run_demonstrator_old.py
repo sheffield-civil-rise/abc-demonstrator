@@ -13,7 +13,7 @@ PATH_TO_DEMONSTRATOR_LADY_BUG_INFO = r"G:\photogrammetry_input\ladybug_frame_gps
 PATH_TO_DEMONSTRATOR_LADY_BUG_IMAGES = r"G:\photogrammetry_input\ladybug_images"
 PATH_TO_DEMONSTRATOR_POLYGON = r"G:\polygons\demo\demo_0.poly"
 PATH_TO_DEMONSTRATOR_OUTPUT = r"G:\demonstrator_output"
-PATH_TO_DEMONSTRATOR_SCRIPT = r"G:\photogrammetry_e110a\src\demonstrator.py"
+PATH_TO_DEMONSTRATOR_SCRIPT = r"G:\photogrammetry_e110a\src\o_demonstrator.py"
 
 #############
 # FUNCTIONS #
