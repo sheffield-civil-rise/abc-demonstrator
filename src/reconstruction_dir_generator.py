@@ -640,7 +640,7 @@ class ReconstructionDirGenerator:
         self.create_camera_init_file(
             self.path_to_masked_images,
             self.CAMERA_INIT_LABEL_FILENAME,
-            self.path_to_labelled_images
+            self.path_to_masked_images
         )
         print("Renaming labelled images...")
         self.rename_labelled_images()
