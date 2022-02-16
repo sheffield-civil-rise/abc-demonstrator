@@ -76,8 +76,8 @@ class HeightCalculator:
 
     def joint_transform(forward, backward, separate_scale=False):
         # TODO: Ask about using more READABLE local variable names.
-        Tf, Rf, Sf = to_homogeneous(forward)
-        Tb, Rb, Sb = to_homogeneous(backward)
+        Tf, Rf, Sf = self.to_homogeneous(forward)
+        Tb, Rb, Sb = self.to_homogeneous(backward)
         Rb[0:3, 0:3] = scipy.linalg.inv(Rb[0:3, 0:3])
         Sb = numpy.diag(1/numpy.diag(Sb))
         S = Sf@Sb
