@@ -186,10 +186,9 @@ def get_only_node_of_type(graph, node_type):
 
 def is_structure_from_motion_file(path_to):
     """ Detect whether a given file is the StructureFromMotion file. """
-    if not path_to or (len(path_to) < 1) or not os.path.isfile(path_to):
-        return False
-    if os.path.splitext(path_to)[-1] in (".json", ".sfm"):
-        return True
+    if path_to and (len(path_to) >= 1) and os.path.isfile(path_to):
+        if os.path.splitext(path_to)[-1] in (".json", ".sfm"):
+            return True
     return False
 
 def check_and_read_sfm(path_to):
