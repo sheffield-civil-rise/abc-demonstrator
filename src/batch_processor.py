@@ -164,9 +164,9 @@ class BatchProcessor:
 
     def start(self):
         print("GRAPH NODES: "+str(len(self.graph._nodes)))
-        #self.thread.start()
-        #self.thread.join(timeout=self.timeout)
-        run_task_manager(self.graph)
+        self.thread.start()
+        self.thread.join(timeout=self.timeout)
+        #run_task_manager(self.graph)
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
