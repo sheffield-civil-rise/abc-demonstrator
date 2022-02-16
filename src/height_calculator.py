@@ -36,6 +36,9 @@ class HeightCalculator:
     mesh: open3d.cpu.pybind.geometry.TriangleMesh = None
     result: int = None
 
+    # Class attributes.
+    EYE_ROWS: ClassVar[int] = 4
+
     def __post_init__(self):
         self.check_required_fields()
         self.make_transform()
@@ -53,6 +56,54 @@ class HeightCalculator:
             if required_fields[field_name] is None:
                 raise HeightCalculatorError(field_name+" cannot be None.")
 
+    def to_homogeneous(self, transform):
+        # TODO: Ask about using more READABLE local variable names.
+        T, R, S = transform
+        Th, Rh, Sh = [
+            numpy.zeros((self.EYE_ROWS, self.EYE_ROWS)) for _ in range(3)
+        ]
+        Th[0:self.EYE_ROWS, 0:self.EYE_ROWS] = numpy.eye(self.EYE_ROWS)
+        Th[0, 3] = T[0]
+        Th[1, 3] = T[1]
+        Th[2, 3] = T[2]
+        Rh[0:3, 0:3] = R
+        Rh[3, 3] = 1
+        Sh[0, 0] = numpy.sqrt(S[0])
+        Sh[1, 1] = numpy.sqrt(S[1])
+        Sh[2, 2] = numpy.sqrt(S[2])
+        Sh[3, 3] = 1.0
+        return Th, Rh, Sh
+
+    def joint_transform(forward, backward, separate_scale=False):
+        # TODO: Ask about using more READABLE local variable names.
+        Tf, Rf, Sf = to_homogeneous(forward)
+        Tb, Rb, Sb = to_homogeneous(backward)
+        Rb[0:3, 0:3] = scipy.linalg.inv(Rb[0:3, 0:3])
+        Sb = numpy.diag(1/numpy.diag(Sb))
+        S = Sf@Sb
+        _s = (S[0, 0]+S[1, 1])/2
+        S = _s*numpy.eye(self.EYE_ROWS)
+        S[3, 3] = 1.
+        Tb[0:3, 3] = -Tb[0:3, 3]
+        if separate_scale:
+            return Tf@(Rf@(Rb@(Tb))), S
+        return Tf@(Rf@(S@(Rb@(Tb))))
+
+    def generate_transform(self, tru_xyz, sfm_xyz):
+        """ Generate joint, forward and backward transforms. """
+        forward = (
+            get_translation(tru_xyz),
+            get_rotation(tru_xyz),
+            get_scale(tru_xyz)
+        )
+        backward = (
+            get_translation(sfm_xyz),
+            get_rotation(sfm_xyz),
+            get_scale(sfm_xyz)
+        )
+        joint = self.joint_transform(forward, backward)
+        return joint, forward, backward
+
     def make_transform(self):
         """ Calculate the transformation between relative and reference
         spaces. """
@@ -61,7 +112,7 @@ class HeightCalculator:
         _, rcn_centers = get_geometries(reconstruction["poses"])
         _, ref_centers = get_geometries(reference["poses"], match=rcn_centers)
         self.transform, _, _ = \
-            generate_transform(
+            self.generate_transform(
                 *[
                     numpy.vstack(list(center.values())).T
                     for center in [ref_centers, rcn_centers]
@@ -131,4 +182,23 @@ def read_sfm_as_dict(path_to, encoding=config.DEFAULT_ENCODING):
     """ Read an SFM file and return dictionary with the data therein. """
     with open(path_to, "r", encoding=encoding) as sfm_file:
         result = json.load(sfm_file)
+    return result
+
+def get_rotation(points):
+    # TODO: Ask what this does.
+    pca = PCA()
+    pca.fit(points.T)
+    result = pca.components_.T
+    return result
+
+def get_translation(points):
+    # TODO: Ask what this does.
+    result = numpy.mean(points, axis=1)
+    return result
+
+def get_scale(points):
+    # TODO: Ask what this does.
+    pca = PCA()
+    pca.fit(points.T)
+    result = pca.explained_variance_
     return result
