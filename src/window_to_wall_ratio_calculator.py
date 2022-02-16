@@ -55,7 +55,7 @@ class WindowToWallRatioCalculator:
 
     def calculate_wwr_for_image(self, image_file):
         """ Calculate the window-to-wall ratio for a single image. """
-        dim = encode_color(numpyp.asarray(image_file))
+        dim = encode_color(numpy.asarray(image_file))
         window = len(dim[dim==encode_color(self.LABEL_COLOR_DICT["window"])])
         wall = len(dim[dim==encode_color(self.LABEL_COLOR_DICT["wall"])])
         if (window > wall) or (wall == 0):
