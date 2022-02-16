@@ -153,14 +153,16 @@ class BatchProcessor:
                         cameraInit, self.files_by_type.images
                     )
             self.graph.cacheDir = (
-                self.path_to_cache if self.path_to_cache else meshroom.core.defaultCacheFolder
+                self.path_to_cache
+                    if self.path_to_cache
+                    else meshroom.core.defaultCacheFolder
             )
 
     def start(self):
+        """ Start the thread. """
         print("GRAPH NODES: "+str(len(self.graph._nodes)))
         self.thread.start()
         self.thread.join(timeout=self.timeout)
-        #run_task_manager(self.graph)
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
@@ -200,6 +202,8 @@ def check_and_read_sfm(path_to):
     return readSfMData(path_to)
 
 def run_task_manager(graph):
+    """ Create the task manager object, start it, and keep us in a loop until
+    it's finished. """
     index = 0
     task_manager = TaskManager()
     task_manager.compute(graph, toNodes=None)
