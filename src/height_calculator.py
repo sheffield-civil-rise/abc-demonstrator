@@ -6,7 +6,7 @@ This code defines a class which calculates the heights of buildings.
 import json
 import os
 from dataclasses import dataclass, field
-from typing import Callable, ClassVar
+from typing import ClassVar
 
 # Non-standard imports.
 import open3d
@@ -34,7 +34,7 @@ class HeightCalculator:
     # Generated fields.
     transform: list = None
     mesh: open3d.cpu.pybind.geometry.TriangleMesh = None
-    result: int = None
+    result: float = None
 
     # Class attributes.
     EYE_ROWS: ClassVar[int] = 4

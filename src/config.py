@@ -47,3 +47,12 @@ DEFAULT_CHECK_INTERVAL = 30 # I.e. thirty SECONDS.
 # Other.
 SEMICIRCLE_DEGREES = 180
 MAX_RGB_CHANNEL = 255.0
+LABEL_VALUE_DICT = {
+    "background": 0,
+    "chimney": 3,
+    "door": 5,
+    "window": 4,
+    "roof": 2,
+    "wall": 1
+}
+RGB_MAX = (255, 192, 128)

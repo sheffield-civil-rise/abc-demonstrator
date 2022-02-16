@@ -7,7 +7,7 @@ import numpy as np
 from o_generate_recon_dir import autogenerate as generate_recon_dir
 from o_batch_process import run as batch_process
 from o_calculate_height import main as calculate_height
-from calculate_wwr import calculate as calculate_wwr
+from o_calculate_wwr import calculate as calculate_wwr
 
 from generate_idf import main as generate_energy_model
 
@@ -74,17 +74,11 @@ def run(args):
     args_1.mesh = os.path.join(mesh_base, 'texturedMesh.obj')
     args_1.dir = label_dir
 
-    print("PATH_TO_REFERENCE: "+args_1.ref)
-    print("PATH_TO_SFM: "+args_1.sfm)
-    print("PATH_TO_MESH: "+args_1.mesh)
-
     height = calculate_height(args_1)
-
-    print("HEIGHT: "+str(height))
 
     wwr = calculate_wwr(args_1)
 
-    print(wwr)
+    print("WWR: "+str(wwr))
     args_2 = Attribute()
     args_2.id = args.id
     args_2.init = r'src\starting_point.idf'

@@ -16,9 +16,8 @@ import config
 from batch_processor import BatchProcessor
 from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
+from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
 
-from o_calculate_height import main as calculate_height
-from calculate_wwr import calculate as calculate_wwr
 from generate_idf import main as generate_energy_model
 
 ##############
@@ -40,6 +39,7 @@ class Demonstrator:
         self.paths_to_init_files = None
         self.batch_processor = None
         self.height_calculator = None
+        self.window_to_wall_ratio_calculator = None
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
@@ -86,24 +86,31 @@ class Demonstrator:
         path_to_reference = self.paths_to_init_files[1]
         path_to_sfm = os.path.join(sfm_base, "cameras.sfm")
         path_to_mesh = os.path.join(mesh_base, "texturedMesh.obj")
-        print("PATH_TO_REFERENCE: "+path_to_reference)
-        print("PATH_TO_SFM: "+path_to_sfm)
-        print("PATH_TO_MESH: "+path_to_mesh)
         self.height_calculator = \
             HeightCalculator(
                 path_to_reference=path_to_reference,
                 path_to_sfm=path_to_sfm,
                 path_to_mesh=path_to_mesh
             )
-        print("HEIGHT: "+str(self.height_calculator.result))
+
+    def make_and_run_window_to_wall_ratio_calculator(self):
+        """ Build the window-to-wall ratio calculator object - it runs on its
+        own. """
+        self.window_to_wall_ratio_calculator = \
+            WindowToWallRatioCalculator(
+                path_to_reference=self.height_calculator.path_to_reference,
+                path_to_sfm=self.height_calculator.path_to_sfm,
+                path_to_mesh=self.height_calculator.path_to_mesh,
+                path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
+            )
 
     def demonstrate(self):
         """ Run the demonstrator script. """
         self.make_and_run_reconstruction_dir_generator()
         self.make_and_run_batch_processor()
         self.make_and_run_height_calculator()
-        print("THIS IS AS FAR AS THE SCRIPT SHOULD GET RIGHT NOW")
-        sys.exit(0)
+        self.make_and_run_window_to_wall_ratio_calculator()
+        print("WWR: "+str(self.window_to_wall_ratio_calculator.result))
 
 ###################
 # RUN AND WRAP UP #

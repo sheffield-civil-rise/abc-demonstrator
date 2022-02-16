@@ -25,6 +25,7 @@ from shapely.geometry import Point, Polygon
 # Local imports.
 import config
 from deeplab.Deeplabv3 import Deeplabv3
+from utility_functions import make_label_color_dict, encode_color, decode_color
 
 ##############
 # MAIN CLASS #
@@ -89,16 +90,8 @@ class ReconstructionDirGenerator:
     SEGMENT_RESOLUTION: ClassVar[int] = 20
     IMAGE_FILENAME_INDICES: ClassVar[tuple] = (46, 52, 56)
     MAX_CAM_INDEX: ClassVar[int] = 5
-    LABEL_VALUE_DICT: ClassVar[dict] = {
-        "background": 0,
-        "chimney": 3,
-        "door": 5,
-        "window": 4,
-        "roof": 2,
-        "wall": 1
-    }
-    RGB_MAX: ClassVar[list] = [255, 192, 128]
-    LABEL_COLOR_DICT: ClassVar[dict] = None
+    LABEL_VALUE_DICT: ClassVar[dict] = config.LABEL_VALUE_DICT
+    LABEL_COLOR_DICT: ClassVar[dict] = make_label_color_dict()
     PALETTE: ClassVar[dict] = None
     IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
     BORDER_BOTTOM: ClassVar[int] = 208
@@ -129,24 +122,7 @@ class ReconstructionDirGenerator:
     }
 
     def __post_init__(self):
-        self.set_label_color_dict()
         self.set_palette()
-
-    def set_label_color_dict(self):
-        """ Initialise this class attribute. """
-        self.LABEL_COLOR_DICT = {
-            i:[int(j_) for j_ in j]
-            for i, j in zip(
-                self.LABEL_VALUE_DICT.keys(),
-                decode_color(
-                    numpy.linspace(
-                        0,
-                        encode_color(self.RGB_MAX),
-                        len(self.LABEL_VALUE_DICT)
-                    ).astype("int")
-                )
-            )
-        }
 
     def set_palette(self):
         """ Initialise this class attribute. """
@@ -783,28 +759,6 @@ def get_img_paths(
             _, ext = os.path.splitext(path)
             if ext.lower() in image_extensions:
                 result.append(os.path.join(path_to_dir, path))
-    return result
-
-def encode_color(to_encode, byte_length=config.DEFAULT_BYTE_LENGTH):
-    """ Encode a colour as an integer representation thereof. """
-    to_encode = numpy.array(to_encode).astype("int")
-    result = (
-        (to_encode[..., 2]<<byte_length*2)+
-        (to_encode[..., 1]<<byte_length)+
-        to_encode[..., 0]
-    )
-    return result
-
-def decode_color(to_decode, byte_length=config.DEFAULT_BYTE_LENGTH):
-    """ Decode an integer representation of a colour. """
-    result = \
-        numpy.stack(
-            [
-                to_decode & 0xFF,
-                (to_decode & 0xFF00) >> byte_length,
-                (to_decode & 0xFF0000) >> byte_length*2
-            ], axis=-1
-        ).astype(numpy.uint8)
     return result
 
 def print_progress(index, loops):
