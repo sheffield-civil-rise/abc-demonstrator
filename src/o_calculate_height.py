@@ -145,6 +145,9 @@ def calculate_geometry(mesh, transform):
 
 def calculate_height(mesh, transform, ignore_roof=False):
     _, height, _ = calculate_geometry(mesh, transform)
+    print("MESH: "+str(mesh))
+    print("TRANSFORM: "+str(transform))
+    print("RAW HEIGHT: "+str(height))
     if ignore_roof:
         return height
     else:
