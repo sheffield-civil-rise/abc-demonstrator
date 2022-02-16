@@ -30,7 +30,7 @@ class HeightCalculator:
     path_to_mesh: str = None
     # Non-required fields.
     path_to_labelled_images: str = None
-    ignore_roof: bool = False
+    ignore_roof: bool = True
     # Generated fields.
     transform: list = None
     mesh: open3d.cpu.pybind.geometry.TriangleMesh = None
