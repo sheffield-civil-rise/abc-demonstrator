@@ -86,6 +86,9 @@ class Demonstrator:
         path_to_reference = self.paths_to_init_files[1]
         path_to_sfm = os.path.join(sfm_base, "cameras.sfm")
         path_to_mesh = os.path.join(mesh_base, "texturedMesh.obj")
+        print("PATH_TO_REFERENCE: "+path_to_reference)
+        print("PATH_TO_SFM: "+path_to_sfm)
+        print("PATH_TO_MESH: "+path_to_mesh)
         self.height_calculator = \
             HeightCalculator(
                 path_to_reference=path_to_reference,
