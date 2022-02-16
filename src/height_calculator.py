@@ -129,9 +129,6 @@ class HeightCalculator:
     def calculate(self):
         """ Calculate the height. """
         _, result, _ = self.calculate_geometry()
-        print("MESH: "+str(self.mesh))
-        print("TRANSFORM: "+str(self.transform))
-        print("RAW HEIGHT: "+str(result))
         if not self.ignore_roof:
             result = result*(2/3)
         self.result = result
