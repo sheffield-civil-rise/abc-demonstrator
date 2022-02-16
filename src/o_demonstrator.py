@@ -74,6 +74,10 @@ def run(args):
     args_1.mesh = os.path.join(mesh_base, 'texturedMesh.obj')
     args_1.dir = label_dir
 
+    print("PATH_TO_REFERENCE: "+args_1.ref)
+    print("PATH_TO_SFM: "+args_1.sfm)
+    print("PATH_TO_MESH: "+args_1.mesh)
+
     height = calculate_height(args_1)
 
     print("HEIGHT: "+str(height))
