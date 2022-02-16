@@ -53,7 +53,7 @@ class WindowToWallRatioCalculator:
             if required_fields[field_name] is None:
                 raise WWRCalculatorError(field_name+" cannot be None.")
 
-    def calculate_wwr_for_image(self.image_file):
+    def calculate_wwr_for_image(self, image_file):
         """ Calculate the window-to-wall ratio for a single image. """
         dim = encode(numpyp.asarray(image_file))
         window = len(dim[dim==encode_color(self.LABEL_COLOR_DICT["window"])])
