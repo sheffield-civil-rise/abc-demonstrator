@@ -92,6 +92,7 @@ class Demonstrator:
                 path_to_sfm=path_to_sfm,
                 path_to_mesh=path_to_mesh
             )
+        print("HEIGHT: "+str(self.height_calculator.result))
 
     def demonstrate(self):
         """ Run the demonstrator script. """
