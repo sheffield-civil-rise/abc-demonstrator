@@ -76,6 +76,8 @@ def run(args):
 
     height = calculate_height(args_1)
 
+    print("HEIGHT: "+str(height))
+
     wwr = calculate_wwr(args_1)
 
     print(wwr)
