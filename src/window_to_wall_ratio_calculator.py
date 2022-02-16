@@ -66,7 +66,7 @@ class WindowToWallRatioCalculator:
     def make_ensemble_ratios(self):
         """ Get a list of WWRs, from which to take an average. """
         result = []
-        for filename in enumerate(os.listdir(self.path_to_labelled_images)):
+        for filename in os.listdir(self.path_to_labelled_images):
             path_to = os.path.join(self.path_to_labelled_images, filename)
             with Image.open(path_to) as image_file:
                 ratio = self.calculate_wwr_for_image(image_file)
