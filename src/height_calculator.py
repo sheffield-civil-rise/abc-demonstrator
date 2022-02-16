@@ -74,7 +74,7 @@ class HeightCalculator:
         Sh[3, 3] = 1.0
         return Th, Rh, Sh
 
-    def joint_transform(forward, backward, separate_scale=False):
+    def joint_transform(self, forward, backward, separate_scale=False):
         # TODO: Ask about using more READABLE local variable names.
         Tf, Rf, Sf = self.to_homogeneous(forward)
         Tb, Rb, Sb = self.to_homogeneous(backward)
