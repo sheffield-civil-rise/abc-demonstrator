@@ -14,10 +14,8 @@ import numpy
 # Local imports.
 import config
 from batch_processor import BatchProcessor
+from energy_model_generator import EnergyModelGenerator
 from height_calculator import HeightCalculator
-from intermediate_data_format_obj_generator import (
-    IntermediateDataFormatObjGenerator
-)
 from reconstruction_dir_generator import ReconstructionDirGenerator
 from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
 
@@ -41,6 +39,7 @@ class Demonstrator:
         self.batch_processor = None
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
+        self.energy_model_generator = None
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
@@ -105,12 +104,22 @@ class Demonstrator:
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
 
+    def make_and_run_energy_model_generator(self):
+        """ Build the energy model generator object, and then run it. """
+        self.energy_model_generator = \
+            EnergyModelGenerator(
+                height=self.height_calculator.result,
+                window_to_wall_ratio=self.window_to_wall_ratio_calculator.result
+            )
+        self.energy_model_generator.generate_and_run()
+
     def demonstrate(self):
         """ Run the demonstrator script. """
         self.make_and_run_reconstruction_dir_generator()
         self.make_and_run_batch_processor()
         self.make_and_run_height_calculator()
         self.make_and_run_window_to_wall_ratio_calculator()
+        self.make_and_run_energy_model_generator()
 
 ###################
 # RUN AND WRAP UP #

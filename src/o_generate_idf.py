@@ -24,7 +24,6 @@ def generate_initial_idf(init, epw):
 
     return idf
 
-
 def define_geometry(idf, id, polygon, height, nbfloors=2):
     """ add initial geometry """
     # NOTE:the vertex for coordination can be given clockwise or anti-clockwise
@@ -241,8 +240,7 @@ def add_boiler(idf, type=None, fuel=None, efficiency=None):
     return boiler
 
 
-def populate_zones(idf, idf_schedules, thermostat,
-    densities = None, ach = None):
+def populate_zones(idf, idf_schedules, thermostat, densities = None, ach = None):
     """ populate zones """
     # Density definitions
     if densities is None:
