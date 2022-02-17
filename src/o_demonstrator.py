@@ -79,7 +79,7 @@ def run(args):
 
     args_2 = Attribute()
     args_2.id = args.id
-    args_2.init = r'src\starting_point.idf'
+    args_2.init = r'G:\photogrammetry_e110a\idf_files\starting_point.idf'
     args_2.height = np.max([7, 2 * height / 3])
     args_2.wwr = {0: wwr, 90: 0.2, 180: wwr, 270: 0.2}
     args_2.polygon = args.polygon
