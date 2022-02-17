@@ -10,8 +10,8 @@ from shapely.geometry import Polygon
 
 class config:
     """ this is a dummy config class to be pulled out later """
-    LOCATION_IDD = r'C:\EnergyPlusV9-5-0\Energy+.idd'
-    LOCATION_EPW = r'C:\EnergyPlusV9-5-0\WeatherData\GBR_Finningley.033600_IWEC.epw'
+    LOCATION_IDD = r'G:\photogrammetry_binaries\EnergyPlusV9-5-0\Energy+.idd'
+    LOCATION_EPW = r'G:\photogrammetry_binaries\WeatherData\GBR_Finningley.033600_IWEC.epw'
 
 def generate_initial_idf(init, epw):
     """ """
