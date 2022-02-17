@@ -38,8 +38,8 @@ class EnergyModelGenerator:
     path_to_idd: str = config.DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY
     path_to_starting_point_idf: str = config.DEFAULT_PATH_TO_STARTING_POINT_IDF
     path_to_weather_file: str = config.DEFAULT_PATH_TO_ENERGYPLUS_WEATHER_FILE
-    path_to_output_idf: str = config.DEFAULT_PATH_TO_ENERGYMODEL_OUTPUT_IDF
-    path_to_output_dir: str = config.DEFAULT_PATH_TO_ENERGYMODEL_OUTPUT_DIR
+    path_to_output_idf: str = config.DEFAULT_PATH_TO_ENERGYPLUS_OUTPUT_IDF
+    path_to_output_dir: str = config.DEFAULT_PATH_TO_ENERGYPLUS_OUTPUT_DIR
     num_stories: int = 2
     orientation: float = 0.0
     save_idf: bool = True
