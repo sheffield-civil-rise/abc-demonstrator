@@ -283,7 +283,7 @@ class EnergyModelGenerator:
 
     def add_thermostat(self):
         """ Thermostat for HVAC control. """
-        self.thermostat = 
+        self.thermostat = \
             self.idf_obj.newidfobject(
                 "HVACTEMPLATE:THERMOSTAT",
                 Name="Zone Thermostat",
