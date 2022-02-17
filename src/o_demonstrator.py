@@ -8,8 +8,7 @@ from o_generate_recon_dir import autogenerate as generate_recon_dir
 from o_batch_process import run as batch_process
 from o_calculate_height import main as calculate_height
 from o_calculate_wwr import calculate as calculate_wwr
-
-from generate_idf import main as generate_energy_model
+from o_generate_idf import main as generate_energy_model
 
 TIME_TOO_LONG = 7200  # seconds (2 hours)
 
@@ -78,7 +77,6 @@ def run(args):
 
     wwr = calculate_wwr(args_1)
 
-    print("WWR: "+str(wwr))
     args_2 = Attribute()
     args_2.id = args.id
     args_2.init = r'src\starting_point.idf'

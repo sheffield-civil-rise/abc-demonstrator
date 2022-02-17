@@ -15,10 +15,11 @@ import numpy
 import config
 from batch_processor import BatchProcessor
 from height_calculator import HeightCalculator
+from intermediate_data_format_obj_generator import (
+    IntermediateDataFormatObjGenerator
+)
 from reconstruction_dir_generator import ReconstructionDirGenerator
 from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
-
-from generate_idf import main as generate_energy_model
 
 ##############
 # MAIN CLASS #
@@ -110,7 +111,6 @@ class Demonstrator:
         self.make_and_run_batch_processor()
         self.make_and_run_height_calculator()
         self.make_and_run_window_to_wall_ratio_calculator()
-        print("WWR: "+str(self.window_to_wall_ratio_calculator.result))
 
 ###################
 # RUN AND WRAP UP #
