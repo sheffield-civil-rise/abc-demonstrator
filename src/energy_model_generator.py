@@ -195,7 +195,7 @@ class EnergyModelGenerator:
 
     def generate_material_idf(self, material_name, uvalue):
         """ Generate an "inner" IDF object for a given material. """
-        if name == "window":
+        if material_name == "window":
             return None  # Create special one for windows.
         result = \
             self.idf_obj.newidfobject(
