@@ -55,9 +55,11 @@ class EnergyModelGenerator:
     boiler_type: str = "CondensingHotWaterBoiler"
     boiler_fuel: str = "NaturalGas"
     boiler_efficiency: float = config.DEFAULT_BOILER_EFFICIENCY
+    src_co_ref_sys: str = config.DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM
     # Generated fields.
     adjusted_height: float = None
     window_to_wall_ratio_dict: dict = None
+    polygon: Polygon = None
     idf_obj: IDF = None
     materials: dict = None
     thermostat: IDF = None
@@ -106,6 +108,7 @@ class EnergyModelGenerator:
         "people": 0.025
     }
     OUTPUT_SUFFIX: ClassVar[str] = "C"
+    DEFAULT_POLYGON: ClassVar[list] = [(6, 0), (6, 6), (0, 6), (0, 0)]
 
     def __post_init__(self):
         self.set_adjusted_height()
@@ -113,6 +116,7 @@ class EnergyModelGenerator:
         self.set_uvalues()
         self.set_layers()
         self.set_densities()
+        self.read_polygon()
 
     def set_adjusted_height(self):
         # TODO: Ask about why we do this.
@@ -149,6 +153,22 @@ class EnergyModelGenerator:
         if not self.densities:
             self.densities = deepcopy(self.DEFAULT_DENSITIES)
 
+    def read_polygon(self):
+        """ Read the polygon from a file, if possible. """
+        if self.path_to_polygon:
+            data_frame = pandas.read_csv(self.path_to_polygon, header=None)
+            geometry = geopandas.points_from_xy(data_frame[1], data_frame[0])
+            geo_data_frame = \
+                geopandas.GeoDataFrame(
+                    geometry=geometry,
+                    crs=self.src_co_ref_sys
+                )
+            bounds = Polygon(geo_data_frame.geometry).bounds
+            poly = geo_data_frame.geometry.translate(-bounds[0], -bounds[1])
+            self.polygon = list(zip(poly.x, poly.y))
+        else:
+            self.polygon = deepcopy(self.DEFAULT_POLYGON)
+
     def initialise_idf(self):
         """ Initialise our Intermediate Data Format object. """
         IDF.setiddname(self.path_to_idd)
@@ -163,7 +183,7 @@ class EnergyModelGenerator:
         #     (2) The floor plan can be a non-convex surface.
         self.idf_obj.add_block(
             name=self.id_num,
-            coordinates=self.path_to_polygon,
+            coordinates=self.polygon,
             height=self.adjusted_height, # Full height of building above ground.
             num_stories=self.num_stories
         )
