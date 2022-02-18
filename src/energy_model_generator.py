@@ -231,7 +231,7 @@ class EnergyModelGenerator:
             )
         return result
 
-    def define_construction(self):
+    def define_constructions(self):
         # TODO: Ask about filling in this docstring.
         self.constructions = { 
             name.capitalize():
@@ -389,6 +389,7 @@ class EnergyModelGenerator:
         self.idf_obj.set_wwr(wwr_map=self.window_to_wall_ratio_dict)
         self.idf_obj.idfobjects["BUILDING"][0].North_Axis = self.orientation
         self.define_materials()
+        self.define_constructions()
         self.define_schedules()
         self.add_thermostat()
         self.add_hot_water_loop()
