@@ -218,7 +218,7 @@ class EnergyModelGenerator:
                 "WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM",
                 Name="window",
                 UFactor=self.uvalues["window"],
-                Solar_Heat_Gain_Coefficient=shgc
+                Solar_Heat_Gain_Coefficient=self.window_shgc
             )
 
     def generate_construction_idf(self, construction_name):
