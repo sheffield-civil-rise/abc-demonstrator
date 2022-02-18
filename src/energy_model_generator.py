@@ -410,7 +410,7 @@ class EnergyModelGenerator:
         """ Generate our IDF object, and then run it. """
         self.generate()
         if self.save_idf:
-            self.idf_obj.save(self.path_to_idf_output)
+            self.idf_obj.save(self.path_to_output_idf)
         self.run_simulation()
 
 ################################
