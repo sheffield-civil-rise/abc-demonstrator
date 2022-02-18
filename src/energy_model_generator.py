@@ -30,7 +30,7 @@ NORTH, EAST, SOUTH, WEST = 0, 90, 180, 270
 class EnergyModelGenerator:
     """ The class in question. """
     # Fields.
-    id_num: int = 0
+    id_str: str = "demo"
     path_to_starting_point_idf: str = config.DEFAULT_PATH_TO_STARTING_POINT_IDF
     height: float = None
     window_to_wall_ratio: float = None
@@ -182,7 +182,7 @@ class EnergyModelGenerator:
         #         anti-clockwise.
         #     (2) The floor plan can be a non-convex surface.
         self.idf_obj.add_block(
-            name=self.id_num,
+            name=self.id_str,
             coordinates=self.polygon,
             height=self.adjusted_height, # Full height of building above ground.
             num_stories=self.num_stories
@@ -402,7 +402,7 @@ class EnergyModelGenerator:
         self.idf_obj.run(
             output_directory=self.path_to_output_dir,
             expandobjects=True,
-            output_prefix=self.id_num,
+            output_prefix=self.id_str,
             output_suffix=self.OUTPUT_SUFFIX
         )
 
