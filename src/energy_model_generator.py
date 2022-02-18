@@ -394,6 +394,7 @@ class EnergyModelGenerator:
         self.add_thermostat()
         self.add_hot_water_loop()
         self.add_boiler()
+        self.populate_zones()
 
     def run_simulation(self):
         """ Run the EnergyPlus simulation and save the simulation output to a
