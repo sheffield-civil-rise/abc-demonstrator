@@ -1,14 +1,22 @@
+"""
+This code defines some functions which help to create a pipeline for our
+BatchProcessor object.
+"""
+
+# Non-standard imports.
 from meshroom.core.graph import Graph, GraphModification
 
-
+# Local constants. TODO: Ask about removing this.
 VOCAB_TREE = r"C:\Users\Wil_User\Desktop\Meshroom-2021.1.0-win64\Meshroom-2021.1.0\aliceVision\share\aliceVision\vlfeat_K80L3.SIFT.tree"
 
+#############
+# FUNCTIONS #
+#############
 
 def defaultSfmPipeline(graph):
     """
-    Instantiate SfM pipeline for photogrammetry pipeline
-
-    Based on default photogrammetry pipeline in meshroom
+    Instantiate SfM pipeline for photogrammetry pipeline.
+    Based on default photogrammetry pipeline in meshroom.
     """
     cameraInit = graph.addNewNode('CameraInit')
     featureExtraction = graph.addNewNode(
@@ -35,12 +43,10 @@ def defaultSfmPipeline(graph):
         featureMatching,
         structureFromMotion]
 
-
 def twowaySfmPipeline(graph, cameraInit=None):
     """
-    Instantiate SfM pipeline for photogrammetry pipeline
-
-    Uses custom defined cameraInit fle
+    Instantiate SfM pipeline for photogrammetry pipeline.
+    Uses custom defined cameraInit file.
     """
     out = []
     cameraInit = graph.addNewNode('CameraInit')
@@ -117,9 +123,8 @@ def twowaySfmPipeline(graph, cameraInit=None):
 
 def customSfmPipeline(graph, cameraInit=None):
     """
-    Instnatiate SfM pipeline for photogrammetry pipeline
-
-    Uses custom defined cameraInit fle
+    Instnatiate SfM pipeline for photogrammetry pipeline.
+    Uses custom defined cameraInit file.
     """
     out = []
     # if cameraInit is None:
@@ -153,45 +158,28 @@ def customSfmPipeline(graph, cameraInit=None):
         lockScenePreviouslyReconstructed=True,
         lockAllIntrinsics=True)
     out.append(structureFromMotion)
-    # sfMAlignment = graph.addNewNode(
-    #     'SfMTransfer', input=structureFromMotion.output,
-    #     reference=cameraInit.output,
-    #     method='from_viewid',
-    #     transferPoses=True,
-    #     transferIntrinsics=True
-    #     # applyScale=True,
-    #     # applyRotation=True,
-    #     # applyTranslation=True
-    # )
     return out
-
-
 
 def sfmPipeline(graph, init=None):
     """
-    Instantiate custom pipeline graph for photogrammetry
-
+    Instantiate custom pipeline graph for photogrammetry.
     Currently uses default.
     """
-    # return defaultSfmPipeline(graph)
-    if type(init) is list and len(init) > 1:
+    if (type(init) is list) and len(init) > 1:
         return twowaySfmPipeline(graph, init)
     else:
         return customSfmPipeline(graph, init)
 
-
 def defaultMvsPipeline(graph, sfm=None):
     """
-    Instantiate SfM pipeline for photogrammetry pipeline
-
-    Based on default photogrammetry pipeline in meshroom
+    Instantiate SfM pipeline for photogrammetry pipeline.
+    Based on default photogrammetry pipeline in meshroom.
     """
     if sfm and not sfm.nodeType in [
         "StructureFromMotion", "SfMAlignment", "SfMTransfer"]:
         raise ValueError(
             "Invalid node type. Expected SfM, got {}".
             format(sfm.nodeType))
-
     prepareDenseScene = graph.addNewNode(
         'PrepareDenseScene', input=sfm.output if sfm else "")
     depthMap = graph.addNewNode(
@@ -217,19 +205,16 @@ def defaultMvsPipeline(graph, sfm=None):
         meshFiltering,
         texturing]
 
-
 def customMvsPipeline(graph, sfm=None, label_dir=None):
     """
-    Instantiate SfM pipeline for photogrammetry pipeline
-
-    Based on default photogrammetry pipeline in meshroom
+    Instantiate SfM pipeline for photogrammetry pipeline.
+    Based on default photogrammetry pipeline in meshroom.
     """
     if sfm and not sfm.nodeType in [
         "StructureFromMotion", "SfMAlignment", "SfMTransfer"]:
         raise ValueError(
             "Invalid node type. Expected SfM, got {}".
             format(sfm.nodeType))
-
     prepareDenseScene = graph.addNewNode(
         'PrepareDenseScene', input=sfm.output if sfm else "",
         outputFileType='png')
@@ -265,11 +250,9 @@ def customMvsPipeline(graph, sfm=None, label_dir=None):
         texturing,
         labelling]
 
-
 def mvsPipeline(graph, sfm=None, label_dir=None):
     """
-    Instantiate custom pipeline graph for photogrammetry
-
+    Instantiate custom pipeline graph for photogrammetry.
     Currently uses default.
     """
     if label_dir is None:
@@ -285,7 +268,6 @@ def build_graph(
     ''' Custom photogrammetry graph '''
     if graph is None:
         graph = Graph('Custom photogrammetry')
-
     with GraphModification(graph):
         if init is None:
             sfmNodes = sfmPipeline(graph)
@@ -304,7 +286,6 @@ def build_graph(
                 cameraInit.intrinsics.extend(inputIntrinsics)
 
         mvsNodes = mvsPipeline(graph, sfmNodes[-1], label_dir)
-
         if output:
             texturing = mvsNodes[-1]
             graph.addNewNode(
