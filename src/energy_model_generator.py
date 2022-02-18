@@ -209,7 +209,7 @@ class EnergyModelGenerator:
     def define_materials(self):
         # TODO: Ask about filling in this docstring.
         self.materials = {
-            k.capitalize():
+            name.capitalize():
                 self.generate_material_idf(name, uvalue)
                 for name, uvalue in self.uvalues.items()
         }
