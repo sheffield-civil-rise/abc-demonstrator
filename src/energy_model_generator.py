@@ -299,7 +299,7 @@ class EnergyModelGenerator:
                 Schedule_Type_Limits_Name="Fraction",
                 Field_1=self.schedules["Availability"]
             )
-        return result
+        self.schedules = result
 
     def add_thermostat(self):
         """ Thermostat for HVAC control. """
