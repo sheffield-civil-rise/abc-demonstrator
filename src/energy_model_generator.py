@@ -117,7 +117,7 @@ class EnergyModelGenerator:
     def set_adjusted_height(self):
         # TODO: Ask about why we do this.
         self.adjusted_height = \
-            numpy.max(self.MIN_ADJUSTED_HEIGHT, self.height*(2/3))
+            numpy.max([self.MIN_ADJUSTED_HEIGHT, self.height*(2/3)])
 
     def set_window_to_wall_ratio_dict(self):
         """ Create a dictionary giving the window-to-wall ratio for each
@@ -164,7 +164,7 @@ class EnergyModelGenerator:
         self.idf_obj.add_block(
             name=self.id_num,
             coordinates=self.path_to_polygon,
-            height=self.height, # Total height of building above ground level.
+            height=self.adjusted_height, # Full height of building above ground.
             num_stories=self.num_stories
         )
         # Might be handy for real world coordination: idf.translate_to_origin()
