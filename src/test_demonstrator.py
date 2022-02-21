@@ -14,7 +14,7 @@ from demonstrator import Demonstrator
 # TESTING #
 ###########
 
-def test_rec_dir_gen_fields(demo_obj):
+def check_rec_dir_gen_fields(demo_obj):
     """ Test the FIELDS of the ReconstructionDirGenerator sub-object. """
     assert (
         demo_obj.rec_dir_gen.path_to_output ==
