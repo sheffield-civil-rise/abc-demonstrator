@@ -3,7 +3,6 @@ This code defines a script which in turn runs pytest on our source code.
 """
 
 # Local imports.
-import os
 import subprocess
 
 # Local constants.
@@ -15,9 +14,9 @@ HANSEL_PATH_TO_SRC = r"G:\photogrammetry_e110a\src"
 
 def run():
     """ Run this file. """
-    os.chdir(HANSEL_PATH_TO_SRC)
     try:
-        subprocess.run(["pytest"], check=True)
+        subprocess.run(["pip", "install", "pytest"], check=True)
+        subprocess.run(["pytest", HANSEL_PATH_TO_SRC], check=True)
     except subprocess.CalledProcessError:
         return False
     return True
