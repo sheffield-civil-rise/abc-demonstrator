@@ -106,10 +106,19 @@ class Demonstrator:
 
     def make_and_run_energy_model_generator(self):
         """ Build the energy model generator object, and then run it. """
+        wwr = self.window_to_wall_ratio_calculator.result
+        path_to_output_idf = \
+            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "output.idf")
+        path_to_output_dir = \
+            os.path.join(
+                config.DEFAULT_PATH_TO_DEMO_OUTPUT, "energy_model_output"
+            )
         self.energy_model_generator = \
             EnergyModelGenerator(
                 height=self.height_calculator.result,
-                window_to_wall_ratio=self.window_to_wall_ratio_calculator.result
+                window_to_wall_ratio=wwr,
+                path_to_output_idf=path_to_output_idf,
+                path_to_output_dir=path_to_output_dir
             )
         self.energy_model_generator.generate_and_run()
 
