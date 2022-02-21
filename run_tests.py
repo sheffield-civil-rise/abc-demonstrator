@@ -3,7 +3,6 @@ This code defines a script which in turn runs pytest on our source code.
 """
 
 # Standard imports.
-import os
 import subprocess
 
 # Non-standard imports.
@@ -18,7 +17,6 @@ HANSEL_PATH_TO_REPO = r"G:\photogrammetry_e110a"
 
 def run():
     """ Run this file. """
-    print(os.getcwd())
     pytest.main()
 #    try:
 #        subprocess.run(["pytest", HANSEL_PATH_TO_REPO], check=True)
