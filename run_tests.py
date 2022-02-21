@@ -15,7 +15,7 @@ HANSEL_PATH_TO_SRC = r"G:\photogrammetry_e110a\src"
 
 def run():
     """ Run this file. """
-    os.chdir("HANSEL_PATH_TO_SRC")
+    os.chdir(HANSEL_PATH_TO_SRC)
     try:
         subprocess.run(["pytest"], check=True)
     except subprocess.CalledProcessError:
