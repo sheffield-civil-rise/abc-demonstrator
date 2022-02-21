@@ -63,14 +63,14 @@ def check_rec_dir_gen_files(demo_obj):
     actual_labelled_image_checksum = \
         make_checksum(
             os.path.join(
-                demo_obj.path_to_labelled_images,
+                demo_obj.rec_dir_gen.path_to_labelled_images,
                 EXPECTED_LABELLED_IMAGE_FILENAME
             )
         )
     actual_masked_image_checksum = \
         make_checksum(
             os.path.join(
-                demo_obj.path_to_masked_images,
+                demo_obj.rec_dir_gen.path_to_masked_images,
                 EXPECTED_MASKED_IMAGE_FILENAME
             )
         )
