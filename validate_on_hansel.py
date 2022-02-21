@@ -12,7 +12,7 @@ from pathlib import Path
 from check_with_hansel import run_on_hansel_with_auth, DEFAULT_PATH_TO_REPO
 
 # Constants.
-PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "test_on_hansel.sh")
+PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "validate_on_hansel.sh")
 
 ###################
 # RUN AND WRAP UP #
