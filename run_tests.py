@@ -6,6 +6,7 @@ This code defines a script which in turn runs pytest on our source code.
 import subprocess
 
 # Non-standard imports.
+import pytest
 
 # Local constants.
 HANSEL_PATH_TO_REPO = r"G:\photogrammetry_e110a"
