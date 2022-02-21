@@ -6,7 +6,7 @@ This code defines a script which in turn runs pytest on our source code.
 import subprocess
 
 # Local constants.
-HANSEL_PATH_TO_SRC = r"G:\photogrammetry_e110a\src"
+HANSEL_PATH_TO_REPO = r"G:\photogrammetry_e110a"
 
 ###################
 # RUN AND WRAP UP #
@@ -15,7 +15,7 @@ HANSEL_PATH_TO_SRC = r"G:\photogrammetry_e110a\src"
 def run():
     """ Run this file. """
     try:
-        subprocess.run(["pytest", HANSEL_PATH_TO_SRC], check=True)
+        subprocess.run(["pytest", HANSEL_PATH_TO_REPO], check=True)
     except subprocess.CalledProcessError:
         return False
     return True
