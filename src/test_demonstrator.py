@@ -37,7 +37,7 @@ def test():
     """ Run the unit tests. """
     demo_obj = Demonstrator()
     demo_obj.make_and_run_reconstruction_dir_generator()
-    test_rec_dir_gen_fields(demo_obj)
+    check_rec_dir_gen_fields(demo_obj)
 
 ###################
 # RUN AND WRAP UP #
