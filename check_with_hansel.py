@@ -7,13 +7,13 @@ is running correctly.
 import json
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 # Constants.
 PATH_TO_HOME = str(Path.home())
 DEFAULT_PATH_TO_REPO = os.path.join(PATH_TO_HOME, "photogrammetry_e110a")
-DEFAULT_PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "run_on_hansel.sh")
+DEFAULT_PATH_TO_SCRIPT = \
+    os.path.join(DEFAULT_PATH_TO_REPO, "check_with_hansel.sh")
 DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\photogrammetry_e110a"
 DEFAULT_PATH_TO_ACTIVATE_SCRIPT = r"C:\Users\hansel\Anaconda3\Scripts\activate"
 DEFAULT_ENV_NAME = "demonstrator"
@@ -47,7 +47,6 @@ def run_on_hansel(
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
         branch=DEFAULT_BRANCH,
-        old=False,
         hide_output=False
     ):
     """ Call the shell script with the correct arguments. """
@@ -62,8 +61,6 @@ def run_on_hansel(
         "--path-to-activate-script", path_to_activate_script,
         "--env-name", env_name
     ]
-    if old:
-        arguments.append("--old")
     try:
         if hide_output:
             subprocess.run(arguments, check=True, stdout=subprocess.DEVNULL)
@@ -73,12 +70,16 @@ def run_on_hansel(
         return False
     return True
 
-###################
-# RUN AND WRAP UP #
-###################
-
-def run():
-    """ Run this file. """
+def run_on_hansel_with_auth(
+        path_to_repo=DEFAULT_PATH_TO_REPO_ON_HANSEL,
+        path_to_activate_script=DEFAULT_PATH_TO_ACTIVATE_SCRIPT,
+        env_name=DEFAULT_ENV_NAME,
+        repo_url=DEFAULT_REPO_URL,
+        path_to_script=DEFAULT_PATH_TO_SCRIPT,
+        branch=DEFAULT_BRANCH,
+        hide_output=False
+    ):
+    """ Generate the required auth data, and then call the script. """
     old = False
     if "--old" in sys.argv:
         old = True
@@ -91,6 +92,14 @@ def run():
             old=old
         )
     return result
+
+###################
+# RUN AND WRAP UP #
+###################
+
+def run():
+    """ Run this file. """
+    return run_on_hansel_with_auth()
 
 if __name__ == "__main__":
     run()

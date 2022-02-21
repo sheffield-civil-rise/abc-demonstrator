@@ -360,8 +360,6 @@ class ReconstructionDirGenerator:
         self.path_to_output_images = \
             os.path.join(self.path_to_output, "images")
         if os.path.isdir(self.path_to_output):
-            if self.expedite:
-                return
             raise ReconstructionDirGeneratorError(
                 "Output directory at "+self.path_to_output+" already exists."
             )

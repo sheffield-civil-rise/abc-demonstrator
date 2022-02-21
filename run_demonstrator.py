@@ -6,7 +6,8 @@ This code defines a script which in turn runs the demonstrator script.
 import subprocess
 
 # Local constants.
-PATH_TO_DEMONSTRATOR_SCRIPT = r"G:\photogrammetry_e110a\src\demonstrator.py"
+HANSEL_PATH_TO_DEMONSTRATOR_SCRIPT = \
+    r"G:\photogrammetry_e110a\src\demonstrator.py"
 
 ###################
 # RUN AND WRAP UP #
@@ -15,7 +16,9 @@ PATH_TO_DEMONSTRATOR_SCRIPT = r"G:\photogrammetry_e110a\src\demonstrator.py"
 def run():
     """ Run this file. """
     try:
-        subprocess.run(["python", PATH_TO_DEMONSTRATOR_SCRIPT], check=True)
+        subprocess.run(
+            ["python", HANSEL_PATH_TO_DEMONSTRATOR_SCRIPT], check=True
+        )
     except subprocess.CalledProcessError:
         print("Sorry, but the demonstrator failed.")
         return False
