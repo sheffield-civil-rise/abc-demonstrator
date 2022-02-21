@@ -15,7 +15,6 @@ HANSEL_PATH_TO_SRC = r"G:\photogrammetry_e110a\src"
 def run():
     """ Run this file. """
     try:
-        subprocess.run(["pip", "install", "pytest"], check=True)
         subprocess.run(["pytest", HANSEL_PATH_TO_SRC], check=True)
     except subprocess.CalledProcessError:
         return False

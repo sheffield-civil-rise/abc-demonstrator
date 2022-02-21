@@ -3,6 +3,9 @@ This code defines a series of tests which check the output - both files and the
 fields of sub-objects - of the Demonstrator class.
 """
 
+# Standard imports.
+import os
+
 # Local imports.
 import config
 from demonstrator import Demonstrator
