@@ -80,6 +80,7 @@ sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
         exit 1
     )
     $PATH_TO_ACTIVATE_SCRIPT $ENV_NAME
+    G:
     cd $PATH_TO_REPO
     python $PATH_TO_DEMONSTRATOR_SCRIPT
 ENDSSH
