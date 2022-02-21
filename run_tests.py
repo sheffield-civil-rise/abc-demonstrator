@@ -18,7 +18,7 @@ HANSEL_PATH_TO_REPO = r"G:\photogrammetry_e110a"
 
 def run():
     """ Run this file. """
-    print(os.cwd())
+    print(os.getcwd())
     pytest.main(["tests"])
 #    try:
 #        subprocess.run(["pytest", HANSEL_PATH_TO_REPO], check=True)
