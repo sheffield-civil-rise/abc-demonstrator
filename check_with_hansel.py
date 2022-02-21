@@ -80,16 +80,12 @@ def run_on_hansel_with_auth(
         hide_output=False
     ):
     """ Generate the required auth data, and then call the script. """
-    old = False
-    if "--old" in sys.argv:
-        old = True
     security_dict = get_security_dict()
     result = \
         run_on_hansel(
             security_dict["personal_access_token"],
             security_dict["ssh_id"],
-            security_dict["ssh_password"],
-            old=old
+            security_dict["ssh_password"]
         )
     return result
 
