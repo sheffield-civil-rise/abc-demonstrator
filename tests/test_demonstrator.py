@@ -4,8 +4,8 @@ fields of sub-objects - of the Demonstrator class.
 """
 
 # Add paths.
-import sys
-sys.path.append("../src")
+#import sys
+#sys.path.append("../src")
 
 # Standard imports.
 import os
