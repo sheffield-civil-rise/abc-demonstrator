@@ -3,9 +3,9 @@ This code defines a series of tests which check the output - both files and the
 fields of sub-objects - of the Demonstrator class.
 """
 
-#import sys
-#
-#sys.path.append("../src")
+# Add paths.
+import sys
+sys.path.append("../src")
 
 # Standard imports.
 import os

@@ -2,8 +2,10 @@
 This code defines a script which in turn runs pytest on our source code.
 """
 
-# Local imports.
+# Standard imports.
 import subprocess
+
+# Non-standard imports.
 
 # Local constants.
 HANSEL_PATH_TO_REPO = r"G:\photogrammetry_e110a"
@@ -14,11 +16,12 @@ HANSEL_PATH_TO_REPO = r"G:\photogrammetry_e110a"
 
 def run():
     """ Run this file. """
-    try:
-        subprocess.run(["pytest", HANSEL_PATH_TO_REPO], check=True)
-    except subprocess.CalledProcessError:
-        return False
-    return True
+    pytest.main()
+#    try:
+#        subprocess.run(["pytest", HANSEL_PATH_TO_REPO], check=True)
+#    except subprocess.CalledProcessError:
+#        return False
+#    return True
 
 if __name__ == "__main__":
     run()
