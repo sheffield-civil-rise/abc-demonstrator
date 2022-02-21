@@ -85,7 +85,14 @@ def run_on_hansel_with_auth(
         run_on_hansel(
             security_dict["personal_access_token"],
             security_dict["ssh_id"],
-            security_dict["ssh_password"]
+            security_dict["ssh_password"],
+            path_to_repo=path_to_repo,
+            path_to_activate_script=path_to_activate_script,
+            env_name=env_name,
+            repo_url=repo_url,
+            path_to_script=path_to_script,
+            branch=branch,
+            hide_output=hide_output
         )
     return result
 
