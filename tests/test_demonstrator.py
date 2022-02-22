@@ -81,3 +81,11 @@ def test_rec_dir_gen_files(demo_obj):
             expected.CAMERA_INIT_LABEL_CHECKSUM
     )
 
+def test_batch_processor_files(demo_obj):
+    """ Test the files which the BatchProcessor sub-object outputs. """
+    assert os.path.exists(demo_obj.path_to_cache)
+    for subdirectory in expected.CACHE_SUBDIRECTORIES:
+        path_to = os.path.join(demo_obj.path_to_cache, subdirectory)
+        assert os.path.exists(path_to)
+        assert os.listdir(path_to) > 0
+
