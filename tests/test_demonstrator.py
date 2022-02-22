@@ -16,7 +16,7 @@ from make_checksum import make_checksum
 # TESTING #
 ###########
 
-def TestDemonstrator:
+class TestDemonstrator:
     """ A grouping of test methods. """
     def __init__(self):
         self.demo_obj = Demonstrator()
