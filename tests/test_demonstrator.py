@@ -9,6 +9,7 @@ import os
 # Local imports.
 import config
 from demonstrator import Demonstrator
+from make_checksum import make_checksum
 
 # Local constants.
 EXPECTED_LABELLED_IMAGE_FILENAME = "68273.png"
