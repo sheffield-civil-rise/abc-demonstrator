@@ -8,19 +8,9 @@ import os
 
 # Local imports.
 import config
+import expected
 from demonstrator import Demonstrator
 from make_checksum import make_checksum
-
-# Local constants.
-EXPECTED_LABELLED_IMAGE_FILENAME = "68273.png"
-EXPECTED_LABELLED_IMAGE_CHECKSUM = "8112283d0796bb55930c1d2a5ba450ba"
-EXPECTED_MASKED_IMAGE_FILENAME = (
-    "Ladybug-Stream-20210513-141154_ColorProcessed_006827_Cam3_192355_125-"+
-    "6896.jpg"
-)
-EXPECTED_MASKED_IMAGE_CHECKSUM = "66f9b85957e8c6f5e644a86f4e8a76ae"
-EXPECTED_CAMERA_INIT_CHECKSUM = "f5ac3842b62cb9b88bcc785f1b2c9d83"
-EXPECTED_CAMERA_INIT_LABEL_CHECKSUM = "3808667a6ebbbe4114522f3d2815b746"
 
 ###########
 # TESTING #
@@ -52,14 +42,14 @@ def check_rec_dir_gen_files(demo_obj):
         make_checksum(
             os.path.join(
                 demo_obj.rec_dir_gen.path_to_labelled_images,
-                EXPECTED_LABELLED_IMAGE_FILENAME
+                expected.LABELLED_IMAGE_FILENAME
             )
         )
     actual_masked_image_checksum = \
         make_checksum(
             os.path.join(
                 demo_obj.rec_dir_gen.path_to_masked_images,
-                EXPECTED_MASKED_IMAGE_FILENAME
+                expected.MASKED_IMAGE_FILENAME
             )
         )
     actual_camera_init_checksum = \
@@ -74,12 +64,12 @@ def check_rec_dir_gen_files(demo_obj):
                 demo_obj.rec_dir_gen.path_to_output, "cameraInit_label.sfm"
             )
         )
-    assert actual_labelled_image_checksum == EXPECTED_LABELLED_IMAGE_CHECKSUM
-    assert actual_masked_image_checksum == EXPECTED_MASKED_IMAGE_CHECKSUM
-    assert actual_camera_init_checksum == EXPECTED_CAMERA_INIT_CHECKSUM
+    assert actual_labelled_image_checksum == expected.LABELLED_IMAGE_CHECKSUM
+    assert actual_masked_image_checksum == expected.MASKED_IMAGE_CHECKSUM
+    assert actual_camera_init_checksum == expected.CAMERA_INIT_CHECKSUM
     assert (
         actual_camera_init_label_checksum ==
-            EXPECTED_CAMERA_INIT_LABEL_CHECKSUM
+            expected.CAMERA_INIT_LABEL_CHECKSUM
     )
 
 def test():
