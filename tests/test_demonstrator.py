@@ -19,10 +19,10 @@ from make_checksum import make_checksum
 # TESTING #
 ###########
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def demo_obj():
     result = Demonstrator()
-    result.make_and_run_reconstruction_dir_generator()
+    result.demonstrate()
     return result
 
 def test_rec_dir_gen_fields(demo_obj):
