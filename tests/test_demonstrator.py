@@ -99,5 +99,5 @@ def test_window_to_wall_ratio_calculator(demo_obj):
 
 def test_energy_model_idf(demo_obj):
     """ Test that the energy model's IDF object has the fields we want. """
-    print(demo_obj.energy_model.idf_obj.idfobjects.keys())
+    print(demo_obj.energy_model_generator.idf_obj.idfobjects.keys())
     assert False
