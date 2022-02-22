@@ -87,5 +87,17 @@ def test_batch_processor_files(demo_obj):
     for subdirectory in expected.CACHE_SUBDIRECTORIES:
         path_to = os.path.join(demo_obj.path_to_cache, subdirectory)
         assert os.path.exists(path_to)
-        assert os.listdir(path_to) > 0
+        assert len(os.listdir(path_to)) > 0
 
+def test_height_calculator(demo_obj):
+    """ Test that the height calculator actually produces an output. """
+    assert demo_obj.height_calculator.result is not None
+
+def test_window_to_wall_ratio_calculator(demo_obj):
+    """ Test that the WWR calculator actually produces an output. """
+    assert demo_obj.window_to_wall_ratio_calculator.result is not None
+
+def test_energy_model_idf(demo_obj):
+    """ Test that the energy model's IDF object has the fields we want. """
+    print(demo_obj.energy_model.idf_obj.idfobjects.keys())
+    assert False
