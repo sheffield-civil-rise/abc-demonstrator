@@ -8,7 +8,7 @@
 PATH_TO_REPO="G:\photogrammetry_e110a"
 PATH_TO_ACTIVATE_SCRIPT="C:\Users\hansel\Anaconda3\Scripts\activate"
 ENV_NAME="demonstrator"
-PATH_TO_DEMONSTRATOR_SCRIPT="$PATH_TO_REPO\run_tests.py"
+PATH_TO_DEMONSTRATOR_SCRIPT="$PATH_TO_REPO\validate.py"
 
 # Exit on first error.
 set -e

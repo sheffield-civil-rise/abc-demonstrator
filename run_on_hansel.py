@@ -13,7 +13,7 @@ from pathlib import Path
 PATH_TO_HOME = str(Path.home())
 DEFAULT_PATH_TO_REPO = os.path.join(PATH_TO_HOME, "photogrammetry_e110a")
 DEFAULT_PATH_TO_SCRIPT = \
-    os.path.join(DEFAULT_PATH_TO_REPO, "check_with_hansel.sh")
+    os.path.join(DEFAULT_PATH_TO_REPO, "run_on_hansel.sh")
 DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\photogrammetry_e110a"
 DEFAULT_PATH_TO_ACTIVATE_SCRIPT = r"C:\Users\hansel\Anaconda3\Scripts\activate"
 DEFAULT_ENV_NAME = "demonstrator"
