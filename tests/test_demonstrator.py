@@ -4,7 +4,6 @@ fields of sub-objects - of the Demonstrator class.
 """
 
 # Standard imports.
-import hashlib
 import os
 
 # Local imports.
@@ -12,7 +11,6 @@ import config
 from demonstrator import Demonstrator
 
 # Local constants.
-CHUNK_SIZE = 4096
 EXPECTED_LABELLED_IMAGE_FILENAME = "68273.png"
 EXPECTED_LABELLED_IMAGE_CHECKSUM = "8112283d0796bb55930c1d2a5ba450ba"
 EXPECTED_MASKED_IMAGE_FILENAME = (
@@ -20,19 +18,8 @@ EXPECTED_MASKED_IMAGE_FILENAME = (
     "6896.jpg"
 )
 EXPECTED_MASKED_IMAGE_CHECKSUM = "66f9b85957e8c6f5e644a86f4e8a76ae"
-
-####################
-# HELPER FUNCTIONS #
-####################
-
-def make_checksum(path_to_file, chunk_size=CHUNK_SIZE):
-    """ Make a checksum for a given file. """
-    hash_md5 = hashlib.md5()
-    with open(path_to_file, "rb") as hash_me:
-        for chunk in iter(lambda: hash_me.read(chunk_size), b""):
-            hash_md5.update(chunk)
-    result = hash_md5.hexdigest()
-    return result
+EXPECTED_CAMERA_INIT_CHECKSUM = "f5ac3842b62cb9b88bcc785f1b2c9d83"
+EXPECTED_CAMERA_INIT_LABEL_CHECKSUM = "3808667a6ebbbe4114522f3d2815b746"
 
 ###########
 # TESTING #
@@ -74,8 +61,25 @@ def check_rec_dir_gen_files(demo_obj):
                 EXPECTED_MASKED_IMAGE_FILENAME
             )
         )
+    actual_camera_init_checksum = \
+        make_checksum(
+            os.path.join(
+                demo_obj.rec_dir_gen.path_to_output, "cameraInit.sfm"
+            )
+        )
+    actual_camera_init_label_checksum = \
+        make_checksum(
+            os.path.join(
+                demo_obj.rec_dir_gen.path_to_output, "cameraInit_label.sfm"
+            )
+        )
     assert actual_labelled_image_checksum == EXPECTED_LABELLED_IMAGE_CHECKSUM
     assert actual_masked_image_checksum == EXPECTED_MASKED_IMAGE_CHECKSUM
+    assert actual_camera_init_checksum == EXPECTED_CAMERA_INIT_CHECKSUM
+    assert (
+        actual_camera_init_label_checksum ==
+            EXPECTED_CAMERA_INIT_LABEL_CHECKSUM
+    )
 
 def test():
     """ Run the unit tests. """
