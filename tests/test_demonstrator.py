@@ -23,7 +23,7 @@ from make_checksum import make_checksum
 def demo_obj():
     return Demonstrator()
 
-def check_rec_dir_gen_fields(demo_obj):
+def test_rec_dir_gen_fields(demo_obj):
     """ Test the FIELDS of the ReconstructionDirGenerator sub-object. """
     demo_obj.make_and_run_reconstruction_dir_generator()
     assert (
@@ -43,7 +43,7 @@ def check_rec_dir_gen_fields(demo_obj):
             os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "masked")
     )
 
-def check_rec_dir_gen_files(demo_obj):
+def test_rec_dir_gen_files(demo_obj):
     """ Test that the ReconstructionDirGenerator sub-object outputs the right
     files. """
     actual_labelled_image_checksum = \
