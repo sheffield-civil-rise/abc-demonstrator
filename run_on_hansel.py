@@ -1,6 +1,5 @@
 """
-This code defines a script which checks with Hansel whether the demonstrator
-is running correctly.
+This code defines a script which runs the demonstrator script on Hansel.
 """
 
 # Standard imports.
