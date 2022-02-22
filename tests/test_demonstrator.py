@@ -21,11 +21,12 @@ from make_checksum import make_checksum
 
 @pytest.fixture
 def demo_obj():
-    return Demonstrator()
+    result = Demonstrator()
+    result.make_and_run_reconstruction_dir_generator()
+    return result
 
 def test_rec_dir_gen_fields(demo_obj):
     """ Test the FIELDS of the ReconstructionDirGenerator sub-object. """
-    demo_obj.make_and_run_reconstruction_dir_generator()
     assert (
         demo_obj.rec_dir_gen.path_to_output ==
             config.DEFAULT_PATH_TO_DEMO_OUTPUT
