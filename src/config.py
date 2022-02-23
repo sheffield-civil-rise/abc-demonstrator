@@ -241,6 +241,6 @@ class Config:
 
     def export_energy_model(self):
         """ Convert this dictionary into a named tuple. """
-        EnergyModel = namedtuple("EnergyModel", list(self.batch_process.keys()))
-        result = BatchProcess(**self.energy_model)
+        EnergyModel = namedtuple("EnergyModel", list(self.energy_model.keys()))
+        result = EnergyModel(**self.energy_model)
         return result
