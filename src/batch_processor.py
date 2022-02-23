@@ -38,7 +38,6 @@ class BatchProcessor:
     paths_to_init_files: list = field(default_factory=list) # I.e. SFM files.
     path_to_labelled_images: str = None
     timeout: int = config.DEFAULT_BATCH_PROCESS_TIMEOUT
-    check_interval: int = config.DEFAULT_CHECK_INTERVAL
     # Generated fields.
     has_searched_for_images: bool = False
     two_way: bool = False
@@ -81,7 +80,7 @@ class BatchProcessor:
             print("Running two-way pipeline...")
             self.two_way = True
         elif len(self.paths_to_init_files) == 1:
-            print("Running only masked cameraInit...") # TODO: Ask about rephrasing this.
+            print("Running only masked cameraInit...")
         else:
             print("Running single pipeline...")
             self.single_track = True

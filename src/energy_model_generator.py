@@ -207,7 +207,7 @@ class EnergyModelGenerator:
         return result
 
     def define_materials(self):
-        # TODO: Ask about filling in this docstring.
+        """ Add some information on materials' thermoconductivity. """
         self.materials = {
             name.capitalize():
                 self.generate_material_idf(name, uvalue)

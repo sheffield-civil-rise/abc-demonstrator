@@ -209,8 +209,16 @@ class ReconstructionDirGenerator:
         result = [
             R @ (
                 lambda i: numpy.array([
-                    [numpy.cos(theta(i)), -numpy.sin(theta(i)), 0.],
-                    [numpy.sin(theta(i)), numpy.cos(theta(i)), 0.],
+                    [
+                        numpy.cos(angle_of_camera_with_index(i)),
+                        -numpy.sin(angle_of_camera_with_index(i)),
+                        0.
+                    ],
+                    [
+                        numpy.sin(angle_of_camera_with_index(i)),
+                        numpy.cos(angle_of_camera_with_index(i)),
+                        0.
+                    ],
                     [0., 0., 1.]
                 ])
             )(cam) for cam in range(self.number_of_cameras)
@@ -399,7 +407,7 @@ class ReconstructionDirGenerator:
             return
         for index, path in enumerate(img_list):
             img = cv2.imread(
-                path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH # TODO: Ask about how the pipe works here.
+                path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH
             )
             new_img = \
                 cv2.resize(
@@ -715,19 +723,15 @@ def seconds_since(origin, time):
     result = (time-origin).total_seconds()
     return result
 
-def theta(i):
+def angle_of_camera_with_index(index):
     # TODO: Ask what this does.
-    return (1+2*i)*numpy.pi/5.
-
-def theta_2(i):
-    # TODO: Ask what this does.
-    result = 2*numpy.pi-(1+(2*i))*numpy.pi/5.
+    result = 2*numpy.pi-(1+(2*index))*numpy.pi/5.
     return result
 
 def find_directions(heading, cam):
     # TODO: Ask what this does.
     heading = numpy.pi*heading/180.
-    th = theta_2(cam)+heading
+    th = angle_of_camera_with_index(cam)+heading
     if th >= 2*numpy.pi:
         result = th-2*numpy.pi
     elif th < 0:

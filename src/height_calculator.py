@@ -57,7 +57,12 @@ class HeightCalculator:
                 raise HeightCalculatorError(field_name+" cannot be None.")
 
     def to_homogeneous(self, transform):
-        # TODO: Ask about using more READABLE local variable names.
+        """
+        `T` is a translation vector.
+        `R` is a rotation matrix.
+        `S` is a scale vector.
+        `h` denotes a homogeneous transformation thereof.
+        """
         T, R, S = transform
         Th, Rh, Sh = [
             numpy.zeros((self.EYE_ROWS, self.EYE_ROWS)) for _ in range(3)
@@ -75,7 +80,9 @@ class HeightCalculator:
         return Th, Rh, Sh
 
     def joint_transform(self, forward, backward, separate_scale=False):
-        # TODO: Ask about using more READABLE local variable names.
+        """
+        `f` and `b` denote forwards and backwards.
+        """
         Tf, Rf, Sf = self.to_homogeneous(forward)
         Tb, Rb, Sb = self.to_homogeneous(backward)
         Rb[0:3, 0:3] = scipy.linalg.inv(Rb[0:3, 0:3])
