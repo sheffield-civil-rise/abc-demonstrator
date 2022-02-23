@@ -20,9 +20,10 @@ def config_obj():
 def test_defaults(config_obj):
     """ Test that the expected defaults are present in the dictionary fields
     of the config object. """
-    assert config_obj.general["path_to_output"] = DEFAULT_PATH_TO_OUTPUT
+    assert config_obj.general["path_to_output"] == DEFAULT_PATH_TO_OUTPUT
     assert (
-        config_obj.energy_model["boiler_efficiency"] = DEFAULT_BOILER_EFFICIENCY
+        config_obj.energy_model["boiler_efficiency"] ==
+            DEFAULT_BOILER_EFFICIENCY
     )
 
 def test_immutability(config_obj):
