@@ -32,5 +32,5 @@ def test_immutability(config_obj):
     """ Test that trying to change one of the fields raises the appropriate
     exception. """
     config_immutable = config_obj.export_as_immutable()
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         config_immutable.batch_process.timeout = 1234
