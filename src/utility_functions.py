@@ -18,7 +18,7 @@ def make_label_color_dict(
     ):
     """ Ronseal. """
     if label_value_dict is None:
-        label_value_dict = config.LABEL_VALUE_DICT
+        label_value_dict = config.DEFAULT_LABEL_VALUE_DICT
     result = {
         i:[int(j_) for j_ in j]
         for i, j in zip(
