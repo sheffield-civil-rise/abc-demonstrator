@@ -90,6 +90,8 @@ DEFAULT_SETPOINT_COOLING = 26
 DEFAULT_BOILER_EFFICIENCY = 0.8
 
 # Other.
+EXPECTED_PATH_TO_CONFIG_JSON = \
+    os.path.join(str(Path.home()), "photogrammetry_config.json")
 SEMICIRCLE_DEGREES = 180
 
 ##############
@@ -154,8 +156,7 @@ class Config:
     }
 
     # Fields.
-    path_to_json: str = \
-        os.path.join(str(Path.home()), "photogrammetry_config.json")
+    path_to_json: str = EXPECTED_PATH_TO_CONFIG_JSON
     enc: str = DEFAULT_ENCODING
     general: dict = None
     reconstruction_dir: dict = None

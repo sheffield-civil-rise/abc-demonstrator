@@ -2,6 +2,9 @@
 This code defines some unit tests for the Config class.
 """
 
+# Standard imports.
+import os
+
 # Non-standard imports.
 import pytest
 
@@ -34,3 +37,15 @@ def test_immutability(config_obj):
     config_immutable = config_obj.export_as_immutable()
     with pytest.raises(AttributeError):
         config_immutable.batch_process.timeout = 1234
+
+def test_custom_json():
+    """ Test that we can set configurations via a JSON file. """
+    new_path_to_output = "/something/else"
+    test_config_json_path = "test_config.json"
+    test_config_json_str = "{ 'path_to_output': '"+new_path_to_output+"' }"
+    with open(test_config_json_path, "w") as test_config_json_file:
+        test_config_json_file.write(test_config_json_str)
+    custom_config = config.Config(path_to_json)
+    immutable_custom_config = custom_config.export_as_immutable()
+    assert immutable_custom_config.general.path_to_ouput = new_path_to_output
+    os.remove(test_config_json_path)
