@@ -12,7 +12,10 @@ import config
 # FUNCTIONS #
 #############
 
-def make_label_color_dict(label_value_dict=None, rgb_max=config.RGB_MAX):
+def make_label_color_dict(
+        label_value_dict=None,
+        rgb_max=config.DEFAULT_RGB_MAX
+    ):
     """ Ronseal. """
     if label_value_dict is None:
         label_value_dict = config.LABEL_VALUE_DICT
