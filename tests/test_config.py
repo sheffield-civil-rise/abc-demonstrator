@@ -56,7 +56,8 @@ def test_custom_json():
     immutable_custom_config = custom_config.export_as_immutable()
     assert immutable_custom_config.general.path_to_output == new_path_to_output
     assert (
-        immutable_custom_config.general.path_to_input == DEFAULT_PATH_TO_INPUT
+        immutable_custom_config.general.path_to_input == \
+            config.DEFAULT_PATH_TO_INPUT
     )
     os.remove(test_config_json_path)
 
