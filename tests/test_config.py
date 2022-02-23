@@ -43,11 +43,20 @@ def test_custom_json():
     new_path_to_output = "/something/else"
     test_config_json_path = "test_config.json"
     test_config_json_str = (
-        '{ "general": { "path_to_output": "'+new_path_to_output+'" } }'
+        '{ '+
+            '"general": { '+
+                '"path_to_output": "'+new_path_to_output+'", '+
+                '"path_to_input": null '+
+            '} '+
+        '}'
     )
     with open(test_config_json_path, "w") as test_config_json_file:
         test_config_json_file.write(test_config_json_str)
     custom_config = config.Config(test_config_json_path)
     immutable_custom_config = custom_config.export_as_immutable()
     assert immutable_custom_config.general.path_to_output == new_path_to_output
+    assert (
+        immutable_custom_config.general.path_to_input == DEFAULT_PATH_TO_INPUT
+    )
     os.remove(test_config_json_path)
+
