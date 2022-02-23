@@ -252,3 +252,13 @@ class Config:
         EnergyModel = namedtuple("EnergyModel", list(self.energy_model.keys()))
         result = EnergyModel(**self.energy_model)
         return result
+
+####################
+# HELPER FUNCTIONS #
+####################
+
+def get_configs():
+    """ Get an immutable config object. """
+    config_obj = Config()
+    result = config_obj.export_as_immutable()
+    return result

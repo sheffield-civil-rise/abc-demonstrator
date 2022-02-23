@@ -26,3 +26,5 @@ The code in this repo calls a script which - through the power of SSH - runs on 
 * If you're working from a non-university machine, it may be necessary to start the University of Sheffield VPN in order to access Hansel.
 * Run the demonstrator script by calling `python3 run_on_hansel.py`.
 * You can also run the same code manually on Hansel itself by calling `run_demonstrator.py`.
+
+### Config JSON File
