@@ -6,7 +6,10 @@ This code defines some utility functions.
 import numpy
 
 # Local imports.
-import config
+from config import get_configs
+
+# Local constants.
+CONFIGS = get_configs()
 
 #############
 # FUNCTIONS #
@@ -14,11 +17,11 @@ import config
 
 def make_label_color_dict(
         label_value_dict=None,
-        rgb_max=config.DEFAULT_RGB_MAX
+        rgb_max=CONFIGS.general.rgb_max
     ):
     """ Ronseal. """
     if label_value_dict is None:
-        label_value_dict = config.DEFAULT_LABEL_VALUE_DICT
+        label_value_dict = CONFIGS.general.label_value_dict
     result = {
         i:[int(j_) for j_ in j]
         for i, j in zip(
@@ -32,7 +35,7 @@ def make_label_color_dict(
     }
     return result
 
-def encode_color(to_encode, byte_length=config.DEFAULT_BYTE_LENGTH):
+def encode_color(to_encode, byte_length=CONFIGS.batch_process.byte_length):
     """ Encode a colour as an integer representation thereof. """
     to_encode = numpy.array(to_encode).astype("int")
     result = (
@@ -42,7 +45,7 @@ def encode_color(to_encode, byte_length=config.DEFAULT_BYTE_LENGTH):
     )
     return result
 
-def decode_color(to_decode, byte_length=config.DEFAULT_BYTE_LENGTH):
+def decode_color(to_decode, byte_length=CONFIGS.batch_process.byte_length):
     """ Decode an integer representation of a colour. """
     result = \
         numpy.stack(

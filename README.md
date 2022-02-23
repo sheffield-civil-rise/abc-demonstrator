@@ -28,3 +28,5 @@ The code in this repo calls a script which - through the power of SSH - runs on 
 * You can also run the same code manually on Hansel itself by calling `run_demonstrator.py`.
 
 ### Config JSON File
+
+You may, **if you wish**, choose to provide a configurations JSON file. See the value of `EXPECTED_PATH_TO_CONFIG_JSON` in src/config.py for where to put this file. Any configurations provided in said JSON file will override the defaults. A template configurations file is provided in this directory. Any values which are absent from the configurations file, or which are set to null, will be set to the defaults found in src/config.py.

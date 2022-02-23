@@ -15,7 +15,10 @@ import scipy
 from sklearn.decomposition import PCA
 
 # Local imports.
-import config
+from config import get_configs
+
+# Local constants.
+CONFIGS = get_configs()
 
 ##############
 # MAIN CLASS #
@@ -185,7 +188,7 @@ def load_mesh(path_to):
     os.chdir(cwd)
     return result
 
-def read_sfm_as_dict(path_to, encoding=config.DEFAULT_ENCODING):
+def read_sfm_as_dict(path_to, encoding=CONFIGS.general.encoding):
     """ Read an SFM file and return dictionary with the data therein. """
     with open(path_to, "r", encoding=encoding) as sfm_file:
         result = json.load(sfm_file)

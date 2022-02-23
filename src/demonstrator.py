@@ -12,12 +12,15 @@ import sys
 import numpy
 
 # Local imports.
-import config
 from batch_processor import BatchProcessor
+from config import get_configs
 from energy_model_generator import EnergyModelGenerator
 from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
 from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
+
+# Local constants.
+CONFIGS = get_configs()
 
 ##############
 # MAIN CLASS #
@@ -27,7 +30,7 @@ class Demonstrator:
     """ The class in question. """
     def __init__(
             self,
-            path_to_output=config.DEFAULT_PATH_TO_DEMO_OUTPUT,
+            path_to_output=CONFIGS.general.path_to_demo_output,
             expedite=False
         ):
         self.path_to_output = path_to_output
@@ -108,11 +111,9 @@ class Demonstrator:
         """ Build the energy model generator object, and then run it. """
         wwr = self.window_to_wall_ratio_calculator.result
         path_to_output_idf = \
-            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "output.idf")
+            os.path.join(self.path_to_output, "output.idf")
         path_to_output_dir = \
-            os.path.join(
-                config.DEFAULT_PATH_TO_DEMO_OUTPUT, "energy_model_output"
-            )
+            os.path.join(self.path_to_output, "energy_model_output")
         self.energy_model_generator = \
             EnergyModelGenerator(
                 height=self.height_calculator.result,

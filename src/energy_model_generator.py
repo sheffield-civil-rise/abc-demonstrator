@@ -17,10 +17,11 @@ from geomeppy import IDF
 from shapely.geometry import Polygon
 
 # Local imports.
-import config
+from config import get_configs
 
 # Local constants.
 NORTH, EAST, SOUTH, WEST = 0, 90, 180, 270
+CONFIGS = get_configs()
 
 ##############
 # MAIN CLASS #
@@ -31,31 +32,35 @@ class EnergyModelGenerator:
     """ The class in question. """
     # Fields.
     id_str: str = "demo"
-    path_to_starting_point_idf: str = config.DEFAULT_PATH_TO_STARTING_POINT_IDF
+    path_to_starting_point_idf: str = \
+        CONFIGS.energy_model.path_to_starting_point_idf
     height: float = None
     window_to_wall_ratio: float = None
-    path_to_polygon: str = config.DEFAULT_PATH_TO_POLYGON
-    path_to_idd: str = config.DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY
-    path_to_starting_point_idf: str = config.DEFAULT_PATH_TO_STARTING_POINT_IDF
-    path_to_weather_file: str = config.DEFAULT_PATH_TO_ENERGYPLUS_WEATHER_FILE
-    path_to_output_idf: str = config.DEFAULT_PATH_TO_OUTPUT_IDF
-    path_to_output_dir: str = config.DEFAULT_PATH_TO_ENERGY_MODEL_OUTPUT_DIR
+    path_to_polygon: str = CONFIGS.energy_model.path_to_polygon
+    path_to_idd: str = \
+        CONFIGS.energy_model.path_to_energyplus_input_data_dictionary
+    path_to_weather_file: str = \
+        CONFIGS.energy_model.path_to_energyplus_weather_file
+    path_to_output_idf: str = CONFIGS.energy_model.path_to_output_idf
+    path_to_output_dir: str = \
+        CONFIGS.energy_model.path_to_energy_model_output_dir
     num_stories: int = 2
     orientation: float = 0.0
     save_idf: bool = True
     uvalues: dict = None
     layers: list = None
-    window_shgc: float = config.DEFAULT_WINDOW_SHGC # Solar Heat Gain Coeff.
+    window_shgc: float = CONFIGS.energy_model.window_shgc
     roughness: str = "MediumRough"
     schedules: dict = None
-    air_change_per_hour: float = config.DEFAULT_AIR_CHANGE_PER_HOUR
-    setpoint_heating: int = config.DEFAULT_SETPOINT_HEATING
-    setpoint_cooling: int = config.DEFAULT_SETPOINT_COOLING
+    air_change_per_hour: float = CONFIGS.energy_model.air_change_per_hour
+    setpoint_heating: int = CONFIGS.energy_model.setpoint_heating
+    setpoint_cooling: int = CONFIGS.energy_model.setpoint_cooling
     densities: dict = None
     boiler_type: str = "CondensingHotWaterBoiler"
     boiler_fuel: str = "NaturalGas"
-    boiler_efficiency: float = config.DEFAULT_BOILER_EFFICIENCY
-    src_co_ref_sys: str = config.DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM
+    boiler_efficiency: float = CONFIGS.energy_model.boiler_efficiency
+    src_co_ref_sys: str = \
+        CONFIGS.reconstruction_dir.source_coordinate_reference_system
     # Generated fields.
     adjusted_height: float = None
     window_to_wall_ratio_dict: dict = None

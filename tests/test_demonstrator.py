@@ -61,25 +61,16 @@ def test_rec_dir_gen_files(demo_obj):
                 expected.MASKED_IMAGE_FILENAME
             )
         )
-    actual_camera_init_checksum = \
-        make_checksum(
-            os.path.join(
-                demo_obj.rec_dir_gen.path_to_output, "cameraInit.sfm"
-            )
-        )
-    actual_camera_init_label_checksum = \
-        make_checksum(
-            os.path.join(
-                demo_obj.rec_dir_gen.path_to_output, "cameraInit_label.sfm"
-            )
+    path_to_camera_init = \
+        os.path.join(demo_obj.rec_dir_gen.path_to_output, "cameraInit.sfm")
+    path_to_camera_init_label = \
+        os.path.join(
+            demo_obj.rec_dir_gen.path_to_output, "cameraInit_label.sfm"
         )
     assert actual_labelled_image_checksum == expected.LABELLED_IMAGE_CHECKSUM
     assert actual_masked_image_checksum == expected.MASKED_IMAGE_CHECKSUM
-    assert actual_camera_init_checksum == expected.CAMERA_INIT_CHECKSUM
-    assert (
-        actual_camera_init_label_checksum ==
-            expected.CAMERA_INIT_LABEL_CHECKSUM
-    )
+    assert os.path.exists(path_to_camera_init)
+    assert os.path.exists(path_to_camera_init_label)
 
 def test_batch_processor_files(demo_obj):
     """ Test the files which the BatchProcessor sub-object outputs. """

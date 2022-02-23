@@ -7,7 +7,10 @@ BatchProcessor object.
 from meshroom.core.graph import Graph, GraphModification
 
 # Local imports.
-import config
+from config import get_configs
+
+# Local constants.
+CONFIGS = get_configs()
 
 #############
 # FUNCTIONS #
@@ -25,7 +28,7 @@ def defaultSfmPipeline(graph):
     imageMatching = graph.addNewNode(
         "ImageMatching", input=featureExtraction.input,
         featuresFolders=[featureExtraction.output],
-        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
+        tree=CONFIGS.batch_process.path_to_vocab_tree)
     featureMatching = graph.addNewNode(
         "FeatureMatching", input=imageMatching.input,
         featuresFolders=imageMatching.featuresFolders,
@@ -68,12 +71,12 @@ def twowaySfmPipeline(graph, cameraInit=None):
         "ImageMatching",
         input=featureExtraction.input,
         featuresFolders=[featureExtraction.output],
-        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
+        tree=CONFIGS.batch_process.path_to_vocab_tree)
     _imageMatching = graph.addNewNode(
         "ImageMatching",
         input=_featureExtraction.input,
         featuresFolders=[_featureExtraction.output],
-        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
+        tree=CONFIGS.batch_process.path_to_vocab_tree)
     out.append(imageMatching)
     out.append(_imageMatching)
 
@@ -140,7 +143,7 @@ def customSfmPipeline(graph, cameraInit=None):
         "ImageMatching",
         input=featureExtraction.input,
         featuresFolders=[featureExtraction.output],
-        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
+        tree=CONFIGS.batch_process.path_to_vocab_tree)
     out.append(imageMatching)
     featureMatching = graph.addNewNode(
         "FeatureMatching", input=imageMatching.input,

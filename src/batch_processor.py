@@ -19,8 +19,11 @@ from meshroom.core.graph import Graph
 from meshroom.core.taskManager import TaskManager, TaskThread
 
 # Local imports.
-import config
+from config import get_configs
 from custom_pipeline import build_graph
+
+# Local constants.
+CONFIGS = get_configs()
 
 ##############
 # MAIN CLASS #
@@ -34,10 +37,10 @@ class BatchProcessor:
     path_to_output_images: str = None
     pipeline: str = "custom"
     publisher_output: list = field(default_factory=list)
-    path_to_cache: str = os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "cache")
+    path_to_cache: str = os.path.join(CONFIGS.general.path_to_output, "cache")
     paths_to_init_files: list = field(default_factory=list) # I.e. SFM files.
     path_to_labelled_images: str = None
-    timeout: int = config.DEFAULT_BATCH_PROCESS_TIMEOUT
+    timeout: int = CONFIGS.batch_process.timeout
     # Generated fields.
     has_searched_for_images: bool = False
     two_way: bool = False

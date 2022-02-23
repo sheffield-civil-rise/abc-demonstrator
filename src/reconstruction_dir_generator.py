@@ -23,9 +23,12 @@ from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
 
 # Local imports.
-import config
+from config import get_configs, SEMICIRCLE_DEGREES
 from deeplab.Deeplabv3 import Deeplabv3
 from utility_functions import make_label_color_dict, encode_color, decode_color
+
+# Local constants.
+CONFIGS = get_configs()
 
 ##############
 # MAIN CLASS #
@@ -35,19 +38,23 @@ from utility_functions import make_label_color_dict, encode_color, decode_color
 class ReconstructionDirGenerator:
     """ The class in question. """
     # Fields.
-    path_to_gps_data: str = config.DEFAULT_PATH_TO_GPS_DATA
-    path_to_ladybug_gps_data: str = config.DEFAULT_PATH_TO_LADYBUG_GPS_DATA
-    path_to_ladybug_images: str = config.DEFAULT_PATH_TO_LADYBUG_IMAGES
-    path_to_polygon: str = config.DEFAULT_PATH_TO_POLYGON
-    path_to_output: str = config.DEFAULT_PATH_TO_OUTPUT
-    path_to_model: str = config.DEFAULT_PATH_TO_DEEPLAB_BINARY
-    co_ref_sys: str = config.DEFAULT_COORDINATE_REFERENCE_SYSTEM
-    src_co_ref_sys: str = config.DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM
-    radius: int = config.DEFAULT_RADIUS
-    view_distance: int = config.DEFAULT_VIEW_DISTANCE
-    field_of_view: float = config.DEFAULT_FIELD_OF_VIEW
-    output_image_extension: str = config.DEFAULT_OUTPUT_IMAGE_EXTENSION
-    number_of_cameras: int = config.DEFAULT_NUMBER_OF_CAMERAS
+    path_to_gps_data: str = CONFIGS.reconstruction_dir.path_to_gps_data
+    path_to_ladybug_gps_data: str = \
+        CONFIGS.reconstruction_dir.path_to_ladybug_gps_data
+    path_to_ladybug_images: str = \
+        CONFIGS.reconstruction_dir.path_to_ladybug_images
+    path_to_polygon: str = CONFIGS.reconstruction_dir.path_to_polygon
+    path_to_output: str = CONFIGS.reconstruction_dir.path_to_output
+    path_to_model: str = CONFIGS.reconstruction_dir.path_to_deeplab_binary
+    co_ref_sys: str = CONFIGS.reconstruction_dir.coordinate_reference_system
+    src_co_ref_sys: str = \
+        CONFIGS.reconstruction_dir.source_coordinate_reference_system
+    radius: int = CONFIGS.reconstruction_dir.radius
+    view_distance: int = CONFIGS.reconstruction_dir.view_distance
+    field_of_view: float = CONFIGS.reconstruction_dir.field_of_view
+    output_image_extension: str = \
+        CONFIGS.reconstruction_dir.output_image_extension
+    number_of_cameras: int = CONFIGS.reconstruction_dir.number_of_cameras
     expedite: bool = True
     # Generated fields.
     path_to_output_images: str = None
@@ -90,7 +97,7 @@ class ReconstructionDirGenerator:
     SEGMENT_RESOLUTION: ClassVar[int] = 20
     IMAGE_FILENAME_INDICES: ClassVar[tuple] = (46, 52, 56)
     MAX_CAM_INDEX: ClassVar[int] = 5
-    LABEL_VALUE_DICT: ClassVar[dict] = config.DEFAULT_LABEL_VALUE_DICT
+    LABEL_VALUE_DICT: ClassVar[dict] = CONFIGS.general.label_value_dict
     LABEL_COLOR_DICT: ClassVar[dict] = make_label_color_dict()
     PALETTE: ClassVar[dict] = None
     IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
@@ -194,7 +201,7 @@ class ReconstructionDirGenerator:
     def build_rotation(self, heading, pitch, roll):
         """ Build a rotation matrix. """
         heading, pitch, roll = [
-            (lambda d: numpy.pi*d/config.SEMICIRCLE_DEGREES)(d) for d in [
+            (lambda d: numpy.pi*d/SEMICIRCLE_DEGREES)(d) for d in [
                 heading, pitch, roll
             ]
         ]
@@ -416,7 +423,7 @@ class ReconstructionDirGenerator:
                 )[0:self.IMG_SHAPE[0], 0:self.IMG_SHAPE[1]]
             new_img = (
                 cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)/
-                    config.DEFAULT_MAX_RGB_CHANNEL
+                    CONFIGS.general.max_rgb_channel
             )
             prediction = model.predict(numpy.asarray([numpy.array(new_img)]))
             bgr_mask = \
@@ -664,7 +671,7 @@ class DigitMapToBGR:
 
 def to_geo_data_frame(
         data_frame,
-        co_ref_sys=config.DEFAULT_COORDINATE_REFERENCE_SYSTEM
+        co_ref_sys=CONFIGS.reconstruction_dir.coordinate_reference_system
     ):
     """ Add geometry to a given data frame. """
     result = \
@@ -679,10 +686,11 @@ def to_geo_data_frame(
 
 def create_circle(
         centroid,
-        radius=config.DEFAULT_RADIUS,
-        co_ref_sys=config.DEFAULT_COORDINATE_REFERENCE_SYSTEM,
-        src_co_ref_sys=config.DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM,
-        resolution=config.DEFAULT_CIRCLE_RESOLUTION,
+        radius=CONFIGS.reconstruction_dir.radius,
+        co_ref_sys=CONFIGS.reconstruction_dir.coordinate_reference_systen,
+        src_co_ref_sys=\
+            CONFIGS.reconstruction_dir.source_coordinate_reference_system,
+        resolution=CONFIGS.reconstruction_dir.circle_resolution,
         aspoints=False
     ):
     """ Return a circle object. """
@@ -744,7 +752,7 @@ def find_directions(heading, cam):
 def get_img_paths(
         path_to_dir,
         recursive=True,
-        image_extensions=config.DEFAULT_IMAGE_EXTENSIONS
+        image_extensions=CONFIGS.reconstruction_dir.image_extensions
     ):
     """ Get the paths within a directory corresponding to image files. """
     result = []
@@ -777,5 +785,5 @@ def mask_image(img, mask):
     binmask = numpy.any(mask, axis=2).astype("int")
     maskdim = img*numpy.stack(3*[binmask], axis=2)
     result = cv2.cvtColor(maskdim.astype("uint8"), cv2.COLOR_BGR2BGRA)
-    result[:, :, 3] = binmask*config.DEFAULT_MAX_RGB_CHANNEL
+    result[:, :, 3] = binmask*CONFIGS.general.max_rgb_channel
     return result
