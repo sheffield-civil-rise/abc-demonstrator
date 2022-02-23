@@ -415,7 +415,8 @@ class ReconstructionDirGenerator:
                     (img.shape[1]//2, img.shape[0]//2)
                 )[0:self.IMG_SHAPE[0], 0:self.IMG_SHAPE[1]]
             new_img = (
-                cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)/config.MAX_RGB_CHANNEL
+                cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)/
+                    config.DEFAULT_MAX_RGB_CHANNEL
             )
             prediction = model.predict(numpy.asarray([numpy.array(new_img)]))
             bgr_mask = \
@@ -776,5 +777,5 @@ def mask_image(img, mask):
     binmask = numpy.any(mask, axis=2).astype("int")
     maskdim = img*numpy.stack(3*[binmask], axis=2)
     result = cv2.cvtColor(maskdim.astype("uint8"), cv2.COLOR_BGR2BGRA)
-    result[:, :, 3] = binmask*config.MAX_RGB_CHANNEL
+    result[:, :, 3] = binmask*config.DEFAULT_MAX_RGB_CHANNEL
     return result
