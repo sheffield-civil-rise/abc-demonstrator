@@ -192,7 +192,7 @@ class ReconstructionDirGenerator:
             return new_data_frame
 
     def build_rotation(self, heading, pitch, roll):
-        # TODO: Ask what this does.
+        """ Build a rotation matrix. """
         heading, pitch, roll = [
             (lambda d: numpy.pi*d/config.SEMICIRCLE_DEGREES)(d) for d in [
                 heading, pitch, roll
@@ -471,7 +471,7 @@ class ReconstructionDirGenerator:
             print_progress(index, len(img_list))
 
     def generate_local_selection(self):
-        # TODO: Ask what the `local_selection` does.
+        """ Switch over to local coordinates. """
         result = self.file_paths.copy()
         local_centroid = \
             geopandas.GeoSeries(
@@ -501,13 +501,13 @@ class ReconstructionDirGenerator:
         return result
 
     def get_view_or_pose_index(self, row):
-        # TODO: Ask what an "index" is in this context.
+        """ Ronseal. """
         result = \
             str(int(row["FRAME"])*self.FRAME_ENCODING_FACTOR+int(row["cam"]))
         return result
 
     def create_view(self, row, base_path):
-        # TODO: Ask what a "view" is in this context.
+        """ A "view" in this context is an image. """
         index = self.get_view_or_pose_index(row)
         result = {
             "viewId": index,
@@ -521,7 +521,7 @@ class ReconstructionDirGenerator:
         return result
 
     def create_pose(self, row):
-        # TODO: Ask what a "pose" is in this context.
+        """ A "pose" in this context refers to how the camera is positioned. """
         index = self.get_view_or_pose_index(row)
         result = {
             "poseId": index,
@@ -724,12 +724,12 @@ def seconds_since(origin, time):
     return result
 
 def angle_of_camera_with_index(index):
-    # TODO: Ask what this does.
+    """ Get which way a given camera is pointing, relative to the van. """
     result = 2*numpy.pi-(1+(2*index))*numpy.pi/5.
     return result
 
 def find_directions(heading, cam):
-    # TODO: Ask what this does.
+    """ Get which way a given camera is pointing, relative to north. """
     heading = numpy.pi*heading/180.
     th = angle_of_camera_with_index(cam)+heading
     if th >= 2*numpy.pi:

@@ -67,6 +67,11 @@ DEFAULT_OUTPUT_IMAGE_EXTENSION = ".png"
 # Batch processes.
 DEFAULT_BYTE_LENGTH = 8
 DEFAULT_BATCH_PROCESS_TIMEOUT = 7200 # I.e. two hours in SECONDS.
+DEFAULT_PATH_TO_VOCAB_TREE = \
+    os.path.join(
+        DEFAULT_PATH_TO_BINARIES,
+        r"aliceVision\share\aliceVision\vlfeat_K80L3.SIFT.tree"
+    )
 
 # Energy model.
 DEFAULT_PATH_TO_ENERGYPLUS = \
@@ -133,7 +138,8 @@ class Config:
         },
         "batch_process": {
             "byte_length": DEFAULT_BYTE_LENGTH,
-            "timeout": DEFAULT_BATCH_PROCESS_TIMEOUT
+            "timeout": DEFAULT_BATCH_PROCESS_TIMEOUT,
+            "path_to_vocab_tree": DEFAULT_PATH_TO_VOCAB_TREE
         },
         "energy_model": {
             "path_to_energyplus": DEFAULT_PATH_TO_ENERGYPLUS,

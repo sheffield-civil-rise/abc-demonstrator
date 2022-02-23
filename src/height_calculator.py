@@ -192,19 +192,19 @@ def read_sfm_as_dict(path_to, encoding=config.DEFAULT_ENCODING):
     return result
 
 def get_rotation(points):
-    # TODO: Ask what this does.
+    """ Make the rotation matrix. """
     pca = PCA()
     pca.fit(points.T)
     result = pca.components_.T
     return result
 
 def get_translation(points):
-    # TODO: Ask what this does.
+    """ Make the translation matrix. """
     result = numpy.mean(points, axis=1)
     return result
 
 def get_scale(points):
-    # TODO: Ask what this does.
+    """ Make the scale matrix. """
     pca = PCA()
     pca.fit(points.T)
     result = pca.explained_variance_

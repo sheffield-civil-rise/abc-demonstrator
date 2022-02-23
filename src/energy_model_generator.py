@@ -119,9 +119,9 @@ class EnergyModelGenerator:
         self.read_polygon()
 
     def set_adjusted_height(self):
-        # TODO: Ask about why we do this.
+        """ Make sure the height is at least the minimum. """
         self.adjusted_height = \
-            numpy.max([self.MIN_ADJUSTED_HEIGHT, self.height*(2/3)])
+            numpy.max([self.MIN_ADJUSTED_HEIGHT, self.height])
 
     def set_window_to_wall_ratio_dict(self):
         """ Create a dictionary giving the window-to-wall ratio for each
@@ -232,7 +232,7 @@ class EnergyModelGenerator:
         return result
 
     def define_constructions(self):
-        # TODO: Ask about filling in this docstring.
+        """ Define what is where, and what it's made of. """
         self.constructions = { 
             name.capitalize():
                 self.generate_construction_idf(name) for name in self.layers
@@ -331,7 +331,7 @@ class EnergyModelGenerator:
             )
 
     def populate_zones(self):
-        # TODO: Ask about filling in this docstring.
+        """ Populate our model with stuff such as people and lights. """
         for zone in self.idf_obj.idfobjects["ZONE"]:
             # Add radiator in every zone.
             self.idf_obj.newidfobject(

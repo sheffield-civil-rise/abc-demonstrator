@@ -6,8 +6,8 @@ BatchProcessor object.
 # Non-standard imports.
 from meshroom.core.graph import Graph, GraphModification
 
-# Local constants. TODO: Ask about removing this.
-VOCAB_TREE = r"C:\Users\Wil_User\Desktop\Meshroom-2021.1.0-win64\Meshroom-2021.1.0\aliceVision\share\aliceVision\vlfeat_K80L3.SIFT.tree"
+# Local imports.
+import config
 
 #############
 # FUNCTIONS #
@@ -18,21 +18,21 @@ def defaultSfmPipeline(graph):
     Instantiate SfM pipeline for photogrammetry pipeline.
     Based on default photogrammetry pipeline in meshroom.
     """
-    cameraInit = graph.addNewNode('CameraInit')
+    cameraInit = graph.addNewNode("CameraInit")
     featureExtraction = graph.addNewNode(
-        'FeatureExtraction', input=cameraInit.output,
+        "FeatureExtraction", input=cameraInit.output,
         forceCpuExtraction=False)
     imageMatching = graph.addNewNode(
-        'ImageMatching', input=featureExtraction.input,
+        "ImageMatching", input=featureExtraction.input,
         featuresFolders=[featureExtraction.output],
-        tree=VOCAB_TREE)
+        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
     featureMatching = graph.addNewNode(
-        'FeatureMatching', input=imageMatching.input,
+        "FeatureMatching", input=imageMatching.input,
         featuresFolders=imageMatching.featuresFolders,
         imagePairsList=imageMatching.output,
         describerTypes=featureExtraction.describerTypes)
     structureFromMotion = graph.addNewNode(
-        'StructureFromMotion', input=featureMatching.input,
+        "StructureFromMotion", input=featureMatching.input,
         featuresFolders=featureMatching.featuresFolders,
         matchesFolders=[featureMatching.output],
         describerTypes=featureMatching.describerTypes)
@@ -49,42 +49,42 @@ def twowaySfmPipeline(graph, cameraInit=None):
     Uses custom defined cameraInit file.
     """
     out = []
-    cameraInit = graph.addNewNode('CameraInit')
+    cameraInit = graph.addNewNode("CameraInit")
     out.append(cameraInit)
-    _cameraInit = graph.addNewNode('CameraInit')
+    _cameraInit = graph.addNewNode("CameraInit")
     out.append(_cameraInit)
     featureExtraction = graph.addNewNode(
-            'FeatureExtraction',
+            "FeatureExtraction",
             input=cameraInit.output,
             forceCpuExtraction=False)
     _featureExtraction = graph.addNewNode(
-            'FeatureExtraction',
+            "FeatureExtraction",
             input= _cameraInit.output,
             forceCpuExtraction=False)
     out.append(featureExtraction)
     out.append(_featureExtraction)
 
     imageMatching = graph.addNewNode(
-        'ImageMatching',
+        "ImageMatching",
         input=featureExtraction.input,
         featuresFolders=[featureExtraction.output],
-        tree=VOCAB_TREE)
+        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
     _imageMatching = graph.addNewNode(
-        'ImageMatching',
+        "ImageMatching",
         input=_featureExtraction.input,
         featuresFolders=[_featureExtraction.output],
-        tree=VOCAB_TREE)
+        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
     out.append(imageMatching)
     out.append(_imageMatching)
 
     featureMatching = graph.addNewNode(
-        'FeatureMatching', input=imageMatching.input,
+        "FeatureMatching", input=imageMatching.input,
         featuresFolders=imageMatching.featuresFolders,
         imagePairsList=imageMatching.output,
         describerTypes=featureExtraction.describerTypes,
         matchFromKnownCameraPoses=True)
     _featureMatching = graph.addNewNode(
-        'FeatureMatching', input=_imageMatching.input,
+        "FeatureMatching", input=_imageMatching.input,
         featuresFolders=_imageMatching.featuresFolders,
         imagePairsList=_imageMatching.output,
         describerTypes=_featureExtraction.describerTypes,
@@ -93,7 +93,7 @@ def twowaySfmPipeline(graph, cameraInit=None):
     out.append(_featureMatching)
 
     structureFromMotion = graph.addNewNode(
-        'StructureFromMotion', input=featureMatching.input,
+        "StructureFromMotion", input=featureMatching.input,
         featuresFolders=featureMatching.featuresFolders,
         matchesFolders=[featureMatching.output],
         describerTypes=featureMatching.describerTypes,
@@ -102,7 +102,7 @@ def twowaySfmPipeline(graph, cameraInit=None):
         lockAllIntrinsics=True)
 
     _structureFromMotion = graph.addNewNode(
-        'StructureFromMotion', input=_featureMatching.input,
+        "StructureFromMotion", input=_featureMatching.input,
         featuresFolders=_featureMatching.featuresFolders,
         matchesFolders=[_featureMatching.output],
         describerTypes=_featureMatching.describerTypes,
@@ -113,9 +113,9 @@ def twowaySfmPipeline(graph, cameraInit=None):
     out.append(_structureFromMotion)
 
     sfMAlignment = graph.addNewNode(
-        'SfMTransfer', input=structureFromMotion.output,
+        "SfMTransfer", input=structureFromMotion.output,
         reference=_structureFromMotion.output,
-        method='from_viewid',
+        method="from_viewid",
         transferPoses=True,
         transferIntrinsics=True)
     out.append(sfMAlignment)
@@ -128,29 +128,29 @@ def customSfmPipeline(graph, cameraInit=None):
     """
     out = []
     # if cameraInit is None:
-    _cameraInit = graph.addNewNode('CameraInit')
+    _cameraInit = graph.addNewNode("CameraInit")
     out.append(_cameraInit)
     featureExtraction = graph.addNewNode(
-            'FeatureExtraction',
+            "FeatureExtraction",
             # input=cameraInit if cameraInit is not None else _cameraInit.output,
             input= _cameraInit.output,
             forceCpuExtraction=False)
     out.append(featureExtraction)
     imageMatching = graph.addNewNode(
-        'ImageMatching',
+        "ImageMatching",
         input=featureExtraction.input,
         featuresFolders=[featureExtraction.output],
-        tree=VOCAB_TREE)
+        tree=config.DEFAULT_PATH_TO_VOCAB_TREE)
     out.append(imageMatching)
     featureMatching = graph.addNewNode(
-        'FeatureMatching', input=imageMatching.input,
+        "FeatureMatching", input=imageMatching.input,
         featuresFolders=imageMatching.featuresFolders,
         imagePairsList=imageMatching.output,
         describerTypes=featureExtraction.describerTypes,
         matchFromKnownCameraPoses=True)
     out.append(featureMatching)
     structureFromMotion = graph.addNewNode(
-        'StructureFromMotion', input=cameraInit if cameraInit is not None else featureMatching.input,
+        "StructureFromMotion", input=cameraInit if cameraInit is not None else featureMatching.input,
         featuresFolders=featureMatching.featuresFolders,
         matchesFolders=[featureMatching.output],
         describerTypes=featureMatching.describerTypes,
@@ -181,20 +181,20 @@ def defaultMvsPipeline(graph, sfm=None):
             "Invalid node type. Expected SfM, got {}".
             format(sfm.nodeType))
     prepareDenseScene = graph.addNewNode(
-        'PrepareDenseScene', input=sfm.output if sfm else "")
+        "PrepareDenseScene", input=sfm.output if sfm else "")
     depthMap = graph.addNewNode(
-        'DepthMap', input=prepareDenseScene.input,
+        "DepthMap", input=prepareDenseScene.input,
         imagesFolder=prepareDenseScene.output)
     depthMapFilter = graph.addNewNode(
-        'DepthMapFilter', input=depthMap.input,
+        "DepthMapFilter", input=depthMap.input,
         depthMapsFolder=depthMap.output)
     meshing = graph.addNewNode(
-        'Meshing', input=depthMapFilter.input,
+        "Meshing", input=depthMapFilter.input,
         depthMapsFolder=depthMapFilter.output)
     meshFiltering = graph.addNewNode(
-        'MeshFiltering', inputMesh=meshing.outputMesh)
+        "MeshFiltering", inputMesh=meshing.outputMesh)
     texturing = graph.addNewNode(
-        'Texturing', input=meshing.output,
+        "Texturing", input=meshing.output,
         imagesFolder=depthMap.imagesFolder,
         inputMesh=meshFiltering.outputMesh)
     return [
@@ -216,29 +216,29 @@ def customMvsPipeline(graph, sfm=None, label_dir=None):
             "Invalid node type. Expected SfM, got {}".
             format(sfm.nodeType))
     prepareDenseScene = graph.addNewNode(
-        'PrepareDenseScene', input=sfm.output if sfm else "",
-        outputFileType='png')
+        "PrepareDenseScene", input=sfm.output if sfm else "",
+        outputFileType="png")
     depthMap = graph.addNewNode(
-        'DepthMap', input=prepareDenseScene.input,
+        "DepthMap", input=prepareDenseScene.input,
         imagesFolder=prepareDenseScene.output)
     depthMapFilter = graph.addNewNode(
-        'DepthMapFilter', input=depthMap.input,
+        "DepthMapFilter", input=depthMap.input,
         depthMapsFolder=depthMap.output)
     meshing = graph.addNewNode(
-        'Meshing', input=depthMapFilter.input,
+        "Meshing", input=depthMapFilter.input,
         depthMapsFolder=depthMapFilter.output)
     meshFiltering = graph.addNewNode(
-        'MeshFiltering', inputMesh=meshing.outputMesh)
+        "MeshFiltering", inputMesh=meshing.outputMesh)
     texturing = graph.addNewNode(
-        'Texturing', input=meshing.output,
+        "Texturing", input=meshing.output,
         imagesFolder=depthMap.imagesFolder,
         downscale=2,
         inputMesh=meshFiltering.outputMesh)
     labelling = graph.addNewNode(
-        'Texturing', input=meshing.output,
+        "Texturing", input=meshing.output,
         imagesFolder=label_dir,
         downscale=4,
-        # unwrapMethod='ABF',
+        # unwrapMethod="ABF",
         # fillHoles=True,
         inputMesh=meshFiltering.outputMesh)
     return [
@@ -263,16 +263,16 @@ def mvsPipeline(graph, sfm=None, label_dir=None):
 
 def build_graph(
         inputImages=[], inputViewpoints=[],
-        inputIntrinsics=[], output='',
+        inputIntrinsics=[], output="",
         graph=None, init=None, label_dir=None):
-    ''' Custom photogrammetry graph '''
+    """ Custom photogrammetry graph """
     if graph is None:
-        graph = Graph('Custom photogrammetry')
+        graph = Graph("Custom photogrammetry")
     with GraphModification(graph):
         if init is None:
             sfmNodes = sfmPipeline(graph)
             cameraInit = sfmNodes[0]
-            cameraInit.viewpoints.extend([{'path': img} for img in inputImages])
+            cameraInit.viewpoints.extend([{"path": img} for img in inputImages])
             cameraInit.viewpoints.extend(inputViewpoints)
             cameraInit.intrinsics.extend(inputIntrinsics)
         else:
@@ -281,7 +281,7 @@ def build_graph(
                 pass
             else:
                 cameraInit = sfmNodes[0]
-                cameraInit.viewpoints.extend([{'path': img} for img in inputImages])
+                cameraInit.viewpoints.extend([{"path": img} for img in inputImages])
                 cameraInit.viewpoints.extend(inputViewpoints)
                 cameraInit.intrinsics.extend(inputIntrinsics)
 
@@ -289,7 +289,7 @@ def build_graph(
         if output:
             texturing = mvsNodes[-1]
             graph.addNewNode(
-                'Publish', output=output,
+                "Publish", output=output,
                 inputFiles=[
                     texturing.outputMesh,
                     texturing.outputMaterial,

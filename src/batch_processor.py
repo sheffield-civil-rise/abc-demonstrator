@@ -33,7 +33,7 @@ class BatchProcessor:
     search_recursively: bool = True
     path_to_output_images: str = None
     pipeline: str = "custom"
-    node_output: list = field(default_factory=list) # TODO: Ask about renaming this.
+    publisher_output: list = field(default_factory=list)
     path_to_cache: str = os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "cache")
     paths_to_init_files: list = field(default_factory=list) # I.e. SFM files.
     path_to_labelled_images: str = None
@@ -116,7 +116,7 @@ class BatchProcessor:
                 self.SWITCH_NODE[self.pipeline.lower()](
                     inputViewpoints=self.views,
                     inputIntrinsics=self.intrinsics,
-                    output=self.node_output,
+                    output=self.publisher_output,
                     graph=self.graph,
                     init=self.paths_to_init_files,
                     label_dir=self.path_to_labelled_images
@@ -143,9 +143,9 @@ class BatchProcessor:
                 raise BatchProcessorError(
                     "Graph cannot be computed. Check compatibility."
                 )
-            if self.node_output:
+            if self.publisher_output:
                 publish = get_only_node_of_type(graph, "Publish")
-                publish.output.value = self.node_output
+                publish.output.value = self.publisher_output
             if self.files_by_type.images:
                 self.views, self.intrinsics = \
                     camera_init.nodeDesc.buildIntrinsics(
@@ -207,3 +207,4 @@ def run_task_manager(graph):
     task_manager.compute(graph, toNodes=None)
     while task_manager._thread.isRunning():
         pass
+
