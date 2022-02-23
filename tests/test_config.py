@@ -49,5 +49,5 @@ def test_custom_json():
         test_config_json_file.write(test_config_json_str)
     custom_config = config.Config(test_config_json_path)
     immutable_custom_config = custom_config.export_as_immutable()
-    assert immutable_custom_config.general.path_to_ouput == new_path_to_output
+    assert immutable_custom_config.general.path_to_output == new_path_to_output
     os.remove(test_config_json_path)
