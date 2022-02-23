@@ -166,10 +166,10 @@ class Config:
 
     def __post_init__(self):
         self.set_from_json()
-        self.general = self.DEFAULTS("general")
-        self.reconstruction_dir = self.DEFAULTS("reconstruction_dir")
-        self.batch_process = self.DEFAULTS("batch_process")
-        self.energy_model = self.DEFAULTS("energy_model")
+        self.general = self.DEFAULTS["general"]
+        self.reconstruction_dir = self.DEFAULTS["reconstruction_dir"]
+        self.batch_process = self.DEFAULTS["batch_process"]
+        self.energy_model = self.DEFAULTS["energy_model"]
 
     def set_from_json(self):
         """ Attempt to override some of the defaults from our JSON file. """
