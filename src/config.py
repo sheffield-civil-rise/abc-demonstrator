@@ -152,6 +152,7 @@ class Config:
         "setpoint_heating": DEFAULT_SETPOINT_HEATING,
         "setpoint_cooling": DEFAULT_SETPOINT_COOLING,
         "boiler_efficiency": DEFAULT_BOILER_EFFICIENCY
+    }
 
     def __post_init__(self):
         self.set_from_json()
