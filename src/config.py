@@ -194,9 +194,9 @@ class Config:
         our JSON file. """
         if (sub_dict_key in self.json_dict) and self.json_dict[sub_dict_key]:
             for key in self.json_dict[sub_dict_key]:
-                if (key in sub_dict) and (sub_dict[key] is not None):
-                    print(sub_dict[key])
-                    sub_dict[key] = self.json_dict[sub_dict_key][key]
+                if key in sub_dict:
+                    if self.json_dict[sub_dict_key][key] is not None:
+                        sub_dict[key] = self.json_dict[sub_dict_key][key]
 
     def export_as_immutable(self):
         """ Export the data in this class into an immutable form. """
