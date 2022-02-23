@@ -90,7 +90,7 @@ class ReconstructionDirGenerator:
     SEGMENT_RESOLUTION: ClassVar[int] = 20
     IMAGE_FILENAME_INDICES: ClassVar[tuple] = (46, 52, 56)
     MAX_CAM_INDEX: ClassVar[int] = 5
-    LABEL_VALUE_DICT: ClassVar[dict] = config.LABEL_VALUE_DICT
+    LABEL_VALUE_DICT: ClassVar[dict] = config.DEFAULT_LABEL_VALUE_DICT
     LABEL_COLOR_DICT: ClassVar[dict] = make_label_color_dict()
     PALETTE: ClassVar[dict] = None
     IMG_SHAPE: ClassVar[tuple] = (1024, 1024)
