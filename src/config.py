@@ -9,6 +9,7 @@ import os
 from collections import namedtuple
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import ClassVar
 
 # Non-standard imports.
 import numpy
@@ -98,64 +99,77 @@ SEMICIRCLE_DEGREES = 180
 @dataclass
 class Config:
     """ The class in question. """
+    # Class attributes.
+    DEFAULTS: ClassVar[dict] = {
+        "general": {
+            "path_to_home": DEFAULT_PATH_TO_HOME,
+            "path_to_binaries": DEFAULT_PATH_TO_BINARIES,
+            "path_to_input": DEFAULT_PATH_TO_INPUT,
+            "path_to_output": DEFAULT_PATH_TO_OUTPUT,
+            "path_to_repo": DEFAULT_PATH_TO_REPO,
+            "encoding": DEFAULT_ENCODING,
+            "max_rgb_channel": DEFAULT_MAX_RGB_CHANNEL,
+            "label_value_dict": DEFAULT_LABEL_VALUE_DICT,
+            "rgb_max": DEFAULT_RGB_MAX
+        },
+        "reconstruction_dir": {
+            "path_to_gps_data": DEFAULT_PATH_TO_GPS_DATA,
+            "path_to_ladybug_gps_data": DEFAULT_PATH_TO_LADYBUG_GPS_DATA,
+            "path_to_ladybug_images": DEFAULT_PATH_TO_LADYBUG_IMAGES,
+            "path_to_deeplab_binary": DEFAULT_PATH_TO_DEEPLAB_BINARY,
+            "path_to_polygon": DEFAULT_PATH_TO_POLYGON,
+            "coordinate_reference_system": DEFAULT_COORDINATE_REFERENCE_SYSTEM,
+            "source_coordinate_reference_system": \
+                DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM,
+            "radius": DEFAULT_RADIUS,
+            "view_distance": DEFAULT_VIEW_DISTANCE,
+            "field_of_view": DEFAULT_FIELD_OF_VIEW,
+            "circle_resolution": DEFAULT_CIRCLE_RESOLUTION,
+            "number_of_cameras": DEFAULT_NUMBER_OF_CAMERAS,
+            "image_extensions": DEFAULT_IMAGE_EXTENSIONS,
+            "output_image_extension": DEFAULT_OUTPUT_IMAGE_EXTENSION
+        },
+        "batch_process": {
+            "byte_length": DEFAULT_BYTE_LENGTH,
+            "timeout": DEFAULT_BATCH_PROCESS_TIMEOUT
+        },
+        "energy_model": {
+            "path_to_energyplus": DEFAULT_PATH_TO_ENERGYPLUS,
+            "path_to_energyplyplus_input_data_dictionary": \
+                DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY,
+            "path_to_weather_data": DEFAULT_PATH_TO_WEATHER_DATA,
+            "path_to_energy_plus_weather_file": \
+                DEFAULT_PATH_TO_ENERGYPLUS_WEATHER_FILE,
+            "path_to_idf_files": DEFAULT_PATH_TO_IDF_FILES,
+            "path_to_starting_point_idf": DEFAULT_PATH_TO_STARTING_POINT_IDF,
+            "path_to_output_idf": DEFAULT_PATH_TO_OUTPUT_IDF,
+            "path_to_energy_model_output_dir": \
+                DEFAULT_PATH_TO_ENERGY_MODEL_OUTPUT_DIR,
+            "window_shgc": DEFAULT_WINDOW_SHGC,
+            "air_change_per_hour": DEFAULT_AIR_CHANGE_PER_HOUR,
+            "setpoint_heating": DEFAULT_SETPOINT_HEATING,
+            "setpoint_cooling": DEFAULT_SETPOINT_COOLING,
+            "boiler_efficiency": DEFAULT_BOILER_EFFICIENCY
+        }
+    }
+
     # Fields.
     path_to_json: str = \
         os.path.join(str(Path.home()), "photogrammetry_config.json")
     enc: str = DEFAULT_ENCODING
+    general: dict = None
+    reconstruction_dir: dict = None
+    batch_process: dict = None
+    energy_model: dict = None
+    # Generated fields.
     json_dict: dict = None
-    general: dict = {
-        "path_to_home": DEFAULT_PATH_TO_HOME,
-        "path_to_binaries": DEFAULT_PATH_TO_BINARIES,
-        "path_to_input": DEFAULT_PATH_TO_INPUT,
-        "path_to_output": DEFAULT_PATH_TO_OUTPUT,
-        "path_to_repo": DEFAULT_PATH_TO_REPO,
-        "encoding": DEFAULT_ENCODING,
-        "max_rgb_channel": DEFAULT_MAX_RGB_CHANNEL,
-        "label_value_dict": DEFAULT_LABEL_VALUE_DICT,
-        "rgb_max": DEFAULT_RGB_MAX
-    }
-    reconstruction_dir: dict = {
-        "path_to_gps_data": DEFAULT_PATH_TO_GPS_DATA,
-        "path_to_ladybug_gps_data": DEFAULT_PATH_TO_LADYBUG_GPS_DATA,
-        "path_to_ladybug_images": DEFAULT_PATH_TO_LADYBUG_IMAGES,
-        "path_to_deeplab_binary": DEFAULT_PATH_TO_DEEPLAB_BINARY,
-        "path_to_polygon": DEFAULT_PATH_TO_POLYGON,
-        "coordinate_reference_system": DEFAULT_COORDINATE_REFERENCE_SYSTEM,
-        "source_coordinate_reference_system": \
-            DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM,
-        "radius": DEFAULT_RADIUS,
-        "view_distance": DEFAULT_VIEW_DISTANCE,
-        "field_of_view": DEFAULT_FIELD_OF_VIEW,
-        "circle_resolution": DEFAULT_CIRCLE_RESOLUTION,
-        "number_of_cameras": DEFAULT_NUMBER_OF_CAMERAS,
-        "image_extensions": DEFAULT_IMAGE_EXTENSIONS,
-        "output_image_extension": DEFAULT_OUTPUT_IMAGE_EXTENSION
-    }
-    batch_process: dict = {
-        "byte_length": DEFAULT_BYTE_LENGTH,
-        "timeout": DEFAULT_BATCH_PROCESS_TIMEOUT
-    }
-    energy_model: dict = {
-        "path_to_energyplus": DEFAULT_PATH_TO_ENERGYPLUS,
-        "path_to_energyplyplus_input_data_dictionary": \
-            DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY,
-        "path_to_weather_data": DEFAULT_PATH_TO_WEATHER_DATA,
-        "path_to_energy_plus_weather_file": \
-            DEFAULT_PATH_TO_ENERGYPLUS_WEATHER_FILE,
-        "path_to_idf_files": DEFAULT_PATH_TO_IDF_FILES,
-        "path_to_starting_point_idf": DEFAULT_PATH_TO_STARTING_POINT_IDF,
-        "path_to_output_idf": DEFAULT_PATH_TO_OUTPUT_IDF,
-        "path_to_energy_model_output_dir": \
-            DEFAULT_PATH_TO_ENERGY_MODEL_OUTPUT_DIR,
-        "window_shgc": DEFAULT_WINDOW_SHGC,
-        "air_change_per_hour": DEFAULT_AIR_CHANGE_PER_HOUR,
-        "setpoint_heating": DEFAULT_SETPOINT_HEATING,
-        "setpoint_cooling": DEFAULT_SETPOINT_COOLING,
-        "boiler_efficiency": DEFAULT_BOILER_EFFICIENCY
-    }
 
     def __post_init__(self):
         self.set_from_json()
+        self.general = self.DEFAULTS("general")
+        self.reconstruction_dir = self.DEFAULTS("reconstruction_dir")
+        self.batch_process = self.DEFAULTS("batch_process")
+        self.energy_model = self.DEFAULTS("energy_model")
 
     def set_from_json(self):
         """ Attempt to override some of the defaults from our JSON file. """
