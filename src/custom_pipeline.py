@@ -322,9 +322,9 @@ def build_graph(
         label_dir=None
     ):
     """ Custom photogrammetry graph """
-    initialise_list_as_necessary(input_images)
-    initialise_list_as_necessary(input_viewpoints)
-    initialise_list_as_necessary(input_intrinsics)
+    input_images = initialise_list_as_necessary(input_images)
+    input_viewpoints = initialise_list_as_necessary(input_viewpoints)
+    input_intrinsics = initialise_list_as_necessary(input_intrinsics)
     if not graph:
         graph = Graph("Custom photogrammetry")
     with GraphModification(graph):
