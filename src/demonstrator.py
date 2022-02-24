@@ -1,108 +1,139 @@
-import sys
+"""
+This code defines a class which demonstrates what the codebase can do.
+"""
+
+# Standard imports.
 import os
-import argparse
-import time
-import numpy as np
+import shutil
 
-from generate_recon_dir import autogenerate as generate_recon_dir
-from batch_process import run as batch_process
-from calculate_height import main as calculate_height
-from calculate_wwr import calculate as calculate_wwr
+# Local imports.
+from batch_processor import BatchProcessor
+from config import get_configs
+from energy_model_generator import EnergyModelGenerator
+from height_calculator import HeightCalculator
+from reconstruction_dir_generator import ReconstructionDirGenerator
+from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
 
-from generate_idf import main as generate_energy_model
+# Local constants.
+CONFIGS = get_configs()
 
+##############
+# MAIN CLASS #
+##############
 
-TIME_TOO_LONG = 7200  # seconds (2 hours)
+class Demonstrator:
+    """ The class in question. """
+    def __init__(
+            self,
+            path_to_output=CONFIGS.general.path_to_demo_output,
+            expedite=False
+        ):
+        self.path_to_output = path_to_output
+        self.expedite = expedite
+        self.path_to_cache = os.path.join(self.path_to_output, "cache")
+        # Generated fields.
+        self.rec_dir_gen = None
+        self.paths_to_init_files = None
+        self.batch_processor = None
+        self.height_calculator = None
+        self.window_to_wall_ratio_calculator = None
+        self.energy_model_generator = None
 
+    def make_and_run_reconstruction_dir_generator(self):
+        """ Run the generator object, deleting any existing output as
+        necessary. """
+        if os.path.exists(self.path_to_output) and not self.expedite:
+            shutil.rmtree(self.path_to_output)
+        self.rec_dir_gen = \
+            ReconstructionDirGenerator(
+                path_to_output=self.path_to_output, expedite=self.expedite
+            )
+        self.rec_dir_gen.generate()
+        self.make_paths_to_init_files()
 
-def run(args):
+    def make_paths_to_init_files(self):
+        """ Make the paths to these special files. """
+        self.paths_to_init_files = [
+            os.path.join(
+                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_LABEL_FILENAME
+            ),
+            os.path.join(
+                self.path_to_output, self.rec_dir_gen.CAMERA_INIT_FILENAME
+            )
+        ]
 
+    def make_and_run_batch_processor(self):
+        """ Build the batch processor object, and then run it. """
+        self.batch_processor = \
+            BatchProcessor(
+                search_recursively=True,
+                path_to_output_images=self.rec_dir_gen.path_to_output_images,
+                pipeline="custom",
+                path_to_cache=self.path_to_cache,
+                paths_to_init_files=self.paths_to_init_files,
+                path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
+            )
+        self.batch_processor.start()
 
-    class Attribute:
-        pass
+    def make_and_run_height_calculator(self):
+        """ Build the height calculator object - it runs on its own. """
+        sfm_base = os.path.join(self.path_to_cache, "SfMTransfer")
+        sfm_base = os.path.join(sfm_base, os.listdir(sfm_base)[-1])
+        mesh_base = os.path.join(self.path_to_cache, "Texturing")
+        mesh_base = os.path.join(mesh_base, os.listdir(mesh_base)[0])
+        path_to_reference = self.paths_to_init_files[1]
+        path_to_sfm = os.path.join(sfm_base, "cameras.sfm")
+        path_to_mesh = os.path.join(mesh_base, "texturedMesh.obj")
+        self.height_calculator = \
+            HeightCalculator(
+                path_to_reference=path_to_reference,
+                path_to_sfm=path_to_sfm,
+                path_to_mesh=path_to_mesh
+            )
 
-    args.id = os.path.splitext(os.path.split(args.polygon)[-1])[0]
-    if args.wd is None:
-        args.wd = os.path.abspath(args.id)
+    def make_and_run_window_to_wall_ratio_calculator(self):
+        """ Build the window-to-wall ratio calculator object - it runs on its
+        own. """
+        self.window_to_wall_ratio_calculator = \
+            WindowToWallRatioCalculator(
+                path_to_reference=self.height_calculator.path_to_reference,
+                path_to_sfm=self.height_calculator.path_to_sfm,
+                path_to_mesh=self.height_calculator.path_to_mesh,
+                path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
+            )
 
-    args_0 = Attribute()
-    args_0.gps = args.gps
-    args_0.ldb = args.ldb
-    args_0.dir = args.dir
-    args_0.out = os.path.join(args.wd, 'working_dir')
+    def make_and_run_energy_model_generator(self):
+        """ Build the energy model generator object, and then run it. """
+        wwr = self.window_to_wall_ratio_calculator.result
+        path_to_output_idf = \
+            os.path.join(self.path_to_output, "output.idf")
+        path_to_output_dir = \
+            os.path.join(self.path_to_output, "energy_model_output")
+        self.energy_model_generator = \
+            EnergyModelGenerator(
+                height=self.height_calculator.result,
+                window_to_wall_ratio=wwr,
+                path_to_output_idf=path_to_output_idf,
+                path_to_output_dir=path_to_output_dir
+            )
+        self.energy_model_generator.generate_and_run()
 
-    args_0.polygon = os.path.abspath(args.polygon)
+    def demonstrate(self):
+        """ Run the demonstrator script. """
+        self.make_and_run_reconstruction_dir_generator()
+        self.make_and_run_batch_processor()
+        self.make_and_run_height_calculator()
+        self.make_and_run_window_to_wall_ratio_calculator()
+        self.make_and_run_energy_model_generator()
 
-    wd_path = generate_recon_dir(args_0)
+###################
+# RUN AND WRAP UP #
+###################
 
-    image_dir = os.path.join(wd_path, 'images')
-    label_dir = os.path.join(wd_path, 'labels')
-    camera_init_0 = os.path.join(wd_path, 'cameraInit_label.sfm')
-    camera_init_1 = os.path.join(wd_path, 'cameraInit.sfm')
-
-    cache_dir = os.path.abspath(os.path.join(args.wd, 'cache'))
-
-    print('caching at {}'.format(cache_dir))
-
-    recon_thread_running = batch_process(
-        image_dir,
-        'custom',
-        cache=cache_dir,
-        init=[camera_init_0, camera_init_1],
-        label_dir=label_dir)
-
-
-    ## Pause execution while photogrammetry running externally
-    starttime = time.time()
-    while True:
-        if not recon_thread_running():
-            break
-        if (time.time() - starttime) > TIME_TOO_LONG:
-            # if it takes longer than two hours fail
-            raise RuntimeError("this is taking too long, i'm giving up")
-        time.sleep(30.0 - ((time.time() - starttime) % 30.0))  # check every 30s
-
-
-    sfm_base = os.path.join(cache_dir, 'SfMTransfer')
-    sfm_base = os.path.join(sfm_base, os.listdir(sfm_base)[-1])
-
-    mesh_base = os.path.join(cache_dir, 'Texturing')
-    mesh_base = os.path.join(mesh_base, os.listdir(mesh_base)[0])
-
-
-    args_1 = Attribute()
-    args_1.ref = camera_init_1
-    args_1.sfm = os.path.join(sfm_base, 'cameras.sfm')
-    args_1.mesh = os.path.join(mesh_base, 'texturedMesh.obj')
-    args_1.dir = label_dir
-
-    height = calculate_height(args_1)
-
-    wwr = calculate_wwr(args_1)
-
-    print(wwr)
-    args_2 = Attribute()
-    args_2.id = args.id
-    args_2.init = r'src\starting_point.idf'
-    args_2.height = np.max([7, 2 * height / 3])
-    args_2.wwr = {0: wwr, 90: 0.2, 180: wwr, 270: 0.2}
-    args_2.polygon = args.polygon
-    args_2.output = os.path.join(args.wd, args.id + '_autogenerate.idf')
-    args_2.outdir = os.path.join(args.wd, args.id + '_autogenerate')
-
-    generate_energy_model(args_2)
-
+def run():
+    """ Run this file. """
+    demonstrator = Demonstrator()
+    demonstrator.demonstrate()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('gps', help='gps file')
-    parser.add_argument('ldb', help='ldb file')
-    parser.add_argument('dir', help='ladybug images')
-    parser.add_argument('polygon', help='polygon file')
-    parser.add_argument('--wd', help='working directory')
-    parser.add_argument('--id', help='identifier')
-
-    args = parser.parse_args()
-
-    run(args)
+    run()

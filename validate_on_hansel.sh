@@ -1,14 +1,14 @@
 #!/bin/sh
 
 ### This script accesses Hansel over SSH in order (1) to pull the latest code
-### into Hansel's version of the repo, and (2) to run the demonstrator script
+### into Hansel's version of the repo, and (2) to run the repo's automated tests
 ### on Hansel's hardware and software.
 
 # Constants.
 PATH_TO_REPO="G:\photogrammetry_e110a"
 PATH_TO_ACTIVATE_SCRIPT="C:\Users\hansel\Anaconda3\Scripts\activate"
 ENV_NAME="demonstrator"
-PATH_TO_DEMONSTRATOR_SCRIPT="$PATH_TO_REPO\run_demonstrator.py"
+PATH_TO_DEMONSTRATOR_SCRIPT="$PATH_TO_REPO\validate.py"
 
 # Exit on first error.
 set -e
@@ -80,5 +80,7 @@ sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
         exit 1
     )
     $PATH_TO_ACTIVATE_SCRIPT $ENV_NAME
+    G:
+    cd $PATH_TO_REPO
     python $PATH_TO_DEMONSTRATOR_SCRIPT
 ENDSSH
