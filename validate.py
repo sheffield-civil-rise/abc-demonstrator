@@ -18,7 +18,7 @@ def run_tests(min_code_coverage=DEFAULT_MIN_CODE_COVERAGE):
     arguments = [
         "--cov-report", "term",
         "--cov-fail-under="+str(min_code_coverage),
-        "--cov=."
+        "--cov=./src"
     ]
     return_code = pytest.main(arguments)
     assert return_code == 0, "PyTest returned code: "+str(return_code)
