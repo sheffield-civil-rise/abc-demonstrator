@@ -43,12 +43,11 @@ class ReconstructionDirGenerator:
         CONFIGS.reconstruction_dir.path_to_ladybug_gps_data
     path_to_ladybug_images: str = \
         CONFIGS.reconstruction_dir.path_to_ladybug_images
-    path_to_polygon: str = CONFIGS.reconstruction_dir.path_to_polygon
-    path_to_output: str = CONFIGS.reconstruction_dir.path_to_output
+    path_to_polygon: str = CONFIGS.general.path_to_polygon
+    path_to_output: str = CONFIGS.general.path_to_output
     path_to_model: str = CONFIGS.reconstruction_dir.path_to_deeplab_binary
-    co_ref_sys: str = CONFIGS.reconstruction_dir.coordinate_reference_system
-    src_co_ref_sys: str = \
-        CONFIGS.reconstruction_dir.source_coordinate_reference_system
+    co_ref_sys: str = CONFIGS.general.coordinate_reference_system
+    src_co_ref_sys: str = CONFIGS.general.source_coordinate_reference_system
     radius: int = CONFIGS.reconstruction_dir.radius
     view_distance: int = CONFIGS.reconstruction_dir.view_distance
     field_of_view: float = CONFIGS.reconstruction_dir.field_of_view
@@ -671,7 +670,7 @@ class DigitMapToBGR:
 
 def to_geo_data_frame(
         data_frame,
-        co_ref_sys=CONFIGS.reconstruction_dir.coordinate_reference_system
+        co_ref_sys=CONFIGS.general.coordinate_reference_system
     ):
     """ Add geometry to a given data frame. """
     result = \
@@ -687,9 +686,8 @@ def to_geo_data_frame(
 def create_circle(
         centroid,
         radius=CONFIGS.reconstruction_dir.radius,
-        co_ref_sys=CONFIGS.reconstruction_dir.coordinate_reference_systen,
-        src_co_ref_sys=\
-            CONFIGS.reconstruction_dir.source_coordinate_reference_system,
+        co_ref_sys=CONFIGS.general.coordinate_reference_systen,
+        src_co_ref_sys=CONFIGS.general.source_coordinate_reference_system,
         resolution=CONFIGS.reconstruction_dir.circle_resolution,
         aspoints=False
     ):

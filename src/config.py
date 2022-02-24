@@ -114,6 +114,10 @@ class Config:
             "path_to_input": DEFAULT_PATH_TO_INPUT,
             "path_to_output": DEFAULT_PATH_TO_OUTPUT,
             "path_to_repo": DEFAULT_PATH_TO_REPO,
+            "path_to_polygon": DEFAULT_PATH_TO_POLYGON,
+            "coordinate_reference_system": DEFAULT_COORDINATE_REFERENCE_SYSTEM,
+            "source_coordinate_reference_system": \
+                DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM,
             "encoding": DEFAULT_ENCODING,
             "max_rgb_channel": DEFAULT_MAX_RGB_CHANNEL,
             "label_value_dict": DEFAULT_LABEL_VALUE_DICT,
@@ -124,10 +128,6 @@ class Config:
             "path_to_ladybug_gps_data": DEFAULT_PATH_TO_LADYBUG_GPS_DATA,
             "path_to_ladybug_images": DEFAULT_PATH_TO_LADYBUG_IMAGES,
             "path_to_deeplab_binary": DEFAULT_PATH_TO_DEEPLAB_BINARY,
-            "path_to_polygon": DEFAULT_PATH_TO_POLYGON,
-            "coordinate_reference_system": DEFAULT_COORDINATE_REFERENCE_SYSTEM,
-            "source_coordinate_reference_system": \
-                DEFAULT_SOURCE_COORDINATE_REFERENCE_SYSTEM,
             "radius": DEFAULT_RADIUS,
             "view_distance": DEFAULT_VIEW_DISTANCE,
             "field_of_view": DEFAULT_FIELD_OF_VIEW,
@@ -146,7 +146,7 @@ class Config:
             "path_to_energyplus_input_data_dictionary": \
                 DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY,
             "path_to_weather_data": DEFAULT_PATH_TO_WEATHER_DATA,
-            "path_to_energy_plus_weather_file": \
+            "path_to_energyplus_weather_file": \
                 DEFAULT_PATH_TO_ENERGYPLUS_WEATHER_FILE,
             "path_to_idf_files": DEFAULT_PATH_TO_IDF_FILES,
             "path_to_starting_point_idf": DEFAULT_PATH_TO_STARTING_POINT_IDF,

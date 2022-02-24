@@ -36,7 +36,7 @@ class EnergyModelGenerator:
         CONFIGS.energy_model.path_to_starting_point_idf
     height: float = None
     window_to_wall_ratio: float = None
-    path_to_polygon: str = CONFIGS.reconstruction_dir.path_to_polygon
+    path_to_polygon: str = CONFIGS.general.path_to_polygon
     path_to_idd: str = \
         CONFIGS.energy_model.path_to_energyplus_input_data_dictionary
     path_to_weather_file: str = \
@@ -59,8 +59,7 @@ class EnergyModelGenerator:
     boiler_type: str = "CondensingHotWaterBoiler"
     boiler_fuel: str = "NaturalGas"
     boiler_efficiency: float = CONFIGS.energy_model.boiler_efficiency
-    src_co_ref_sys: str = \
-        CONFIGS.reconstruction_dir.source_coordinate_reference_system
+    src_co_ref_sys: str = CONFIGS.general.source_coordinate_reference_system
     # Generated fields.
     adjusted_height: float = None
     window_to_wall_ratio_dict: dict = None
