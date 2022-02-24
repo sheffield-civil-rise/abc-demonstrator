@@ -321,24 +321,24 @@ def build_graph(
         graph = Graph("Custom photogrammetry")
     with GraphModification(graph):
         if init is None:
-            sfmNodes = sfmPipeline(graph)
-            cameraInit = sfmNodes[0]
-            cameraInit.viewpoints.extend([{"path": img} for img in input_images])
-            cameraInit.viewpoints.extend(input_viewpoints)
-            cameraInit.intrinsics.extend(input_intrinsics)
+            sfm_nodes = sfm_pipeline(graph)
+            camera_init = sfm_nodes[0]
+            camera_init.viewpoints.extend([{"path": img} for img in input_images])
+            camera_init.viewpoints.extend(input_viewpoints)
+            camera_init.intrinsics.extend(input_intrinsics)
         else:
-            sfmNodes = sfmPipeline(graph, init)
+            sfm_nodes = sfm_pipeline(graph, init)
             if type(init) is list and len(init) > 1:
                 pass
             else:
-                cameraInit = sfmNodes[0]
-                cameraInit.viewpoints.extend([{"path": img} for img in input_images])
-                cameraInit.viewpoints.extend(input_viewpoints)
-                cameraInit.intrinsics.extend(input_intrinsics)
+                camera_init = sfm_nodes[0]
+                camera_init.viewpoints.extend([{"path": img} for img in input_images])
+                camera_init.viewpoints.extend(input_viewpoints)
+                camera_init.intrinsics.extend(input_intrinsics)
 
-        mvsNodes = mvsPipeline(graph, sfmNodes[-1], label_dir)
+        mvs_nodes = mvs_pipeline(graph, sfm_nodes[-1], label_dir)
         if output:
-            texturing = mvsNodes[-1]
+            texturing = mvs_nodes[-1]
             graph.addNewNode(
                 "Publish", output=output,
                 inputFiles=[
