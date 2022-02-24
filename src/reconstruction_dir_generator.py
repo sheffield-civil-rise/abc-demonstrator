@@ -686,7 +686,7 @@ def to_geo_data_frame(
 def create_circle(
         centroid,
         radius=CONFIGS.reconstruction_dir.radius,
-        co_ref_sys=CONFIGS.general.coordinate_reference_systen,
+        co_ref_sys=CONFIGS.general.coordinate_reference_system,
         src_co_ref_sys=CONFIGS.general.source_coordinate_reference_system,
         resolution=CONFIGS.reconstruction_dir.circle_resolution,
         aspoints=False
