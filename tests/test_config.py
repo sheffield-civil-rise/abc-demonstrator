@@ -8,8 +8,11 @@ import os
 # Non-standard imports.
 import pytest
 
-# Local imports.
+# Source imports.
 import config
+
+# Local imports.
+import expected
 
 ###########
 # TESTING #
@@ -17,7 +20,8 @@ import config
 
 @pytest.fixture(scope="module")
 def config_obj():
-    result = config.Config(path_to_json=False)
+    """ Create a Configs object. """
+    result = config.Configs(path_to_json=False)
     return result
 
 def test_defaults(config_obj):
@@ -50,9 +54,9 @@ def test_custom_json():
             '} '+
         '}'
     )
-    with open(test_config_json_path, "w") as test_config_json_file:
-        test_config_json_file.write(test_config_json_str)
-    custom_config = config.Config(test_config_json_path)
+    with open(test_config_json_path, "w", encoding=expected.ENCODING) as jsonf:
+        jsonf.write(test_config_json_str)
+    custom_config = config.Configs(test_config_json_path)
     immutable_custom_config = custom_config.export_as_immutable()
     assert immutable_custom_config.general.path_to_output == new_path_to_output
     assert (
@@ -60,4 +64,3 @@ def test_custom_json():
             config.DEFAULT_PATH_TO_INPUT
     )
     os.remove(test_config_json_path)
-

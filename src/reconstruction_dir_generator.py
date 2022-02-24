@@ -3,11 +3,8 @@ This code defines a class which generates the reconstruction directory.
 """
 
 # Standard imports.
-import argparse
 import json
 import os
-import re
-import shutil
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -25,7 +22,7 @@ from shapely.geometry import Point, Polygon
 # Local imports.
 from config import get_configs, SEMICIRCLE_DEGREES
 from deeplab.Deeplabv3 import Deeplabv3
-from utility_functions import make_label_color_dict, encode_color, decode_color
+from utility_functions import make_label_color_dict
 
 # Local constants.
 CONFIGS = get_configs()
@@ -68,6 +65,7 @@ class ReconstructionDirGenerator:
     file_dict: dict = None
     file_paths: geopandas.GeoDataFrame = None
     local_selection: geopandas.GeoDataFrame = None
+    localised_gps_data: pandas.DataFrame = None
 
     # Class attributes.
     LADYBUG_USECOLS: ClassVar[list] = ["FRAME", "CAMERA TIME"]
@@ -194,8 +192,8 @@ class ReconstructionDirGenerator:
             new_data_frame.at[index, "rotations"] = rotations
         if inplace: # Append rotations to input dataframe.
             data_frame["rotations"] = new_data_frame["rotations"].values
-        else: # return copy with added rotations
-            return new_data_frame
+            return data_frame
+        return new_data_frame # Return copy with added rotations.
 
     def build_rotation(self, heading, pitch, roll):
         """ Build a rotation matrix. """
@@ -267,13 +265,13 @@ class ReconstructionDirGenerator:
         """ Expand a given data from to include the expanded columns. """
         new_data_frame = pandas.DataFrame(columns=self.EXPANDED_COLUMNS)
         geox, geoy = [], []
-        for index, row in data_frame.iterrows():
+        for _, row in data_frame.iterrows():
             rotations = row["rotations"]
             nrow = row[self.EXPANDED_COLUMNS]
-            for cam in range(len(rotations)):
-                nrow["cam"] = int(cam)
+            for cam, _ in enumerate(rotations):
+                nrow["cam"] = cam
                 nrow["rotation"] = rotations[cam]
-                if type(data_frame) is not geopandas.GeoDataFrame:
+                if isinstance(data_frame, geopandas.GeoDataFrame):
                     geox.append(row["longitude"])
                     geoy.append(row["latitude"])
                 else:
@@ -281,7 +279,7 @@ class ReconstructionDirGenerator:
                     geoy.append(row.geometry.y)
                 new_data_frame = new_data_frame.append(nrow, ignore_index=True)
         local_co_ref_sys = self.co_ref_sys
-        if type(data_frame) is geopandas.GeoDataFrame:
+        if isinstance(data_frame, geopandas.GeoDataFrame):
             local_co_ref_sys = data_frame.crs
         result = \
             geopandas.GeoDataFrame(
@@ -354,7 +352,7 @@ class ReconstructionDirGenerator:
         """ Generate a file dictionary for the image directory. """
         file_list = os.listdir(self.path_to_ladybug_images)
         result = [{}, {}, {}, {}, {}]
-        for index, filename in enumerate(file_list):
+        for _, filename in enumerate(file_list):
             frame, cam = self.framecam(filename)
             if int(cam) < self.MAX_CAM_INDEX:
                 result[int(cam)][frame] = filename
@@ -379,7 +377,7 @@ class ReconstructionDirGenerator:
             )
         os.makedirs(self.path_to_output)
         os.mkdir(self.path_to_output_images)
-        for index, row in self.file_paths.iterrows():
+        for _, row in self.file_paths.iterrows():
             image = \
                 Image.open(
                     os.path.join(self.path_to_ladybug_images, row["path"])
@@ -461,7 +459,7 @@ class ReconstructionDirGenerator:
         if os.path.exists(self.path_to_masked_images) and self.expedite:
             return
         for index, path in enumerate(img_list):
-            base, file_path = os.path.split(path)
+            _, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
             path_to_image_to_mask = \
                 os.path.join(
@@ -566,15 +564,15 @@ class ReconstructionDirGenerator:
 
     def create_camera_init_file(
             self,
-            path_to_source,
             output_filename,
-            base_path
+            base_path,
+            encoding=CONFIGS.general.encoding
         ):
         """ Ronseal. """
         init_dict = self.build_init_dict(base_path)
         path_to_output_file = \
             os.path.join(self.path_to_output, output_filename)
-        with open(path_to_output_file, "w") as fid:
+        with open(path_to_output_file, "w", encoding=encoding) as fid:
             json.dump(init_dict, fid, indent=self.JSON_INDENT)
 
     def rename_labelled_images(self):
@@ -622,12 +620,10 @@ class ReconstructionDirGenerator:
         self.generate_local_selection()
         print("Creating CameraInit files.")
         self.create_camera_init_file(
-            self.path_to_output_images,
             self.CAMERA_INIT_FILENAME,
             self.path_to_output_images
         )
         self.create_camera_init_file(
-            self.path_to_masked_images,
             self.CAMERA_INIT_LABEL_FILENAME,
             self.path_to_masked_images
         )
@@ -641,7 +637,6 @@ class ReconstructionDirGenerator:
 
 class ReconstructionDirGeneratorError(Exception):
     """ A custom exception. """
-    pass
 
 class DigitMapToBGR:
     """ This class converts the output from the model to the BGR mask image. """
@@ -651,22 +646,22 @@ class DigitMapToBGR:
 
     def digit_to_color(self, h, w, output_mask):
         """ Convert a digit at the given coordinates to a colour. """
-        maximum_channel = self.get_maximum_channel(self.digit_map[h, w])
+        maximum_channel = get_maximum_channel(self.digit_map[h, w])
         color = self.palette[int(maximum_channel)]
         output_mask[h, w] = color
         return output_mask
 
-    def get_maximum_channel(self, channel_vector):
-        """ Get the maximum channel in a given channel vector. """
-        return list(channel_vector).index(max(list(channel_vector)))
-
     def __call__(self):
-        height, weight, channel = self.digit_map.shape
+        height, weight, _ = self.digit_map.shape
         output_bgr = numpy.zeros([height, weight, 3])
         for h in range(height):
             for w in range(weight):
                 output_bgr = self.digit_to_color(h, w, output_bgr)
         return output_bgr
+
+def get_maximum_channel(channel_vector):
+    """ Get the maximum channel in a given channel vector. """
+    return list(channel_vector).index(max(list(channel_vector)))
 
 def to_geo_data_frame(
         data_frame,
@@ -715,7 +710,7 @@ def create_circle(
 
 def filter_by_view(data_frame, centroid):
     """ Filter a given data frame by a given centroid. """
-    if type(centroid) is not Point:
+    if not isinstance(centroid, Point):
         centroid = Point(*centroid)
     inview = data_frame.apply(lambda r: centroid.within(r["view"]), axis=1)
     result = data_frame[inview]
@@ -761,7 +756,7 @@ def get_img_paths(
                     result+
                     get_img_paths(
                         os.path.join(path_to_dir, path),
-                        image_extensions=image_extension
+                        image_extensions=image_extensions
                     )
                 )
         else:

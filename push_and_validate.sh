@@ -12,4 +12,4 @@ set -e
 git add .
 git commit -m "Debugging..." || echo "Let's not worry about that..."
 git push origin $BRANCH
-python3 validate_on_hansel.py
+python3 continuous_integration.py

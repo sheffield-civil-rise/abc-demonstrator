@@ -9,10 +9,12 @@ import os
 # Non-standard imports.
 import pytest
 
+# Source imports.
+from demonstrator import Demonstrator
+
 # Local imports.
 import config
 import expected
-from demonstrator import Demonstrator
 from make_checksum import make_checksum
 
 ###########
@@ -21,6 +23,7 @@ from make_checksum import make_checksum
 
 @pytest.fixture(scope="module")
 def demo_obj():
+    """ Make an object of the Demonstrator class. """
     result = Demonstrator()
     result.demonstrate()
     return result

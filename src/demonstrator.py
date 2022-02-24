@@ -3,13 +3,8 @@ This code defines a class which demonstrates what the codebase can do.
 """
 
 # Standard imports.
-import argparse
 import os
 import shutil
-import sys
-
-# Non-standard imports.
-import numpy
 
 # Local imports.
 from batch_processor import BatchProcessor

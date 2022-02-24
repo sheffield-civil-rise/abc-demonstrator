@@ -7,7 +7,7 @@ files in this directory.
 import json
 import os
 from collections import namedtuple
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
 
@@ -104,7 +104,7 @@ SEMICIRCLE_DEGREES = 180
 ##############
 
 @dataclass
-class Config:
+class Configs:
     """ The class in question. """
     # Class attributes.
     DEFAULTS: ClassVar[dict] = {
@@ -260,6 +260,6 @@ class Config:
 
 def get_configs():
     """ Get an immutable config object. """
-    config_obj = Config()
+    config_obj = Configs()
     result = config_obj.export_as_immutable()
     return result

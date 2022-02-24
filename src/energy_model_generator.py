@@ -6,7 +6,7 @@ This code defines a class which generates the required Intermediate Data File
 # Standard imports.
 import os
 from copy import deepcopy
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import ClassVar
 
 # Non-standard imports.
@@ -230,14 +230,14 @@ class EnergyModelGenerator:
         result = \
             self.idf_obj.newidfobject(
                 "CONSTRUCTION",
-                Name="%s_construction"%construction_name,
+                Name=construction_name+"_construction",
                 Outside_Layer=construction_name
             )
         return result
 
     def define_constructions(self):
         """ Define what is where, and what it's made of. """
-        self.constructions = { 
+        self.constructions = {
             name.capitalize():
                 self.generate_construction_idf(name) for name in self.layers
         }
@@ -425,4 +425,3 @@ class EnergyModelGenerator:
 
 class EnergyModelGeneratorError(Exception):
     """ A custom exception. """
-    pass

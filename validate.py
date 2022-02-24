@@ -6,12 +6,11 @@ This code defines a script which in turn runs pytest on our source code.
 import pytest
 
 # Local constants.
-DEFAULT_MIN_CODE_COVERAGE = 50
-DEFAULT_MIN_LINT_SCORE = 8
+DEFAULT_MIN_CODE_COVERAGE = 80
 
-#############
-# FUNCTIONS #
-#############
+##################
+# MAIN FUNCTIONS #
+##################
 
 def run_tests(min_code_coverage=DEFAULT_MIN_CODE_COVERAGE):
     """ Run PyTest. """

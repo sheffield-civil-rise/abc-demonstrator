@@ -5,18 +5,17 @@ This code defines a class which runs some of the more time-consuming processes.
 # Standard imports.
 import os
 import sys
-import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from threading import Thread
-from typing import Callable, ClassVar
+from typing import ClassVar
 
 # Non-standard imports.
 import meshroom
 from meshroom import multiview
 from meshroom.nodes.aliceVision.CameraInit import readSfMData
 from meshroom.core.graph import Graph
-from meshroom.core.taskManager import TaskManager, TaskThread
+from meshroom.core.taskManager import TaskManager
 
 # Local imports.
 from config import get_configs
@@ -47,7 +46,7 @@ class BatchProcessor:
     single_track: bool = False
     views: list = field(default_factory=list)
     intrinsics: list = field(default_factory=list)
-    files_by_type: list = None
+    files_by_type: multiview.FilesByType = None
     graph: Graph = None
     thread: Thread = None
 
@@ -117,8 +116,8 @@ class BatchProcessor:
         with multiview.GraphModification(self.graph):
             try:
                 self.SWITCH_NODE[self.pipeline.lower()](
-                    inputViewpoints=self.views,
-                    inputIntrinsics=self.intrinsics,
+                    input_viewpoints=self.views,
+                    input_intrinsics=self.intrinsics,
                     output=self.publisher_output,
                     graph=self.graph,
                     init=self.paths_to_init_files,
@@ -137,7 +136,8 @@ class BatchProcessor:
                 camera_inits[1].intrinsics.resetValue()
                 camera_inits[1].intrinsics.extend(self.intrinsics[1])
             else:
-                camera_init = getOnlyNodeOfType(self.graph, self.INIT_NODE_TYPE)
+                camera_init = \
+                    get_only_node_of_type(self.graph, self.INIT_NODE_TYPE)
                 camera_init.viewpoints.resetValue()
                 camera_init.viewpoints.extend(self.views)
                 camera_init.intrinsics.resetValue()
@@ -147,12 +147,12 @@ class BatchProcessor:
                     "Graph cannot be computed. Check compatibility."
                 )
             if self.publisher_output:
-                publish = get_only_node_of_type(graph, "Publish")
+                publish = get_only_node_of_type(self.graph, "Publish")
                 publish.output.value = self.publisher_output
             if self.files_by_type.images:
                 self.views, self.intrinsics = \
                     camera_init.nodeDesc.buildIntrinsics(
-                        cameraInit, self.files_by_type.images
+                        camera_init, self.files_by_type.images
                     )
             self.graph.cacheDir = (
                 self.path_to_cache
@@ -162,7 +162,6 @@ class BatchProcessor:
 
     def start(self):
         """ Start the thread. """
-        print("GRAPH NODES: "+str(len(self.graph._nodes)))
         self.thread.start()
         self.thread.join(timeout=self.timeout)
 
@@ -172,7 +171,6 @@ class BatchProcessor:
 
 class BatchProcessorError(Exception):
     """ A custom exception. """
-    pass
 
 def get_only_node_of_type(graph, node_type):
     """ Helper function to get a node of WnodeTypeW in the graph and raise an
@@ -180,9 +178,8 @@ def get_only_node_of_type(graph, node_type):
     nodes = graph.nodesOfType(node_type)
     if len(nodes) != 1:
         raise BatchProcessorError(
-            "Required a pipeline graph with exactly one '{}' node. "+
-            "Found {} such nodes."
-            .format(node_type, len(nodes))
+            "Required a pipeline graph with exactly one "+str(node_type)+" "+
+            "node. Found "+str(len(nodes))+" such nodes."
         )
     return nodes[0]
 
@@ -205,9 +202,7 @@ def check_and_read_sfm(path_to):
 def run_task_manager(graph):
     """ Create the task manager object, start it, and keep us in a loop until
     it's finished. """
-    index = 0
     task_manager = TaskManager()
     task_manager.compute(graph, toNodes=None)
     while task_manager._thread.isRunning():
         pass
-

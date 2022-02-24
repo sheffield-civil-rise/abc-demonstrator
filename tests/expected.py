@@ -2,6 +2,7 @@
 This code holds some of the various tests' expected values.
 """
 
+ENCODING = "utf-8"
 LABELLED_IMAGE_FILENAME = "68273.png"
 LABELLED_IMAGE_CHECKSUM = "8112283d0796bb55930c1d2a5ba450ba"
 MASKED_IMAGE_FILENAME = (

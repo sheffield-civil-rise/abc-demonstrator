@@ -4,16 +4,15 @@ This code defines a class which calculates the window-to-wall ratio (WWR).
 
 # Standard imports.
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import ClassVar
 
 # Non-standard imports.
 import numpy
-from matplotlib import pyplot
 from PIL import Image
 
 # Local imports.
-from utility_functions import make_label_color_dict, encode_color, decode_color
+from utility_functions import make_label_color_dict, encode_color
 
 ##############
 # MAIN CLASS #
@@ -49,7 +48,7 @@ class WindowToWallRatioCalculator:
             "path_to_mesh": self.path_to_mesh,
             "path_to_labelled_images": self.path_to_labelled_images
         }
-        for field_name in required_fields.keys():
+        for field_name in required_fields:
             if required_fields[field_name] is None:
                 raise WWRCalculatorError(field_name+" cannot be None.")
 
@@ -88,4 +87,3 @@ class WindowToWallRatioCalculator:
 
 class WWRCalculatorError(Exception):
     """ A custom exception. WWR = Window-to-Wall Ratio. """
-    pass

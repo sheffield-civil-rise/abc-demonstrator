@@ -5,7 +5,7 @@ This code defines a class which calculates the heights of buildings.
 # Standard imports.
 import json
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import ClassVar
 
 # Non-standard imports.
@@ -149,13 +149,12 @@ class HeightCalculator:
 
 class HeightCalculatorError(Exception):
     """ A custom exception. """
-    pass
 
 def get_geometries(poses, match=None):
     """ Extract centroid and rotations of SFM poses. """
     rotations = {}
     centers = {}
-    for index, pose in enumerate(poses):
+    for _, pose in enumerate(poses):
         id_num = int(pose["poseId"])
         if match:
             if id_num not in match.keys():
