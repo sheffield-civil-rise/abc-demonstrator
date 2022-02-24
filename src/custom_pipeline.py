@@ -313,8 +313,8 @@ def mvs_pipeline(graph, sfm=None, label_dir=None):
     return custom_mvs_pipeline(graph, sfm, label_dir)
 
 def build_graph(
-        inputImages=[], inputViewpoints=[],
-        inputIntrinsics=[], output="",
+        input_images=[], input_viewpoints=[],
+        input_intrinsics=[], output="",
         graph=None, init=None, label_dir=None):
     """ Custom photogrammetry graph """
     if graph is None:
@@ -323,18 +323,18 @@ def build_graph(
         if init is None:
             sfmNodes = sfmPipeline(graph)
             cameraInit = sfmNodes[0]
-            cameraInit.viewpoints.extend([{"path": img} for img in inputImages])
-            cameraInit.viewpoints.extend(inputViewpoints)
-            cameraInit.intrinsics.extend(inputIntrinsics)
+            cameraInit.viewpoints.extend([{"path": img} for img in input_images])
+            cameraInit.viewpoints.extend(input_viewpoints)
+            cameraInit.intrinsics.extend(input_intrinsics)
         else:
             sfmNodes = sfmPipeline(graph, init)
             if type(init) is list and len(init) > 1:
                 pass
             else:
                 cameraInit = sfmNodes[0]
-                cameraInit.viewpoints.extend([{"path": img} for img in inputImages])
-                cameraInit.viewpoints.extend(inputViewpoints)
-                cameraInit.intrinsics.extend(inputIntrinsics)
+                cameraInit.viewpoints.extend([{"path": img} for img in input_images])
+                cameraInit.viewpoints.extend(input_viewpoints)
+                cameraInit.intrinsics.extend(input_intrinsics)
 
         mvsNodes = mvsPipeline(graph, sfmNodes[-1], label_dir)
         if output:
