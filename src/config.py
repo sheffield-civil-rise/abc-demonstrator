@@ -113,6 +113,7 @@ class Config:
             "path_to_binaries": DEFAULT_PATH_TO_BINARIES,
             "path_to_input": DEFAULT_PATH_TO_INPUT,
             "path_to_output": DEFAULT_PATH_TO_OUTPUT,
+            "path_to_demo_output": DEFAULT_PATH_TO_DEMO_OUTPUT,
             "path_to_repo": DEFAULT_PATH_TO_REPO,
             "path_to_polygon": DEFAULT_PATH_TO_POLYGON,
             "coordinate_reference_system": DEFAULT_COORDINATE_REFERENCE_SYSTEM,
