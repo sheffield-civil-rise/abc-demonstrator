@@ -322,9 +322,9 @@ def build_graph(
         label_dir=None
     ):
     """ Custom photogrammetry graph """
-    for argument in (input_images, input_viewpoints, input_intrinsics):
-        if argument is None:
-            argument = []
+    initialise_list_as_necessary(input_images)
+    initialise_list_as_necessary(input_viewpoints)
+    initialise_list_as_necessary(input_intrinsics)
     if not graph:
         graph = Graph("Custom photogrammetry")
     with GraphModification(graph):
@@ -358,3 +358,10 @@ def build_graph(
                 ]
             )
     return graph
+
+def initialise_list_as_necessary(to_initialise):
+    """ Return an empty list if the input is None, otherwise return the
+    input. """
+    if to_initialise is None:
+        return []
+    return to_initialise
