@@ -143,7 +143,7 @@ class Config:
         },
         "energy_model": {
             "path_to_energyplus": DEFAULT_PATH_TO_ENERGYPLUS,
-            "path_to_energyplyplus_input_data_dictionary": \
+            "path_to_energyplus_input_data_dictionary": \
                 DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY,
             "path_to_weather_data": DEFAULT_PATH_TO_WEATHER_DATA,
             "path_to_energy_plus_weather_file": \
