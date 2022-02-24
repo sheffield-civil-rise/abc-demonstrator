@@ -36,7 +36,7 @@ class EnergyModelGenerator:
         CONFIGS.energy_model.path_to_starting_point_idf
     height: float = None
     window_to_wall_ratio: float = None
-    path_to_polygon: str = CONFIGS.energy_model.path_to_polygon
+    path_to_polygon: str = CONFIGS.reconstruction_dir.path_to_polygon
     path_to_idd: str = \
         CONFIGS.energy_model.path_to_energyplus_input_data_dictionary
     path_to_weather_file: str = \
