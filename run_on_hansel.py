@@ -20,7 +20,6 @@ DEFAULT_REPO_URL = "github.com/tomhosker/photogrammetry_e110a.git"
 DEFAULT_PATH_TO_SECURITY_FILE = \
     os.path.join(PATH_TO_HOME, "hansel_security.json")
 DEFAULT_ENCODING = "utf-8"
-DEFAULT_BRANCH = "restructuring0"
 
 #############
 # FUNCTIONS #
@@ -36,6 +35,17 @@ def get_security_dict(
     result = json.loads(json_str)
     return result
 
+def get_current_branch():
+    """ Get the current branch checked out in THIS copy of the repo. """
+    out = \
+        subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            check=True,
+            capture_output=True
+        )
+    result = out.stdout
+    return result
+
 def run_on_hansel(
         personal_access_token,
         ssh_id,
@@ -45,7 +55,7 @@ def run_on_hansel(
         env_name=DEFAULT_ENV_NAME,
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
-        branch=DEFAULT_BRANCH,
+        branch=get_current_branch(),
         hide_output=False
     ):
     """ Call the shell script with the correct arguments. """
@@ -75,7 +85,7 @@ def run_on_hansel_with_auth(
         env_name=DEFAULT_ENV_NAME,
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
-        branch=DEFAULT_BRANCH,
+        branch=get_current_branch(),
         hide_output=False
     ):
     """ Generate the required auth data, and then call the script. """
