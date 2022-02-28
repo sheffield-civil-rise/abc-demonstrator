@@ -48,7 +48,9 @@ class Demonstrator:
             shutil.rmtree(self.path_to_output)
         self.rec_dir_gen = \
             ReconstructionDirGenerator(
-                path_to_output=self.path_to_output
+                path_to_input=self.path_to_input,
+                path_to_output=self.path_to_output,
+                path_to_polygon=self.path_to_polygon
             )
         self.rec_dir_gen.generate()
         self.make_paths_to_init_files()
@@ -116,7 +118,8 @@ class Demonstrator:
                 height=self.height_calculator.result,
                 window_to_wall_ratio=wwr,
                 path_to_output_idf=path_to_output_idf,
-                path_to_output_dir=path_to_output_dir
+                path_to_output_dir=path_to_output_dir,
+                path_to_polygon=self.path_to_polygon
             )
         self.energy_model_generator.generate_and_run()
 
