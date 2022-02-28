@@ -18,7 +18,7 @@ DEFAULT_LINTER_CONFIGS = {
     "max_line_length": 80,
     "messages_to_disable": ("import-error",),
     "min_score": 9,
-    "paths_to_ignore": ("tests",)
+    "paths_to_ignore": ("test_*",)
 }
 
 #############
@@ -72,6 +72,7 @@ def run_linter(configs=None):
         "--ignore="+(",".join(configs["paths_to_ignore"])),
         "--max-line-length="+str(configs["max_line_length"])
     ]
+    print(arguments)
     arguments = arguments+source_file_paths
     try:
         subprocess.run(arguments, check=True)
