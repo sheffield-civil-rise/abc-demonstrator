@@ -93,7 +93,7 @@ DEFAULT_BOILER_EFFICIENCY = 0.8
 
 # Test.
 DEFAULT_PATH_TO_TEST_INPUT = \
-    os.path.join(PATH_TO_HOME, "photogrammetry_input_test")
+    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_input_test")
 
 # Other.
 EXPECTED_PATH_TO_CONFIG_JSON = \
