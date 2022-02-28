@@ -20,7 +20,13 @@ from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
 
 # Local imports.
-from config import get_configs, SEMICIRCLE_DEGREES
+from config import (
+    get_configs,
+    make_path_to_gps_data,
+    make_path_to_ladybug_gps_data,
+    make_path_to_ladybug_images,
+    SEMICIRCLE_DEGREES
+)
 from deeplab.Deeplabv3 import Deeplabv3
 from utility_functions import make_label_color_dict
 
@@ -51,7 +57,6 @@ class ReconstructionDirGenerator:
     output_image_extension: str = \
         CONFIGS.reconstruction_dir.output_image_extension
     number_of_cameras: int = CONFIGS.reconstruction_dir.number_of_cameras
-    expedite: bool = True
     # Generated fields.
     path_to_output_images: str = None
     path_to_labelled_images: str = None
@@ -125,7 +130,13 @@ class ReconstructionDirGenerator:
         "locked": "0"
     }
 
-    def __post_init__(self):
+    def __post_init__(self, path_to_input=None):
+        if path_to_input:
+            self.path_to_gps_data = make_path_to_gps_data(stem=path_to_input)
+            self.path_to_ladybug_gps_data = \
+                make_path_to_ladybug_gps_data(stem=path_to_input)
+            self.path_to_ladybug_images = \
+                make_path_to_ladybug_images(stem=path_to_input)
         self.set_palette()
 
     def set_palette(self):
@@ -407,8 +418,6 @@ class ReconstructionDirGenerator:
         img_list = get_img_paths(self.path_to_output_images)
         model = self.make_model()
         model.load_weights(self.path_to_model)
-        if os.path.exists(self.path_to_labelled_images) and self.expedite:
-            return
         for index, path in enumerate(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH
@@ -456,8 +465,6 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
         img_list = get_img_paths(self.path_to_output_images)
-        if os.path.exists(self.path_to_masked_images) and self.expedite:
-            return
         for index, path in enumerate(img_list):
             _, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)

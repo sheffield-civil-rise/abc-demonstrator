@@ -17,6 +17,9 @@ import config
 import expected
 from make_checksum import make_checksum
 
+# Local constants.
+CONFIGS = config.make_configs()
+
 ###########
 # TESTING #
 ###########
@@ -24,7 +27,7 @@ from make_checksum import make_checksum
 @pytest.fixture(scope="module")
 def demo_obj():
     """ Make an object of the Demonstrator class. """
-    result = Demonstrator()
+    result = Demonstrator(path_to_input=CONFIGS.test.path_to_input)
     result.demonstrate()
     return result
 

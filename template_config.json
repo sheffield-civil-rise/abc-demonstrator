@@ -47,5 +47,8 @@
         "setpoint_heating": null,
         "setpoint_cooling": null,
         "boiler_efficiency": null
+    },
+    "test": {
+        "path_to_input": null
     }
 }

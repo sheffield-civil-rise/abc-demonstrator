@@ -25,11 +25,11 @@ class Demonstrator:
     """ The class in question. """
     def __init__(
             self,
+            path_to_input=CONFIGS.general.path_to_input
             path_to_output=CONFIGS.general.path_to_demo_output,
-            expedite=False
+            path_to_polygon=CONFIGS.general.path_to_polygon
         ):
         self.path_to_output = path_to_output
-        self.expedite = expedite
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
         # Generated fields.
         self.rec_dir_gen = None
@@ -42,11 +42,11 @@ class Demonstrator:
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
         necessary. """
-        if os.path.exists(self.path_to_output) and not self.expedite:
+        if os.path.exists(self.path_to_output):
             shutil.rmtree(self.path_to_output)
         self.rec_dir_gen = \
             ReconstructionDirGenerator(
-                path_to_output=self.path_to_output, expedite=self.expedite
+                path_to_output=self.path_to_output
             )
         self.rec_dir_gen.generate()
         self.make_paths_to_init_files()
