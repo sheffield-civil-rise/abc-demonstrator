@@ -29,7 +29,9 @@ class Demonstrator:
             path_to_output=CONFIGS.general.path_to_demo_output,
             path_to_polygon=CONFIGS.general.path_to_polygon
         ):
+        self.path_to_input = path_to_input
         self.path_to_output = path_to_output
+        self.path_to_polygon = path_to_polygon
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
         # Generated fields.
         self.rec_dir_gen = None

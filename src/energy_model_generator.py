@@ -66,6 +66,7 @@ class EnergyModelGenerator:
     polygon: Polygon = None
     idf_obj: IDF = None
     materials: dict = None
+    constructions: dict = None
     thermostat: IDF = None
     hot_water_loop: IDF = None
     boiler: IDF = None
