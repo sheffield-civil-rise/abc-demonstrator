@@ -170,7 +170,7 @@ class BatchProcessor:
     def start(self):
         """ Start the process. """
         self.pool = Pool(initializer=mute)
-        async_result = self.pool.map_async(run_task_manager, self.graph)
+        async_result = self.pool.map_async(run_task_manager, [self.graph])
         async_result.get(timeout=self.timeout)
 
 ################################
