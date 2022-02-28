@@ -8,7 +8,12 @@ import shutil
 
 # Local imports.
 from batch_processor import BatchProcessor
-from config import get_configs
+from config import (
+    get_configs,
+    make_path_to_gps_data,
+    make_path_to_ladybug_gps_data,
+    make_path_to_ladybug_images,
+)
 from energy_model_generator import EnergyModelGenerator
 from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
@@ -25,11 +30,11 @@ class Demonstrator:
     """ The class in question. """
     def __init__(
             self,
-            path_to_input=CONFIGS.general.path_to_input,
+            path_to_input_override=None, # Overides several configs if set.
             path_to_output=CONFIGS.general.path_to_demo_output,
             path_to_polygon=CONFIGS.general.path_to_polygon
         ):
-        self.path_to_input = path_to_input
+        self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
@@ -46,12 +51,26 @@ class Demonstrator:
         necessary. """
         if os.path.exists(self.path_to_output):
             shutil.rmtree(self.path_to_output)
-        self.rec_dir_gen = \
+        if self.path_to_input_override:
+            path_to_gps_data = \
+                make_path_to_gps_data(stem=self.path_to_input_override)
+            path_to_ladybug_gps_data = \
+                make_path_to_ladybug_gps_data(stem=self.path_to_input_override)
+            path_to_ladybug_images = \
+                make_path_to_ladybug_images(stem=self.path_to_input_override)
             ReconstructionDirGenerator(
-                path_to_input=self.path_to_input,
+                path_to_gps_data=path_to_gps_data,
+                path_to_ladybug_gps_data=path_to_ladybug_gps_data,
+                path_to_ladybug_images=path_to_ladybug_images,
                 path_to_output=self.path_to_output,
                 path_to_polygon=self.path_to_polygon
             )
+        else:
+            self.rec_dir_gen = \
+                ReconstructionDirGenerator(
+                    path_to_output=self.path_to_output,
+                    path_to_polygon=self.path_to_polygon
+                )
         self.rec_dir_gen.generate()
         self.make_paths_to_init_files()
 
