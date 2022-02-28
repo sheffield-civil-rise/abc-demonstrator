@@ -122,7 +122,7 @@ def make_path_to_ladybug_images(
         stem=DEFAULT_PATH_TO_INPUT, dirname=DEFAULT_LADYBUG_IMAGES_DIRNAME
     ):
     """ Make the path, filling in the blanks with defaults. """
-    result = os.path.join(stem, filename)
+    result = os.path.join(stem, dirname)
     return result
 
 ##############
