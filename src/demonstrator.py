@@ -58,13 +58,14 @@ class Demonstrator:
                 make_path_to_ladybug_gps_data(stem=self.path_to_input_override)
             path_to_ladybug_images = \
                 make_path_to_ladybug_images(stem=self.path_to_input_override)
-            ReconstructionDirGenerator(
-                path_to_gps_data=path_to_gps_data,
-                path_to_ladybug_gps_data=path_to_ladybug_gps_data,
-                path_to_ladybug_images=path_to_ladybug_images,
-                path_to_output=self.path_to_output,
-                path_to_polygon=self.path_to_polygon
-            )
+            self.rec_dir_gen = \
+                ReconstructionDirGenerator(
+                    path_to_gps_data=path_to_gps_data,
+                    path_to_ladybug_gps_data=path_to_ladybug_gps_data,
+                    path_to_ladybug_images=path_to_ladybug_images,
+                    path_to_output=self.path_to_output,
+                    path_to_polygon=self.path_to_polygon
+                )
         else:
             self.rec_dir_gen = \
                 ReconstructionDirGenerator(
