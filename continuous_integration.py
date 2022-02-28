@@ -18,7 +18,7 @@ DEFAULT_LINTER_CONFIGS = {
     "max_line_length": 80,
     "messages_to_disable": ("import-error",),
     "min_score": 9,
-    "paths_to_ignore": ("test_*",)
+    "patterns_to_ignore": ("**/test_*.py",)
 }
 
 #############
@@ -59,6 +59,16 @@ def make_parser():
     )
     return result
 
+def make_files_to_ignore(patterns_to_ignore):
+    """ Make a string list of files from a list of patterns. """
+    file_set = set()
+    for pattern in patterns_to_ignore:
+        file_list = glob(pattern)
+        for file_path in file_list:
+            file_set.add(os.path.basename(file_path))
+    result = ",".join(list(file_set))
+    return result
+
 def run_linter(configs=None):
     """ Run PyLint on this repo. """
     if configs is None:
@@ -69,10 +79,9 @@ def run_linter(configs=None):
         "pylint",
         "--fail-under="+str(configs["min_score"]),
         "--disable="+(",".join(configs["messages_to_disable"])),
-        "--ignore="+(",".join(configs["paths_to_ignore"])),
+        "--ignore="+make_files_to_ignore(configs["patterns_to_ignore"]),
         "--max-line-length="+str(configs["max_line_length"])
     ]
-    print(arguments)
     arguments = arguments+source_file_paths
     try:
         subprocess.run(arguments, check=True)
@@ -87,7 +96,7 @@ def run_continuous_integration(
     lint_result, test_result = True, True
     if lint:
         lint_result = run_linter()
-        if (not lint_result) and crash_on_failure:
+        if (not lint_result) and stop_on_failure:
             return False
     if test:
         if test_locally:
