@@ -18,7 +18,7 @@ import expected
 from make_checksum import make_checksum
 
 # Local constants.
-CONFIGS = config.make_configs()
+CONFIGS = config.get_configs()
 
 ###########
 # TESTING #
