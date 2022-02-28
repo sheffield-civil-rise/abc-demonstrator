@@ -5,6 +5,7 @@ This code defines a class which runs some of the more time-consuming processes.
 # Standard imports.
 import os
 import sys
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from threading import Thread
@@ -199,10 +200,22 @@ def check_and_read_sfm(path_to):
         )
     return readSfMData(path_to)
 
+@contextmanager
+def suppress_stdout():
+    """ Suppress normal output, but not errors and warnings. """
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = old_stdout
+
 def run_task_manager(graph):
     """ Create the task manager object, start it, and keep us in a loop until
-    it's finished. """
-    task_manager = TaskManager()
-    task_manager.compute(graph, toNodes=None)
-    while task_manager._thread.isRunning():
-        pass
+    it's finished. And do all this as quietly as possible. """
+    with suppress_stdout():
+        task_manager = TaskManager()
+        task_manager.compute(graph, toNodes=None)
+        while task_manager._thread.isRunning():
+            pass
