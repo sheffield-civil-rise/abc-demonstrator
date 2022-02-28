@@ -47,6 +47,7 @@ class ReconstructionDirGenerator:
     path_to_ladybug_images: str = \
         CONFIGS.reconstruction_dir.path_to_ladybug_images
     path_to_polygon: str = CONFIGS.general.path_to_polygon
+    path_to_input_override: str = None
     path_to_output: str = CONFIGS.general.path_to_output
     path_to_model: str = CONFIGS.reconstruction_dir.path_to_deeplab_binary
     co_ref_sys: str = CONFIGS.general.coordinate_reference_system
@@ -130,13 +131,14 @@ class ReconstructionDirGenerator:
         "locked": "0"
     }
 
-    def __post_init__(self, path_to_input=None):
-        if path_to_input:
-            self.path_to_gps_data = make_path_to_gps_data(stem=path_to_input)
+    def __post_init__(self):
+        if self.path_to_input_override:
+            self.path_to_gps_data = \
+                make_path_to_gps_data(stem=self.path_to_input_override)
             self.path_to_ladybug_gps_data = \
-                make_path_to_ladybug_gps_data(stem=path_to_input)
+                make_path_to_ladybug_gps_data(stem=self.path_to_input_override)
             self.path_to_ladybug_images = \
-                make_path_to_ladybug_images(stem=path_to_input)
+                make_path_to_ladybug_images(stem=self.path_to_input_override)
         self.set_palette()
 
     def set_palette(self):
