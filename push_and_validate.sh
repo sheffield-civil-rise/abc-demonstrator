@@ -3,7 +3,7 @@
 ### This code quickly pushes any changes and runs the new code on Hansel.
 
 # Constants.
-BRANCH="restructuring0"
+BRANCH="restructuring1"
 
 # Fail on the first error.
 set -e
