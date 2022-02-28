@@ -5,10 +5,9 @@ This code defines a class which runs some of the more time-consuming processes.
 # Standard imports.
 import os
 import sys
-from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
-from threading import Thread
+from multiprocessing import Pool
 from typing import ClassVar
 
 # Non-standard imports.
@@ -24,6 +23,14 @@ from custom_pipeline import build_graph
 
 # Local constants.
 CONFIGS = get_configs()
+
+#####################
+# SPECIAL FUNCTIONS #
+#####################
+
+def mute():
+    """ Suppress standard output. """
+    sys.stdout = open(os.devnull, "w")
 
 ##############
 # MAIN CLASS #
@@ -49,7 +56,7 @@ class BatchProcessor:
     intrinsics: list = field(default_factory=list)
     files_by_type: multiview.FilesByType = None
     graph: Graph = None
-    thread: Thread = None
+    pool: Pool = None
 
     # Class attributes.
     SWITCH_NODE: ClassVar[dict] = {
@@ -67,7 +74,6 @@ class BatchProcessor:
         self.files_by_type = multiview.FilesByType()
         self.get_views_and_instrinsics()
         self.make_graph()
-        self.thread = Thread(target=run_task_manager, args=(self.graph,))
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
@@ -162,9 +168,10 @@ class BatchProcessor:
             )
 
     def start(self):
-        """ Start the thread. """
-        self.thread.start()
-        self.thread.join(timeout=self.timeout)
+        """ Start the process. """
+        self.pool = Pool(initializer=mute)
+        async_result = self.pool.map_async(run_task_manager, self.graph)
+        async_result.get(timeout=self.timeout)
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
@@ -200,22 +207,10 @@ def check_and_read_sfm(path_to):
         )
     return readSfMData(path_to)
 
-@contextmanager
-def suppress_stdout():
-    """ Suppress normal output, but not errors and warnings. """
-    with open(os.devnull, "w") as devnull:
-        old_stdout = sys.stdout
-        sys.stdout = devnull
-        try:  
-            yield
-        finally:
-            sys.stdout = old_stdout
-
 def run_task_manager(graph):
     """ Create the task manager object, start it, and keep us in a loop until
     it's finished. And do all this as quietly as possible. """
-    with suppress_stdout():
-        task_manager = TaskManager()
-        task_manager.compute(graph, toNodes=None)
-        while task_manager._thread.isRunning():
-            pass
+    task_manager = TaskManager()
+    task_manager.compute(graph, toNodes=None)
+    while task_manager._thread.isRunning():
+        pass
