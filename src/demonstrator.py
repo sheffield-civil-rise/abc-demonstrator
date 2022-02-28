@@ -25,7 +25,7 @@ class Demonstrator:
     """ The class in question. """
     def __init__(
             self,
-            path_to_input=CONFIGS.general.path_to_input
+            path_to_input=CONFIGS.general.path_to_input,
             path_to_output=CONFIGS.general.path_to_demo_output,
             path_to_polygon=CONFIGS.general.path_to_polygon
         ):
