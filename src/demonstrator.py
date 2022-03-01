@@ -88,12 +88,14 @@ class Demonstrator:
 
     def make_and_run_batch_processor(self):
         """ Build the batch processor object, and then run it. """
-        make_and_run_batch_processor_quietly(
+        arg_list = [
             self.rec_dir_gen.path_to_output_images,
             self.path_to_cache,
             self.paths_to_init_files,
             self.rec_dir_gen.path_to_labelled_images
-        )
+        ]
+        pool = Pool()
+        pool.map(make_and_run_batch_processor, arg_list)
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
@@ -147,20 +149,15 @@ class Demonstrator:
         self.make_and_run_window_to_wall_ratio_calculator()
         self.make_and_run_energy_model_generator()
 
-def make_and_run_batch_processor_quietly(
-        path_to_output_images,
-        path_to_cache,
-        paths_to_init_files,
-        path_to_labelled_images
-    ):
+def make_and_run_batch_processor_quietly(arg_list):
     batch_processor = \
         BatchProcessor(
             search_recursively=True,
-            path_to_output_images=path_to_output_images,
+            path_to_output_images=arg_list[0],
             pipeline="custom",
-            path_to_cache=path_to_cache,
-            paths_to_init_files=paths_to_init_files,
-            path_to_labelled_images=path_to_labelled_images
+            path_to_cache=arg_list[1],
+            paths_to_init_files=arg_list[2],
+            path_to_labelled_images=arg_list[3]
         )
     batch_processor.start()
 
