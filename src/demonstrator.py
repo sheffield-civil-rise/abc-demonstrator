@@ -22,6 +22,18 @@ from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
 # Local constants.
 CONFIGS = get_configs()
 
+from contextlib import contextmanager
+
+@contextmanager
+def suppress_stdout():
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = old_stdout
+
 ##############
 # MAIN CLASS #
 ##############
@@ -146,7 +158,8 @@ class Demonstrator:
     def demonstrate(self):
         """ Run the demonstrator script. """
         self.make_and_run_reconstruction_dir_generator()
-        self.make_and_run_batch_processor()
+        with suppress_stdout():
+            self.make_and_run_batch_processor()
         self.make_and_run_height_calculator()
         self.make_and_run_window_to_wall_ratio_calculator()
         self.make_and_run_energy_model_generator()
