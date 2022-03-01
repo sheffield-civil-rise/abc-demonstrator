@@ -4,8 +4,9 @@ This code defines a class which demonstrates what the codebase can do.
 
 # Standard imports.
 import os
+import pathlib
 import shutil
-from multiprocessing import Pool
+import subprocess
 
 # Local imports.
 from batch_processor import BatchProcessor
@@ -42,7 +43,7 @@ class Demonstrator:
         # Generated fields.
         self.rec_dir_gen = None
         self.paths_to_init_files = None
-        self.batch_processor = None
+        self.batch_process = None
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
         self.energy_model_generator = None
@@ -87,16 +88,30 @@ class Demonstrator:
             )
         ]
 
-    def make_and_run_batch_processor(self):
-        """ Build the batch processor object, and then run it. """
-        arg_list = [
-            self.rec_dir_gen.path_to_output_images,
-            self.path_to_cache,
-            self.paths_to_init_files,
-            self.rec_dir_gen.path_to_labelled_images
+    def make_and_run_batch_process(self):
+        """ Build the batch process, and run it. """
+        self.batch_process = subprocess.run(arguments, check=True)
+        path_to_py_file = \
+            str(pathlib.Path(__file__).parent / "batch_processor.py")
+        if len(self.paths_to_init_files) >= 2:
+            path_to_init_file_a = self.paths_to_init_files[0]
+            path_to_init_file_b = self.paths_to_init_files[1]
+        elif len(self.paths_to_init_files) == 1:
+            path_to_init_file_a = self.paths_to_init_files[0]
+            path_to_init_file_b = None
+        else:
+            path_to_init_file_a = None
+            path_to_init_file_b = None
+        path_to_labelled_images = self.rec_dir_gen.path_to_labelled_images
+        arguments = [
+            "python3", path_to_py_file,
+            "--path-to-output-images", self.rec_dir_gen.path_to_output_images,
+            "--path-to-cache", self.path_to_cache,
+            "--path-to-init-file-a", path_to_init_file_a,
+            "--path-to-init-file-b", path_to_init_file_b,
+            "--path-to-labelled-images", path_to_labelled_images
         ]
-        pool = Pool()
-        pool.map(make_and_run_batch_processor_quietly, arg_list)
+        subprocess.run(arguments, check=True)
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
@@ -145,22 +160,10 @@ class Demonstrator:
     def demonstrate(self):
         """ Run the demonstrator script. """
         self.make_and_run_reconstruction_dir_generator()
-        self.make_and_run_batch_processor()
+        self.make_and_run_batch_process()
         self.make_and_run_height_calculator()
         self.make_and_run_window_to_wall_ratio_calculator()
         self.make_and_run_energy_model_generator()
-
-def make_and_run_batch_processor_quietly(arg_list):
-    batch_processor = \
-        BatchProcessor(
-            search_recursively=True,
-            path_to_output_images=arg_list[0],
-            pipeline="custom",
-            path_to_cache=arg_list[1],
-            paths_to_init_files=arg_list[2],
-            path_to_labelled_images=arg_list[3]
-        )
-    batch_processor.start()
 
 ###################
 # RUN AND WRAP UP #

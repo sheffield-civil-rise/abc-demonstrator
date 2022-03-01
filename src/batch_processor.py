@@ -3,6 +3,7 @@ This code defines a class which runs some of the more time-consuming processes.
 """
 
 # Standard imports.
+import argparse
 import os
 import sys
 from dataclasses import dataclass, field
@@ -196,3 +197,79 @@ def check_and_read_sfm(path_to):
             "File at "+path_to+" is not a structure from motion file."
         )
     return readSfMData(path_to)
+
+            self.path_to_cache,
+            self.paths_to_init_files,
+            self.rec_dir_gen.path_to_labelled_images
+
+def make_parser():
+    """ Return a parser argument. """
+    result = \
+        argparse.ArgumentParser(
+            description="Make and run a BatchProcessor object"
+        )
+    result.add_argument(
+        "--path-to-output-images",
+        default=None,
+        dest="path_to_output_images",
+        help="The path to the output images",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-cache",
+        default=os.path.join(CONFIGS.general.path_to_output, "cache"),
+        dest="path_to_cache",
+        help="The path to the cache",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-init-file-a",
+        default=None,
+        dest="path_to_init_file_a",
+        help="The path to the first init file",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-init-file-b",
+        default=None,
+        dest="path_to_init_file_b",
+        help="The path to the second init file",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-labelled-images",
+        default=None,
+        dest="path_to_labelled_images",
+        help="The path to the labelled images",
+        type=str
+    )
+    return result
+
+def make_batch_processor_from_args(arguments):
+    """ Make the arguments object. """
+    paths_to_init_files = []
+    if arguments.path_to_init_file_a:
+        paths_to_init_files.append(arguments.path_to_init_file_a)
+    if arguments.path_to_init_file_b:
+        paths_to_init_files.append(arguments.path_to_init_file_b)
+    result = \
+        BatchProcessor(
+            path_to_output_images=arguments.path_to_output_images,
+            path_to_cache=arguments.path_to_cache,
+            paths_to_init_files=paths_to_init_files,
+            path_to_labelled_images=arguments.path_to_labelled_images
+        )
+    return result
+
+###################
+# RUN AND WRAP UP #
+###################
+
+def run():
+    parser = make_parser()
+    arguments = parser.parse_args()
+    batch_processor = make_batch_processor_from_args(arguments)
+    batch_processor.start()
+
+if __name__ == "__main__":
+    run()
