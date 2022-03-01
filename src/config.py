@@ -42,6 +42,7 @@ DEFAULT_LABEL_VALUE_DICT = {
     "wall": 1
 }
 DEFAULT_RGB_MAX = (255, 192, 128)
+DEFAULT_LOGGING_FORMAT = "[%(asctime)s] %(levelname)s: %(message)s"
 
 # Reconstruction dir.
 DEFAULT_GPS_DATA_FILENAME = "gps_data.csv"
@@ -99,6 +100,7 @@ DEFAULT_PATH_TO_TEST_INPUT = \
 EXPECTED_PATH_TO_CONFIG_JSON = \
     os.path.join(str(Path.home()), "photogrammetry_config.json")
 SEMICIRCLE_DEGREES = 180
+INTERNAL_PYTHON_COMMAND = "python"
 
 #####################
 # SPECIAL FUNCTIONS #
@@ -148,7 +150,8 @@ class Configs:
             "encoding": DEFAULT_ENCODING,
             "max_rgb_channel": DEFAULT_MAX_RGB_CHANNEL,
             "label_value_dict": DEFAULT_LABEL_VALUE_DICT,
-            "rgb_max": DEFAULT_RGB_MAX
+            "rgb_max": DEFAULT_RGB_MAX,
+            "logging_format": DEFAULT_LOGGING_FORMAT
         },
         "reconstruction_dir": {
             "path_to_gps_data": make_path_to_gps_data(),

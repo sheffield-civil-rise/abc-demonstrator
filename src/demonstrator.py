@@ -15,6 +15,7 @@ from config import (
     make_path_to_gps_data,
     make_path_to_ladybug_gps_data,
     make_path_to_ladybug_images,
+    INTERNAL_PYTHON_COMMAND
 )
 from energy_model_generator import EnergyModelGenerator
 from height_calculator import HeightCalculator
@@ -37,7 +38,10 @@ class Demonstrator:
             path_to_polygon=CONFIGS.general.path_to_polygon,
             quiet=True
         ):
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(
+            level=logging.INFO,
+            format=CONFIGS.general.logging_format
+        )
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
@@ -106,7 +110,7 @@ class Demonstrator:
             path_to_init_file_b = None
         path_to_labelled_images = self.rec_dir_gen.path_to_labelled_images
         arguments = [
-            "python", path_to_py_file,
+            INTERNAL_PYTHON_COMMAND, path_to_py_file,
             "--path-to-output-images", self.rec_dir_gen.path_to_output_images,
             "--path-to-cache", self.path_to_cache,
             "--path-to-init-file-a", path_to_init_file_a,
