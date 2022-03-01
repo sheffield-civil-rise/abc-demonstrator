@@ -90,7 +90,6 @@ class Demonstrator:
 
     def make_and_run_batch_process(self):
         """ Build the batch process, and run it. """
-        self.batch_process = subprocess.run(arguments, check=True)
         path_to_py_file = \
             str(pathlib.Path(__file__).parent / "batch_processor.py")
         if len(self.paths_to_init_files) >= 2:
@@ -111,7 +110,7 @@ class Demonstrator:
             "--path-to-init-file-b", path_to_init_file_b,
             "--path-to-labelled-images", path_to_labelled_images
         ]
-        subprocess.run(arguments, check=True)
+        self.batch_process = subprocess.run(arguments, check=True)
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
