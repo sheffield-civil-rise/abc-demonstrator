@@ -4,6 +4,7 @@ This code defines a class which generates the required Intermediate Data File
 """
 
 # Standard imports.
+import logging
 import os
 from copy import deepcopy
 from dataclasses import dataclass
@@ -389,17 +390,29 @@ class EnergyModelGenerator:
 
     def generate(self):
         """ Generate the model. """
+        logging.info("0")
         self.initialise_idf()
+        logging.info("1")
         self.define_geometry()
+        logging.info("2")
         self.idf_obj.set_wwr(wwr_map=self.window_to_wall_ratio_dict)
+        logging.info("3")
         self.idf_obj.idfobjects["BUILDING"][0].North_Axis = self.orientation
+        logging.info("4")
         self.define_materials()
+        logging.info("5")
         self.define_constructions()
+        logging.info("6")
         self.define_schedules()
+        logging.info("7")
         self.add_thermostat()
+        logging.info("8")
         self.add_hot_water_loop()
+        logging.info("9")
         self.add_boiler()
+        logging.info("10")
         self.populate_zones()
+        logging.info("11")
 
     def run_simulation(self):
         """ Run the EnergyPlus simulation and save the simulation output to a
