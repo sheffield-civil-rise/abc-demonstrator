@@ -24,6 +24,19 @@ from config import get_configs
 NORTH, EAST, SOUTH, WEST = 0, 90, 180, 270
 CONFIGS = get_configs()
 
+from contextlib import contextmanager
+import sys
+
+@contextmanager
+def suppress_stdout():
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = old_stdout
+
 ##############
 # MAIN CLASS #
 ##############
@@ -390,41 +403,30 @@ class EnergyModelGenerator:
 
     def generate(self):
         """ Generate the model. """
-        logging.info("0")
         self.initialise_idf()
-        logging.info("1")
         self.define_geometry()
-        logging.info("2")
         self.idf_obj.set_wwr(wwr_map=self.window_to_wall_ratio_dict)
-        logging.info("3")
         self.idf_obj.idfobjects["BUILDING"][0].North_Axis = self.orientation
-        logging.info("4")
         self.define_materials()
-        logging.info("5")
         self.define_constructions()
-        logging.info("6")
         self.define_schedules()
-        logging.info("7")
         self.add_thermostat()
-        logging.info("8")
         self.add_hot_water_loop()
-        logging.info("9")
         self.add_boiler()
-        logging.info("10")
         self.populate_zones()
-        logging.info("11")
 
     def run_simulation(self):
         """ Run the EnergyPlus simulation and save the simulation output to a
         predefined direction. """
         if not os.path.isdir(self.path_to_output_dir):
             os.makedirs(self.path_to_output_dir)
-        self.idf_obj.run(
-            output_directory=self.path_to_output_dir,
-            expandobjects=True,
-            output_prefix=self.id_str,
-            output_suffix=self.OUTPUT_SUFFIX
-        )
+        with suppress_output:
+            self.idf_obj.run(
+                output_directory=self.path_to_output_dir,
+                expandobjects=True,
+                output_prefix=self.id_str,
+                output_suffix=self.OUTPUT_SUFFIX
+            )
 
     def generate_and_run(self):
         """ Generate our IDF object, and then run it. """
