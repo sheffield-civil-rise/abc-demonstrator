@@ -4,6 +4,7 @@ This code defines a class which generates the reconstruction directory.
 
 # Standard imports.
 import json
+import logging
 import os
 import sys
 from dataclasses import dataclass
@@ -458,7 +459,6 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_img)
-            print_progress(index, len(img_list))
 
     def mask_images(self):
         """ Make the directory holding the masked images, and fill it. """
@@ -482,7 +482,6 @@ class ReconstructionDirGenerator:
                 mask = cv2.imread(path_to_image_to_mask)
                 out = mask_image(img, mask)
                 cv2.imwrite(out_path, out)
-            print_progress(index, len(img_list))
 
     def generate_local_selection(self):
         """ Switch over to local coordinates. """
@@ -604,30 +603,30 @@ class ReconstructionDirGenerator:
 
     def generate(self):
         """ Generate the reconstruction directory. """
-        print("Generating reconstuction directory...")
-        print("Loading GPS data...")
+        logging.info("Generating reconstuction directory...")
+        logging.info("Loading GPS data...")
         self.load_gps_data()
-        print("Localising Ladybug GPS data...")
+        logging.info("Localising Ladybug GPS data...")
         self.make_localised_ladybug_gps_data()
-        print("Adding geometry...")
+        logging.info("Adding geometry...")
         self.make_geo_data_frame()
-        print("Calculating focal point...")
+        logging.info("Calculating focal point...")
         self.make_centroid()
-        print("Selecting subset...")
+        logging.info("Selecting subset...")
         self.select_the_subset()
-        print("Generating file dictionary...")
+        logging.info("Generating file dictionary...")
         self.generate_file_dict()
-        print("Selecting file paths...")
+        logging.info("Selecting file paths...")
         self.select_file_paths()
-        print("Generating output directory...")
+        logging.info("Generating output directory...")
         self.generate_output_directory()
-        print("Labelling images...")
+        logging.info("Labelling images...")
         self.label_images()
-        print("Masking images...")
+        logging.info("Masking images...")
         self.mask_images()
-        print("Generating local selection...")
+        logging.info("Generating local selection...")
         self.generate_local_selection()
-        print("Creating CameraInit files.")
+        logging.info("Creating CameraInit files.")
         self.create_camera_init_file(
             self.CAMERA_INIT_FILENAME,
             self.path_to_output_images
@@ -636,9 +635,9 @@ class ReconstructionDirGenerator:
             self.CAMERA_INIT_LABEL_FILENAME,
             self.path_to_masked_images
         )
-        print("Renaming labelled images...")
+        logging.info("Renaming labelled images...")
         self.rename_labelled_images()
-        print("Reconstruction directory generated.")
+        logging.info("Reconstruction directory generated.")
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
@@ -773,14 +772,6 @@ def get_img_paths(
             if ext.lower() in image_extensions:
                 result.append(os.path.join(path_to_dir, path))
     return result
-
-def print_progress(index, loops):
-    """ Tell the user how far along the process we are. """
-    index_to_print = index+1
-    sys.stdout.write("\r    "+str(index_to_print)+"/"+str(loops))
-    sys.stdout.flush()
-    if index_to_print == loops:
-        print(" ")
 
 def mask_image(img, mask):
     """ Apply a given mask to a given image. """
