@@ -38,10 +38,7 @@ class Demonstrator:
             path_to_polygon=CONFIGS.general.path_to_polygon,
             quiet=True
         ):
-        logging.basicConfig(
-            level=logging.INFO,
-            format=CONFIGS.general.logging_format
-        )
+        self.start_logging()
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
@@ -54,6 +51,14 @@ class Demonstrator:
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
         self.energy_model_generator = None
+
+    def start_logging(self):
+        """ Configure logging, and log that we've started. """
+        logging.basicConfig(
+            level=logging.INFO,
+            format=CONFIGS.general.logging_format
+        )
+        logging.info("Initiating "+str(self.__class__)+"...")
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
