@@ -5,7 +5,6 @@ This code defines a class which demonstrates what the codebase can do.
 # Standard imports.
 import os
 import shutil
-import sys
 
 # Local imports.
 from batch_processor import BatchProcessor
@@ -22,18 +21,6 @@ from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
 
 # Local constants.
 CONFIGS = get_configs()
-
-from contextlib import contextmanager
-
-@contextmanager
-def suppress_stdout():
-    with open(os.devnull, "w") as devnull:
-        old_stdout = sys.stdout
-        sys.stdout = devnull
-        try:  
-            yield
-        finally:
-            sys.stdout = old_stdout
 
 ##############
 # MAIN CLASS #
@@ -101,16 +88,12 @@ class Demonstrator:
 
     def make_and_run_batch_processor(self):
         """ Build the batch processor object, and then run it. """
-        self.batch_processor = \
-            BatchProcessor(
-                search_recursively=True,
-                path_to_output_images=self.rec_dir_gen.path_to_output_images,
-                pipeline="custom",
-                path_to_cache=self.path_to_cache,
-                paths_to_init_files=self.paths_to_init_files,
-                path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
-            )
-        self.batch_processor.start()
+        make_and_run_batch_processor_quietly(
+            self.rec_dir_gen.path_to_output_images,
+            self.path_to_cache,
+            self.paths_to_init_files,
+            self.rec_dir_gen.path_to_labelled_images
+        )
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
@@ -164,6 +147,23 @@ class Demonstrator:
         self.make_and_run_height_calculator()
         self.make_and_run_window_to_wall_ratio_calculator()
         self.make_and_run_energy_model_generator()
+
+def make_and_run_batch_processor_quietly(
+        path_to_output_images,
+        path_to_cache,
+        paths_to_init_files,
+        path_to_labelled_images
+    ):
+    batch_processor = \
+        BatchProcessor(
+            search_recursively=True,
+            path_to_output_images=path_to_output_images,
+            pipeline="custom",
+            path_to_cache=path_to_cache,
+            paths_to_init_files=paths_to_init_files,
+            path_to_labelled_images=path_to_labelled_images
+        )
+    batch_processor.start()
 
 ###################
 # RUN AND WRAP UP #
