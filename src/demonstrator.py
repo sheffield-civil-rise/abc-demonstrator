@@ -36,7 +36,7 @@ class Demonstrator:
             path_to_output=CONFIGS.general.path_to_demo_output,
             path_to_polygon=CONFIGS.general.path_to_polygon
         ):
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.INFO)
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon

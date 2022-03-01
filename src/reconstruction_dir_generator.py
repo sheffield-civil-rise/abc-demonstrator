@@ -603,30 +603,30 @@ class ReconstructionDirGenerator:
 
     def generate(self):
         """ Generate the reconstruction directory. """
-        logging.debug("Generating reconstuction directory...")
-        logging.debug("Loading GPS data...")
+        logging.info("Generating reconstuction directory...")
+        logging.info("Loading GPS data...")
         self.load_gps_data()
-        logging.debug("Localising Ladybug GPS data...")
+        logging.info("Localising Ladybug GPS data...")
         self.make_localised_ladybug_gps_data()
-        logging.debug("Adding geometry...")
+        logging.info("Adding geometry...")
         self.make_geo_data_frame()
-        logging.debug("Calculating focal point...")
+        logging.info("Calculating focal point...")
         self.make_centroid()
-        logging.debug("Selecting subset...")
+        logging.info("Selecting subset...")
         self.select_the_subset()
-        logging.debug("Generating file dictionary...")
+        logging.info("Generating file dictionary...")
         self.generate_file_dict()
-        logging.debug("Selecting file paths...")
+        logging.info("Selecting file paths...")
         self.select_file_paths()
-        logging.debug("Generating output directory...")
+        logging.info("Generating output directory...")
         self.generate_output_directory()
-        logging.debug("Labelling images...")
+        logging.info("Labelling images...")
         self.label_images()
-        logging.debug("Masking images...")
+        logging.info("Masking images...")
         self.mask_images()
-        logging.debug("Generating local selection...")
+        logging.info("Generating local selection...")
         self.generate_local_selection()
-        logging.debug("Creating CameraInit files.")
+        logging.info("Creating CameraInit files.")
         self.create_camera_init_file(
             self.CAMERA_INIT_FILENAME,
             self.path_to_output_images
@@ -635,9 +635,9 @@ class ReconstructionDirGenerator:
             self.CAMERA_INIT_LABEL_FILENAME,
             self.path_to_masked_images
         )
-        logging.debug("Renaming labelled images...")
+        logging.info("Renaming labelled images...")
         self.rename_labelled_images()
-        logging.debug("Reconstruction directory generated.")
+        logging.info("Reconstruction directory generated.")
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
