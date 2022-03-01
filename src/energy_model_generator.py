@@ -420,7 +420,7 @@ class EnergyModelGenerator:
         predefined direction. """
         if not os.path.isdir(self.path_to_output_dir):
             os.makedirs(self.path_to_output_dir)
-        with suppress_output:
+        with suppress_stdout():
             self.idf_obj.run(
                 output_directory=self.path_to_output_dir,
                 expandobjects=True,
