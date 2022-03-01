@@ -142,8 +142,7 @@ class Demonstrator:
     def demonstrate(self):
         """ Run the demonstrator script. """
         self.make_and_run_reconstruction_dir_generator()
-        with suppress_stdout():
-            self.make_and_run_batch_processor()
+        self.make_and_run_batch_processor()
         self.make_and_run_height_calculator()
         self.make_and_run_window_to_wall_ratio_calculator()
         self.make_and_run_energy_model_generator()
