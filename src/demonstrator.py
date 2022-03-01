@@ -9,7 +9,6 @@ import shutil
 import subprocess
 
 # Local imports.
-from batch_processor import BatchProcessor
 from config import (
     get_configs,
     make_path_to_gps_data,
@@ -110,7 +109,13 @@ class Demonstrator:
             "--path-to-init-file-b", path_to_init_file_b,
             "--path-to-labelled-images", path_to_labelled_images
         ]
-        self.batch_process = subprocess.run(arguments, check=True)
+        self.batch_process = \
+            subprocess.run(
+                arguments,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                timeout=CONFIGS.batch_process.timeout
+            )
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
