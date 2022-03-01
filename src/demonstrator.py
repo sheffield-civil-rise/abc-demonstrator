@@ -34,13 +34,15 @@ class Demonstrator:
             self,
             path_to_input_override=None, # Overides several configs if set.
             path_to_output=CONFIGS.general.path_to_demo_output,
-            path_to_polygon=CONFIGS.general.path_to_polygon
+            path_to_polygon=CONFIGS.general.path_to_polygon,
+            quiet=True
         ):
         logging.basicConfig(level=logging.INFO)
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
+        self.quiet = quiet
         # Generated fields.
         self.rec_dir_gen = None
         self.paths_to_init_files = None
@@ -111,14 +113,22 @@ class Demonstrator:
             "--path-to-init-file-b", path_to_init_file_b,
             "--path-to-labelled-images", path_to_labelled_images
         ]
-        self.batch_process = \
-            subprocess.run(
-                arguments,
-                check=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                timeout=CONFIGS.batch_process.timeout
-            )
+        if self.quiet:
+            self.batch_process = \
+                subprocess.run(
+                    arguments,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=CONFIGS.batch_process.timeout
+                )
+        else:
+            self.batch_process = \
+                subprocess.run(
+                    arguments,
+                    check=True,
+                    timeout=CONFIGS.batch_process.timeout
+                )
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
@@ -166,9 +176,13 @@ class Demonstrator:
 
     def demonstrate(self):
         """ Run the demonstrator script. """
+        logging.info("Running reconstruction dir generator...")
         self.make_and_run_reconstruction_dir_generator()
+        logging.info("Running batch process...")
         self.make_and_run_batch_process()
+        logging.info("Running height calculator...")
         self.make_and_run_height_calculator()
+        logging.info("Running window-to-wall ratio calculator...")
         self.make_and_run_window_to_wall_ratio_calculator()
         self.make_and_run_energy_model_generator()
 

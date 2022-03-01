@@ -459,6 +459,9 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_img)
+            logging.info(
+                "Labelling image "+str(index+1)+"/"+str(len(img_list))+"..."
+            )
 
     def mask_images(self):
         """ Make the directory holding the masked images, and fill it. """
@@ -482,6 +485,9 @@ class ReconstructionDirGenerator:
                 mask = cv2.imread(path_to_image_to_mask)
                 out = mask_image(img, mask)
                 cv2.imwrite(out_path, out)
+            logging.info(
+                "Masking image "+str(index+1)+"/"+str(len(img_list))+"..."
+            )
 
     def generate_local_selection(self):
         """ Switch over to local coordinates. """
