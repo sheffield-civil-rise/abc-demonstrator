@@ -198,10 +198,6 @@ def check_and_read_sfm(path_to):
         )
     return readSfMData(path_to)
 
-            self.path_to_cache,
-            self.paths_to_init_files,
-            self.rec_dir_gen.path_to_labelled_images
-
 def make_parser():
     """ Return a parser argument. """
     result = \
