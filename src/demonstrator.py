@@ -190,10 +190,12 @@ class Demonstrator:
             "--path-to-output-dir", path_to_output_dir,
             "--path-to-polygon", self.path_to_polygon
         ]
-        self.energy_model_process = self.run_subprocess(arguments)
+        print(arguments)
+        self.energy_model_process = self.run_subprocess(arguments, timeout=100000)
 
     def demonstrate(self):
         """ Run the demonstrator script. """
+        logging.info("Demonstation initiated.")
         logging.info("Running reconstruction dir generator...")
         self.make_and_run_reconstruction_dir_generator()
         logging.info("Running batch process...")
@@ -202,7 +204,9 @@ class Demonstrator:
         self.make_and_run_height_calculator()
         logging.info("Running window-to-wall ratio calculator...")
         self.make_and_run_window_to_wall_ratio_calculator()
+        logging.info("Running energy model process...")
         self.make_and_run_energy_model_process()
+        logging.info("Demonstration complete.")
 
 ###################
 # RUN AND WRAP UP #
