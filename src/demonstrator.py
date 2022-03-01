@@ -58,7 +58,7 @@ class Demonstrator:
             level=logging.INFO,
             format=CONFIGS.general.logging_format
         )
-        logging.info("Initiating "+str(self.__class__)+"...")
+        logging.info("Initiating "+str(self.__class__.__name__)+" object...")
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
