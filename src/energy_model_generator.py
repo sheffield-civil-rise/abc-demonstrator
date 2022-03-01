@@ -428,12 +428,6 @@ class EnergyModelGenerator:
 class EnergyModelGeneratorError(Exception):
     """ A custom exception. """
 
-                height=self.height_calculator.result,
-                window_to_wall_ratio=wwr,
-                path_to_output_idf=path_to_output_idf,
-                path_to_output_dir=path_to_output_dir,
-                path_to_polygon=self.path_to_polygon
-
 def make_parser():
     """ Return a parser argument. """
     result = \

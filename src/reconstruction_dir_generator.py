@@ -419,6 +419,7 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_labelled_images):
             os.makedirs(self.path_to_labelled_images)
         img_list = get_img_paths(self.path_to_output_images)
+        logging.info("Labelling "+str(len(img_list))+"images...")
         model = self.make_model()
         model.load_weights(self.path_to_model)
         for index, path in enumerate(img_list):
@@ -459,9 +460,6 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_img)
-            logging.info(
-                "Labelling image "+str(index+1)+"/"+str(len(img_list))+"..."
-            )
 
     def mask_images(self):
         """ Make the directory holding the masked images, and fill it. """
@@ -470,6 +468,7 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
         img_list = get_img_paths(self.path_to_output_images)
+        logging.info("Masking "+str(len(img_list))+"images...")
         for index, path in enumerate(img_list):
             _, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
@@ -485,9 +484,6 @@ class ReconstructionDirGenerator:
                 mask = cv2.imread(path_to_image_to_mask)
                 out = mask_image(img, mask)
                 cv2.imwrite(out_path, out)
-            logging.info(
-                "Masking image "+str(index+1)+"/"+str(len(img_list))+"..."
-            )
 
     def generate_local_selection(self):
         """ Switch over to local coordinates. """
@@ -626,9 +622,7 @@ class ReconstructionDirGenerator:
         self.select_file_paths()
         logging.info("Generating output directory...")
         self.generate_output_directory()
-        logging.info("Labelling images...")
         self.label_images()
-        logging.info("Masking images...")
         self.mask_images()
         logging.info("Generating local selection...")
         self.generate_local_selection()

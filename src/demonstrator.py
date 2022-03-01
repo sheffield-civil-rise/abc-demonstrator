@@ -190,8 +190,7 @@ class Demonstrator:
             "--path-to-output-dir", path_to_output_dir,
             "--path-to-polygon", self.path_to_polygon
         ]
-        print(arguments)
-        self.energy_model_process = self.run_subprocess(arguments, timeout=100000)
+        self.energy_model_process = self.run_subprocess(arguments)
 
     def demonstrate(self):
         """ Run the demonstrator script. """
