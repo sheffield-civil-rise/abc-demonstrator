@@ -4,7 +4,7 @@ This code defines a class which generates the required Intermediate Data File
 """
 
 # Standard imports.
-import logging
+import argparse
 import os
 from copy import deepcopy
 from dataclasses import dataclass
@@ -23,19 +23,6 @@ from config import get_configs
 # Local constants.
 NORTH, EAST, SOUTH, WEST = 0, 90, 180, 270
 CONFIGS = get_configs()
-
-from contextlib import contextmanager
-import sys
-
-@contextmanager
-def suppress_stdout():
-    with open(os.devnull, "w") as devnull:
-        old_stdout = sys.stdout
-        sys.stdout = devnull
-        try:  
-            yield
-        finally:
-            sys.stdout = old_stdout
 
 ##############
 # MAIN CLASS #
@@ -420,13 +407,12 @@ class EnergyModelGenerator:
         predefined direction. """
         if not os.path.isdir(self.path_to_output_dir):
             os.makedirs(self.path_to_output_dir)
-        with suppress_stdout():
-            self.idf_obj.run(
-                output_directory=self.path_to_output_dir,
-                expandobjects=True,
-                output_prefix=self.id_str,
-                output_suffix=self.OUTPUT_SUFFIX
-            )
+        self.idf_obj.run(
+            output_directory=self.path_to_output_dir,
+            expandobjects=True,
+            output_prefix=self.id_str,
+            output_suffix=self.OUTPUT_SUFFIX
+        )
 
     def generate_and_run(self):
         """ Generate our IDF object, and then run it. """
@@ -441,3 +427,73 @@ class EnergyModelGenerator:
 
 class EnergyModelGeneratorError(Exception):
     """ A custom exception. """
+
+                height=self.height_calculator.result,
+                window_to_wall_ratio=wwr,
+                path_to_output_idf=path_to_output_idf,
+                path_to_output_dir=path_to_output_dir,
+                path_to_polygon=self.path_to_polygon
+
+def make_parser():
+    """ Return a parser argument. """
+    result = \
+        argparse.ArgumentParser(
+            description="Make and run an EnergyModelGenerator object"
+        )
+    result.add_argument(
+        "--height",
+        default=None,
+        dest="height",
+        help="The height of the building",
+        type=float
+    )
+    result.add_argument(
+        "--wwr",
+        default=None,
+        dest="wwr",
+        help="The window-to-wall ratio",
+        type=float
+    )
+    result.add_argument(
+        "--path-to-output-idf",
+        default=None,
+        dest="path_to_output_idf",
+        help="The path to the output IDF file",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-output-dir",
+        default=None,
+        dest="path_to_output_dir",
+        help="The path to the output directory",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-polygon",
+        default=None,
+        dest="path_to_polygon",
+        help="The path to the polygon file",
+        type=str
+    )
+    return result
+
+###################
+# RUN AND WRAP UP #
+###################
+
+def run():
+    """ Run this file. """
+    parser = make_parser()
+    arguments = parser.parse_args()
+    energy_model_generator = \
+        EnergyModelGenerator(
+            height=arguments.height,
+            window_to_wall_ratio=arguments.wwr,
+            path_to_output_idf=arguments.path_to_output_idf,
+            path_to_output_dir=arguments.path_to_output_dir,
+            path_to_polygon=arguments.path_to_polygon
+        )
+    energy_model_generator.generate_and_run()
+
+if __name__ == "__main__":
+    run()

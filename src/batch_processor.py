@@ -262,6 +262,7 @@ def make_batch_processor_from_args(arguments):
 ###################
 
 def run():
+    """ Run this file. """
     parser = make_parser()
     arguments = parser.parse_args()
     batch_processor = make_batch_processor_from_args(arguments)

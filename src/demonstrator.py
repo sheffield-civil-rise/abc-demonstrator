@@ -17,7 +17,6 @@ from config import (
     make_path_to_ladybug_images,
     INTERNAL_PYTHON_COMMAND
 )
-from energy_model_generator import EnergyModelGenerator
 from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
 from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
@@ -38,7 +37,6 @@ class Demonstrator:
             path_to_polygon=CONFIGS.general.path_to_polygon,
             quiet=True
         ):
-        self.start_logging()
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
@@ -50,7 +48,8 @@ class Demonstrator:
         self.batch_process = None
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
-        self.energy_model_generator = None
+        self.energy_model_process = None
+        self.start_logging()
 
     def start_logging(self):
         """ Configure logging, and log that we've started. """
@@ -59,6 +58,27 @@ class Demonstrator:
             format=CONFIGS.general.logging_format
         )
         logging.info("Initiating "+str(self.__class__.__name__)+" object...")
+
+    def run_subprocess(self, arguments, timeout=None):
+        """ Run a given subprocess - quietly or otherwise. """
+        if self.quiet:
+            result = \
+                subprocess.run(
+                    arguments,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=timeout
+                )
+        else:
+            result = \
+                subprocess.run(
+                    arguments,
+                    check=True,
+                    timeout=timeout
+                )
+        return result
+
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
@@ -103,7 +123,7 @@ class Demonstrator:
     def make_and_run_batch_process(self):
         """ Build the batch process, and run it. """
         path_to_py_file = \
-            str(pathlib.Path(__file__).parent / "batch_processor.py")
+            str(pathlib.Path(__file__).parent/"batch_processor.py")
         if len(self.paths_to_init_files) >= 2:
             path_to_init_file_a = self.paths_to_init_files[0]
             path_to_init_file_b = self.paths_to_init_files[1]
@@ -122,22 +142,10 @@ class Demonstrator:
             "--path-to-init-file-b", path_to_init_file_b,
             "--path-to-labelled-images", path_to_labelled_images
         ]
-        if self.quiet:
-            self.batch_process = \
-                subprocess.run(
-                    arguments,
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    timeout=CONFIGS.batch_process.timeout
-                )
-        else:
-            self.batch_process = \
-                subprocess.run(
-                    arguments,
-                    check=True,
-                    timeout=CONFIGS.batch_process.timeout
-                )
+        self.batch_process = \
+            self.run_subprocess(
+                arguments, timeout=CONFIGS.batch_process.timeout
+            )
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
@@ -166,22 +174,23 @@ class Demonstrator:
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
 
-    def make_and_run_energy_model_generator(self):
+    def make_and_run_energy_model_process(self):
         """ Build the energy model generator object, and then run it. """
-        wwr = self.window_to_wall_ratio_calculator.result
+        path_to_py_file = \
+            str(pathlib.Path(__file__).parent/"energy_model_generator.py")
         path_to_output_idf = \
             os.path.join(self.path_to_output, "output.idf")
         path_to_output_dir = \
             os.path.join(self.path_to_output, "energy_model_output")
-        self.energy_model_generator = \
-            EnergyModelGenerator(
-                height=self.height_calculator.result,
-                window_to_wall_ratio=wwr,
-                path_to_output_idf=path_to_output_idf,
-                path_to_output_dir=path_to_output_dir,
-                path_to_polygon=self.path_to_polygon
-            )
-        self.energy_model_generator.generate_and_run()
+        arguments = [
+            INTERNAL_PYTHON_COMMAND, path_to_py_file,
+            "--height", self.height_calculator.result,
+            "--wwr", self.window_to_wall_ratio_calculator.result,
+            "--path-to-output-idf", path_to_output_idf,
+            "--path-to-output-dir", path_to_output_dir,
+            "--path-to-polygon", self.path_to_polygon
+        ]
+        self.energy_model_process = self.run_subprocess(arguments)
 
     def demonstrate(self):
         """ Run the demonstrator script. """
@@ -193,7 +202,7 @@ class Demonstrator:
         self.make_and_run_height_calculator()
         logging.info("Running window-to-wall ratio calculator...")
         self.make_and_run_window_to_wall_ratio_calculator()
-        self.make_and_run_energy_model_generator()
+        self.make_and_run_energy_model_process()
 
 ###################
 # RUN AND WRAP UP #
