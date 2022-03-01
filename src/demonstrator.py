@@ -114,6 +114,7 @@ class Demonstrator:
                 arguments,
                 check=True,
                 stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
                 timeout=CONFIGS.batch_process.timeout
             )
 
