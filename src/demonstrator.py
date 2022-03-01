@@ -36,9 +36,6 @@ class Demonstrator:
             path_to_output=CONFIGS.general.path_to_demo_output,
             path_to_polygon=CONFIGS.general.path_to_polygon
         ):
-        path_to_py_file = \
-            str(pathlib.Path(__file__).parent / "batch_processor.py")
-        print(path_to_py_file)
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
@@ -106,7 +103,7 @@ class Demonstrator:
             path_to_init_file_b = None
         path_to_labelled_images = self.rec_dir_gen.path_to_labelled_images
         arguments = [
-            "python3", path_to_py_file,
+            "python", path_to_py_file,
             "--path-to-output-images", self.rec_dir_gen.path_to_output_images,
             "--path-to-cache", self.path_to_cache,
             "--path-to-init-file-a", path_to_init_file_a,
