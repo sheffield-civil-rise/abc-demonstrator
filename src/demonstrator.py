@@ -5,6 +5,7 @@ This code defines a class which demonstrates what the codebase can do.
 # Standard imports.
 import os
 import shutil
+import sys
 
 # Local imports.
 from batch_processor import BatchProcessor
