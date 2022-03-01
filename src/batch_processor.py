@@ -46,7 +46,6 @@ class BatchProcessor:
     intrinsics: list = field(default_factory=list)
     files_by_type: multiview.FilesByType = None
     graph: Graph = None
-    pool: Pool = None
 
     # Class attributes.
     SWITCH_NODE: ClassVar[dict] = {
