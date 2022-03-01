@@ -96,7 +96,7 @@ class Demonstrator:
             self.rec_dir_gen.path_to_labelled_images
         ]
         pool = Pool()
-        pool.map(make_and_run_batch_processor, arg_list)
+        pool.map(make_and_run_batch_processor_quietly, arg_list)
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
