@@ -184,8 +184,8 @@ class Demonstrator:
             os.path.join(self.path_to_output, "energy_model_output")
         arguments = [
             INTERNAL_PYTHON_COMMAND, path_to_py_file,
-            "--height", self.height_calculator.result,
-            "--wwr", self.window_to_wall_ratio_calculator.result,
+            "--height", str(self.height_calculator.result),
+            "--wwr", str(self.window_to_wall_ratio_calculator.result),
             "--path-to-output-idf", path_to_output_idf,
             "--path-to-output-dir", path_to_output_dir,
             "--path-to-polygon", self.path_to_polygon
