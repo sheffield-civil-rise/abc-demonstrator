@@ -9,7 +9,11 @@ import subprocess
 from glob import glob
 
 # Local imports.
-from run_on_hansel import run_on_hansel_with_auth, DEFAULT_PATH_TO_REPO
+from run_on_hansel import (
+    print_encased,
+    run_on_hansel_with_auth,
+    DEFAULT_PATH_TO_REPO
+)
 from validate import run_tests as run_tests_locally
 
 # Local constants.
@@ -117,6 +121,7 @@ def run():
     """ Run this file. """
     parser = make_parser()
     arguments = parser.parse_args()
+    print_encased("Starting continuous integration routine...")
     result = \
         run_continuous_integration(
             lint=(not arguments.no_lint),
@@ -124,6 +129,10 @@ def run():
             stop_on_failure=arguments.stop_on_failure,
             test_locally=arguments.test_locally
         )
+    if result:
+        print_encased("Continuous integration: PASS")
+    else:
+        print_encased("Continuous integration: FAIL")
     return result
 
 if __name__ == "__main__":
