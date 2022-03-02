@@ -6,6 +6,7 @@ This code defines a script which runs the demonstrator script on Hansel.
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 # Constants.
@@ -107,12 +108,15 @@ def run_on_hansel_with_auth(
 
 def print_encased(message, symbol="#"):
     """ Print the message encased in hashes. """
+    message_line = symbol+" "+message+" "+symbol
     hashes = ""
-    for _ in range(len(message)):
+    for _ in range(len(message_line)):
         hashes = hashes+symbol
+    print(" ")
     print(hashes)
-    print(symbol+" "+message+" "+symbol)
+    print(message_line)
     print(hashes)
+    print(" ")
 
 ###################
 # RUN AND WRAP UP #
