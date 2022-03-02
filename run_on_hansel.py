@@ -124,6 +124,7 @@ def print_encased(message, symbol="#"):
 
 def run():
     """ Run this file. """
+    print_encased("Running process on Hansel...")
     if run_on_hansel_with_auth():
         print_encased("The process which you ran on Hansel succeeded.")
         sys.exit(0)
