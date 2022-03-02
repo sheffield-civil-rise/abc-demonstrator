@@ -102,9 +102,5 @@ def test_energy_model_idf(demo_obj):
         assert expected_sub_object in actual_idf_sub_objects
 
 def test_energy_model_output(demo_obj):
-    """ Test that the energy model has produced an output. """
-    assert os.path.exists(demo_obj.energy_model_generator.path_to_output_idf)
-    assert os.path.exists(demo_obj.energy_model_generator.path_to_output_dir)
-    assert (
-        len(os.listdir(demo_obj.energy_model_generator.path_to_output_dir)) > 0
-    )
+    """ Test that the energy model has run properly. """
+    assert demo_obj.energy_model_process.returncode == 0

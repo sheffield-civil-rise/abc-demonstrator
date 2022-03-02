@@ -170,7 +170,7 @@ class ReconstructionDirGenerator:
                     self.CIRCLE_RADIUS*numpy.cos(angle)+
                     circle_data_frame.geometry.y[0]
                 )
-            ) for angle in numpy.linspace(0, 2*numpy.pi, resolution)
+            ) for angle in numpy.linspace(0, 2*numpy.pi, self.CIRCLE_RESOLUTION)
         ]
         polygon = Polygon(points)
         geometry = [Point(point) for point in points] if aspoints else [polygon]
