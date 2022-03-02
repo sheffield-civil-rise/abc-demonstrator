@@ -6,7 +6,6 @@ This code defines a class which generates the reconstruction directory.
 import json
 import logging
 import os
-import sys
 from dataclasses import dataclass
 from datetime import datetime
 from typing import ClassVar
@@ -131,6 +130,9 @@ class ReconstructionDirGenerator:
         ],
         "locked": "0"
     }
+    CIRCLE_RESOLUTION: ClassVar[int] = \
+        CONFIGS.reconstruction_dir.circle_resolution
+    CIRCLE_RADIUS: ClassVar[int] = CONFIGS.reconstruction_dir.radius
 
     def __post_init__(self):
         if self.path_to_input_override:
@@ -149,6 +151,35 @@ class ReconstructionDirGenerator:
                 numpy.flip(numpy.array(self.LABEL_COLOR_DICT[label]))
             for label in self.LABEL_VALUE_DICT.keys()
         }
+
+    def create_circle(self, aspoints=False):
+        """ Return a circle object. """
+        centre = Point(self.centroid)
+        circle_data_frame = \
+            geopandas.GeoDataFrame(
+                { "geometry": [centre] },
+                crs=self.co_ref_sys
+            ).to_crs(self.src_co_ref_sys)
+        points = [
+            (
+                (
+                    self.CIRCLE_RADIUS*numpy.sin(angle)+
+                    circle_data_frame.geometry.x[0]
+                ),
+                (
+                    self.CIRCLE_RADIUS*numpy.cos(angle)+
+                    circle_data_frame.geometry.y[0]
+                )
+            ) for angle in numpy.linspace(0, 2*numpy.pi, resolution)
+        ]
+        polygon = Polygon(points)
+        geometry = [Point(point) for point in points] if aspoints else [polygon]
+        result = \
+            geopandas.GeoDataFrame(
+                { "geometry": geometry },
+                crs=self.src_co_ref_sys
+            ).to_crs(self.co_ref_sys)
+        return result
 
     def load_gps_data(self):
         """ Load the data from the paths. """
@@ -337,14 +368,7 @@ class ReconstructionDirGenerator:
 
     def get_views_by_centroid(self):
         """ Use the centroid to filter out all but the data we want. """
-        circle = \
-            create_circle(
-                self.centroid,
-                radius=self.radius,
-                co_ref_sys=self.co_ref_sys,
-                src_co_ref_sys=self.src_co_ref_sys,
-                aspoints=False
-            )
+        circle = self.create_circle()
         subset = self.geo_data_frame.overlay(circle, how="intersection")
         full_frame = self.expand_data_frame(subset)
         view_frame = self.find_views(full_frame)
@@ -419,10 +443,10 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_labelled_images):
             os.makedirs(self.path_to_labelled_images)
         img_list = get_img_paths(self.path_to_output_images)
-        logging.info("Labelling "+str(len(img_list))+" images...")
+        logging.info("Labelling %s images...", len(img_list))
         model = self.make_model()
         model.load_weights(self.path_to_model)
-        for index, path in enumerate(img_list):
+        for _, path in enumerate(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH
             )
@@ -468,8 +492,8 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
         img_list = get_img_paths(self.path_to_output_images)
-        logging.info("Masking "+str(len(img_list))+" images...")
-        for index, path in enumerate(img_list):
+        logging.info("Masking %s images...", len(img_list))
+        for _, path in enumerate(img_list):
             _, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
             path_to_image_to_mask = \
@@ -684,36 +708,6 @@ def to_geo_data_frame(
                 data_frame["latitude"]),
                 crs=co_ref_sys
         )
-    return result
-
-def create_circle(
-        centroid,
-        radius=CONFIGS.reconstruction_dir.radius,
-        co_ref_sys=CONFIGS.general.coordinate_reference_system,
-        src_co_ref_sys=CONFIGS.general.source_coordinate_reference_system,
-        resolution=CONFIGS.reconstruction_dir.circle_resolution,
-        aspoints=False
-    ):
-    """ Return a circle object. """
-    centre = Point(centroid)
-    circle_data_frame = \
-        geopandas.GeoDataFrame(
-            { "geometry": [centre] },
-            crs=co_ref_sys
-        ).to_crs(src_co_ref_sys)
-    points = [
-        (
-            radius*numpy.sin(angle)+circle_data_frame.geometry.x[0],
-            radius*numpy.cos(angle)+circle_data_frame.geometry.y[0]
-        ) for angle in numpy.linspace(0, 2*numpy.pi, resolution)
-    ]
-    polygon = Polygon(points)
-    geometry = [Point(point) for point in points] if aspoints else [polygon]
-    result = \
-        geopandas.GeoDataFrame(
-            { "geometry": geometry },
-            crs=src_co_ref_sys
-        ).to_crs(co_ref_sys)
     return result
 
 def filter_by_view(data_frame, centroid):

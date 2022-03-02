@@ -57,7 +57,7 @@ class Demonstrator:
             level=logging.INFO,
             format=CONFIGS.general.logging_format
         )
-        logging.info("Initiating "+str(self.__class__.__name__)+" object...")
+        logging.info("Initiating %s object...", self.__class__.__name__)
 
     def run_subprocess(self, arguments, timeout=None):
         """ Run a given subprocess - quietly or otherwise. """

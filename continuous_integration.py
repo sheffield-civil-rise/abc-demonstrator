@@ -16,7 +16,7 @@ from validate import run_tests as run_tests_locally
 PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "validate_on_hansel.sh")
 DEFAULT_LINTER_CONFIGS = {
     "max_line_length": 80,
-    "messages_to_disable": ("import-error",),
+    "messages_to_disable": ("import-error", "too-many-instance-attributes"),
     "min_score": 9,
     "patterns_to_ignore": ("**/test_*.py",)
 }
