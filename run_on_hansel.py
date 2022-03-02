@@ -105,13 +105,26 @@ def run_on_hansel_with_auth(
         )
     return result
 
+def print_encased(message, symbol="#"):
+    """ Print the message encased in hashes. """
+    hashes = ""
+    for _ in range(len(message)):
+        hashes = hashes+symbol
+    print(hashes)
+    print(symbol+" "+message+" "+symbol)
+    print(hashes)
+
 ###################
 # RUN AND WRAP UP #
 ###################
 
 def run():
     """ Run this file. """
-    return run_on_hansel_with_auth()
+    if run_on_hansel_with_auth():
+        print_encased("Sorry, but the process which you ran on Hansel failed.")
+        sys.exit(1)
+    print_encased("The process which you ran on Hansel succeeded.")
+    sys.exit(0)
 
 if __name__ == "__main__":
     run()
