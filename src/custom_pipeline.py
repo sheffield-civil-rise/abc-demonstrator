@@ -371,9 +371,7 @@ def build_graph(
             camera_init.intrinsics.extend(input_intrinsics)
         else:
             sfm_nodes = sfm_pipeline(graph, init)
-            if isinstance(init, list) and (len(init) > 1):
-                pass
-            else:
+            if not (isinstance(init, list) and (len(init) > 1)):
                 camera_init = sfm_nodes[0]
                 camera_init.viewpoints.extend(
                     [{"path": img} for img in input_images]
