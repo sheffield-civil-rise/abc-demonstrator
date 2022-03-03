@@ -22,7 +22,7 @@ import numpy
 #DEFAULT_PATH_TO_HOME = str(Path.home())
 DEFAULT_PATH_TO_HOME = "G:\\"
 DEFAULT_PATH_TO_BINARIES = \
-    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_binaries")
+    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_binaries_and_3rd_party")
 DEFAULT_PATH_TO_INPUT = \
     os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_input")
 DEFAULT_PATH_TO_OUTPUT = \
@@ -42,14 +42,12 @@ DEFAULT_LABEL_VALUE_DICT = {
     "wall": 1
 }
 DEFAULT_RGB_MAX = (255, 192, 128)
+DEFAULT_LOGGING_FORMAT = "[%(asctime)s] %(levelname)s: %(message)s"
 
 # Reconstruction dir.
-DEFAULT_PATH_TO_GPS_DATA = \
-    os.path.join(DEFAULT_PATH_TO_INPUT, "210513_113847.csv")
-DEFAULT_PATH_TO_LADYBUG_GPS_DATA = \
-    os.path.join(DEFAULT_PATH_TO_INPUT, "ladybug_frame_gps_info_23627.txt")
-DEFAULT_PATH_TO_LADYBUG_IMAGES = \
-    os.path.join(DEFAULT_PATH_TO_INPUT, "ladybug_images")
+DEFAULT_GPS_DATA_FILENAME = "gps_data.csv"
+DEFAULT_LADYBUG_GPS_DATA_FILENAME = "ladybug_gps_data.txt"
+DEFAULT_LADYBUG_IMAGES_DIRNAME = "ladybug_images"
 DEFAULT_PATH_TO_DEEPLAB_BINARY = \
     os.path.join(DEFAULT_PATH_TO_BINARIES, "Deeplabv3plus-xception-ce.hdf5")
 DEFAULT_PATH_TO_POLYGON = \
@@ -94,10 +92,40 @@ DEFAULT_SETPOINT_HEATING = 18
 DEFAULT_SETPOINT_COOLING = 26
 DEFAULT_BOILER_EFFICIENCY = 0.8
 
+# Test.
+DEFAULT_PATH_TO_TEST_INPUT = \
+    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_input_test")
+
 # Other.
 EXPECTED_PATH_TO_CONFIG_JSON = \
     os.path.join(str(Path.home()), "photogrammetry_config.json")
 SEMICIRCLE_DEGREES = 180
+INTERNAL_PYTHON_COMMAND = "python"
+
+#####################
+# SPECIAL FUNCTIONS #
+#####################
+
+def make_path_to_gps_data(
+        stem=DEFAULT_PATH_TO_INPUT, filename=DEFAULT_GPS_DATA_FILENAME
+    ):
+    """ Make the path, filling in the blanks with defaults. """
+    result = os.path.join(stem, filename)
+    return result
+
+def make_path_to_ladybug_gps_data(
+        stem=DEFAULT_PATH_TO_INPUT, filename=DEFAULT_LADYBUG_GPS_DATA_FILENAME
+    ):
+    """ Make the path, filling in the blanks with defaults. """
+    result = os.path.join(stem, filename)
+    return result
+
+def make_path_to_ladybug_images(
+        stem=DEFAULT_PATH_TO_INPUT, dirname=DEFAULT_LADYBUG_IMAGES_DIRNAME
+    ):
+    """ Make the path, filling in the blanks with defaults. """
+    result = os.path.join(stem, dirname)
+    return result
 
 ##############
 # MAIN CLASS #
@@ -122,12 +150,13 @@ class Configs:
             "encoding": DEFAULT_ENCODING,
             "max_rgb_channel": DEFAULT_MAX_RGB_CHANNEL,
             "label_value_dict": DEFAULT_LABEL_VALUE_DICT,
-            "rgb_max": DEFAULT_RGB_MAX
+            "rgb_max": DEFAULT_RGB_MAX,
+            "logging_format": DEFAULT_LOGGING_FORMAT
         },
         "reconstruction_dir": {
-            "path_to_gps_data": DEFAULT_PATH_TO_GPS_DATA,
-            "path_to_ladybug_gps_data": DEFAULT_PATH_TO_LADYBUG_GPS_DATA,
-            "path_to_ladybug_images": DEFAULT_PATH_TO_LADYBUG_IMAGES,
+            "path_to_gps_data": make_path_to_gps_data(),
+            "path_to_ladybug_gps_data": make_path_to_ladybug_gps_data(),
+            "path_to_ladybug_images": make_path_to_ladybug_images(),
             "path_to_deeplab_binary": DEFAULT_PATH_TO_DEEPLAB_BINARY,
             "radius": DEFAULT_RADIUS,
             "view_distance": DEFAULT_VIEW_DISTANCE,
@@ -159,6 +188,9 @@ class Configs:
             "setpoint_heating": DEFAULT_SETPOINT_HEATING,
             "setpoint_cooling": DEFAULT_SETPOINT_COOLING,
             "boiler_efficiency": DEFAULT_BOILER_EFFICIENCY
+        },
+        "test": {
+            "path_to_input": DEFAULT_PATH_TO_TEST_INPUT
         }
     }
 
@@ -177,6 +209,7 @@ class Configs:
         self.reconstruction_dir = self.DEFAULTS["reconstruction_dir"]
         self.batch_process = self.DEFAULTS["batch_process"]
         self.energy_model = self.DEFAULTS["energy_model"]
+        self.test = self.DEFAULTS["test"]
         self.set_from_json()
 
     def set_from_json(self):
@@ -195,6 +228,7 @@ class Configs:
             self.set_sub_dictionary_from_json(
                 "energy_model", self.energy_model
             )
+            self.set_sub_dictionary_from_json("test", self.test)
 
     def set_sub_dictionary_from_json(self, sub_dict_key, sub_dict):
         """ Attempt to override some of the values in a given dictionary using
@@ -214,7 +248,8 @@ class Configs:
                     "general",
                     "reconstruction_dir",
                     "batch_process",
-                    "energy_model"
+                    "energy_model",
+                    "test"
                 ]
             )
         result = \
@@ -222,7 +257,8 @@ class Configs:
                 general=self.export_general(),
                 reconstruction_dir=self.export_reconstruction_dir(),
                 batch_process=self.export_batch_process(),
-                energy_model=self.export_energy_model()
+                energy_model=self.export_energy_model(),
+                test=self.export_test()
             )
         return result
 
@@ -252,6 +288,12 @@ class Configs:
         """ Convert this dictionary into a named tuple. """
         EnergyModel = namedtuple("EnergyModel", list(self.energy_model.keys()))
         result = EnergyModel(**self.energy_model)
+        return result
+
+    def export_test(self):
+        """ Convert this dictionary into a named tuple. """
+        Test = namedtuple("Test", list(self.test.keys()))
+        result = Test(**self.test)
         return result
 
 ####################

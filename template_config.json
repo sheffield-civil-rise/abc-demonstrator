@@ -12,7 +12,8 @@
         "encoding": null,
         "max_rgb_channel": null,
         "label_value_dict": null,
-        "rgb_max": null
+        "rgb_max": null,
+        "logging_format": null
     },
     "reconstruction_dir": {
         "path_to_gps_data": null,
@@ -47,5 +48,8 @@
         "setpoint_heating": null,
         "setpoint_cooling": null,
         "boiler_efficiency": null
+    },
+    "test": {
+        "path_to_input": null
     }
 }

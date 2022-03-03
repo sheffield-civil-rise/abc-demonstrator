@@ -3,11 +3,11 @@ This code defines a class which runs some of the more time-consuming processes.
 """
 
 # Standard imports.
+import argparse
 import os
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime
-from threading import Thread
 from typing import ClassVar
 
 # Non-standard imports.
@@ -39,7 +39,6 @@ class BatchProcessor:
     path_to_cache: str = os.path.join(CONFIGS.general.path_to_output, "cache")
     paths_to_init_files: list = field(default_factory=list) # I.e. SFM files.
     path_to_labelled_images: str = None
-    timeout: int = CONFIGS.batch_process.timeout
     # Generated fields.
     has_searched_for_images: bool = False
     two_way: bool = False
@@ -48,7 +47,7 @@ class BatchProcessor:
     intrinsics: list = field(default_factory=list)
     files_by_type: multiview.FilesByType = None
     graph: Graph = None
-    thread: Thread = None
+    task_manager: TaskManager = None
 
     # Class attributes.
     SWITCH_NODE: ClassVar[dict] = {
@@ -66,7 +65,6 @@ class BatchProcessor:
         self.files_by_type = multiview.FilesByType()
         self.get_views_and_instrinsics()
         self.make_graph()
-        self.thread = Thread(target=run_task_manager, args=(self.graph,))
 
     def auto_initialise_path_to_cache(self):
         """ Set this field, if it hasn't been set already. """
@@ -161,9 +159,11 @@ class BatchProcessor:
             )
 
     def start(self):
-        """ Start the thread. """
-        self.thread.start()
-        self.thread.join(timeout=self.timeout)
+        """ Start the process. """
+        self.task_manager = TaskManager()
+        self.task_manager.compute(self.graph, toNodes=None)
+        while self.task_manager._thread.isRunning():
+            pass
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
@@ -199,10 +199,75 @@ def check_and_read_sfm(path_to):
         )
     return readSfMData(path_to)
 
-def run_task_manager(graph):
-    """ Create the task manager object, start it, and keep us in a loop until
-    it's finished. """
-    task_manager = TaskManager()
-    task_manager.compute(graph, toNodes=None)
-    while task_manager._thread.isRunning():
-        pass
+def make_parser():
+    """ Return a parser argument. """
+    result = \
+        argparse.ArgumentParser(
+            description="Make and run a BatchProcessor object"
+        )
+    result.add_argument(
+        "--path-to-output-images",
+        default=None,
+        dest="path_to_output_images",
+        help="The path to the output images",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-cache",
+        default=os.path.join(CONFIGS.general.path_to_output, "cache"),
+        dest="path_to_cache",
+        help="The path to the cache",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-init-file-a",
+        default=None,
+        dest="path_to_init_file_a",
+        help="The path to the first init file",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-init-file-b",
+        default=None,
+        dest="path_to_init_file_b",
+        help="The path to the second init file",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-labelled-images",
+        default=None,
+        dest="path_to_labelled_images",
+        help="The path to the labelled images",
+        type=str
+    )
+    return result
+
+def make_batch_processor_from_args(arguments):
+    """ Make the arguments object. """
+    paths_to_init_files = []
+    if arguments.path_to_init_file_a:
+        paths_to_init_files.append(arguments.path_to_init_file_a)
+    if arguments.path_to_init_file_b:
+        paths_to_init_files.append(arguments.path_to_init_file_b)
+    result = \
+        BatchProcessor(
+            path_to_output_images=arguments.path_to_output_images,
+            path_to_cache=arguments.path_to_cache,
+            paths_to_init_files=paths_to_init_files,
+            path_to_labelled_images=arguments.path_to_labelled_images
+        )
+    return result
+
+###################
+# RUN AND WRAP UP #
+###################
+
+def run():
+    """ Run this file. """
+    parser = make_parser()
+    arguments = parser.parse_args()
+    batch_processor = make_batch_processor_from_args(arguments)
+    batch_processor.start()
+
+if __name__ == "__main__":
+    run()

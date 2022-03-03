@@ -4,8 +4,8 @@ This code defines a class which generates the reconstruction directory.
 
 # Standard imports.
 import json
+import logging
 import os
-import sys
 from dataclasses import dataclass
 from datetime import datetime
 from typing import ClassVar
@@ -20,7 +20,13 @@ from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
 
 # Local imports.
-from config import get_configs, SEMICIRCLE_DEGREES
+from config import (
+    get_configs,
+    make_path_to_gps_data,
+    make_path_to_ladybug_gps_data,
+    make_path_to_ladybug_images,
+    SEMICIRCLE_DEGREES
+)
 from deeplab.Deeplabv3 import Deeplabv3
 from utility_functions import make_label_color_dict
 
@@ -41,6 +47,7 @@ class ReconstructionDirGenerator:
     path_to_ladybug_images: str = \
         CONFIGS.reconstruction_dir.path_to_ladybug_images
     path_to_polygon: str = CONFIGS.general.path_to_polygon
+    path_to_input_override: str = None
     path_to_output: str = CONFIGS.general.path_to_output
     path_to_model: str = CONFIGS.reconstruction_dir.path_to_deeplab_binary
     co_ref_sys: str = CONFIGS.general.coordinate_reference_system
@@ -51,7 +58,6 @@ class ReconstructionDirGenerator:
     output_image_extension: str = \
         CONFIGS.reconstruction_dir.output_image_extension
     number_of_cameras: int = CONFIGS.reconstruction_dir.number_of_cameras
-    expedite: bool = True
     # Generated fields.
     path_to_output_images: str = None
     path_to_labelled_images: str = None
@@ -124,8 +130,18 @@ class ReconstructionDirGenerator:
         ],
         "locked": "0"
     }
+    CIRCLE_RESOLUTION: ClassVar[int] = \
+        CONFIGS.reconstruction_dir.circle_resolution
+    CIRCLE_RADIUS: ClassVar[int] = CONFIGS.reconstruction_dir.radius
 
     def __post_init__(self):
+        if self.path_to_input_override:
+            self.path_to_gps_data = \
+                make_path_to_gps_data(stem=self.path_to_input_override)
+            self.path_to_ladybug_gps_data = \
+                make_path_to_ladybug_gps_data(stem=self.path_to_input_override)
+            self.path_to_ladybug_images = \
+                make_path_to_ladybug_images(stem=self.path_to_input_override)
         self.set_palette()
 
     def set_palette(self):
@@ -135,6 +151,35 @@ class ReconstructionDirGenerator:
                 numpy.flip(numpy.array(self.LABEL_COLOR_DICT[label]))
             for label in self.LABEL_VALUE_DICT.keys()
         }
+
+    def create_circle(self, aspoints=False):
+        """ Return a circle object. """
+        centre = Point(self.centroid)
+        circle_data_frame = \
+            geopandas.GeoDataFrame(
+                { "geometry": [centre] },
+                crs=self.co_ref_sys
+            ).to_crs(self.src_co_ref_sys)
+        points = [
+            (
+                (
+                    self.CIRCLE_RADIUS*numpy.sin(angle)+
+                    circle_data_frame.geometry.x[0]
+                ),
+                (
+                    self.CIRCLE_RADIUS*numpy.cos(angle)+
+                    circle_data_frame.geometry.y[0]
+                )
+            ) for angle in numpy.linspace(0, 2*numpy.pi, self.CIRCLE_RESOLUTION)
+        ]
+        polygon = Polygon(points)
+        geometry = [Point(point) for point in points] if aspoints else [polygon]
+        result = \
+            geopandas.GeoDataFrame(
+                { "geometry": geometry },
+                crs=self.src_co_ref_sys
+            ).to_crs(self.co_ref_sys)
+        return result
 
     def load_gps_data(self):
         """ Load the data from the paths. """
@@ -323,14 +368,7 @@ class ReconstructionDirGenerator:
 
     def get_views_by_centroid(self):
         """ Use the centroid to filter out all but the data we want. """
-        circle = \
-            create_circle(
-                self.centroid,
-                radius=self.radius,
-                co_ref_sys=self.co_ref_sys,
-                src_co_ref_sys=self.src_co_ref_sys,
-                aspoints=False
-            )
+        circle = self.create_circle()
         subset = self.geo_data_frame.overlay(circle, how="intersection")
         full_frame = self.expand_data_frame(subset)
         view_frame = self.find_views(full_frame)
@@ -405,11 +443,10 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_labelled_images):
             os.makedirs(self.path_to_labelled_images)
         img_list = get_img_paths(self.path_to_output_images)
+        logging.info("Labelling %s images...", len(img_list))
         model = self.make_model()
         model.load_weights(self.path_to_model)
-        if os.path.exists(self.path_to_labelled_images) and self.expedite:
-            return
-        for index, path in enumerate(img_list):
+        for _, path in enumerate(img_list):
             img = cv2.imread(
                 path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH
             )
@@ -447,7 +484,6 @@ class ReconstructionDirGenerator:
                     interpolation=cv2.INTER_NEAREST
                 )
             cv2.imwrite(out_path, out_img)
-            print_progress(index, len(img_list))
 
     def mask_images(self):
         """ Make the directory holding the masked images, and fill it. """
@@ -456,9 +492,8 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
         img_list = get_img_paths(self.path_to_output_images)
-        if os.path.exists(self.path_to_masked_images) and self.expedite:
-            return
-        for index, path in enumerate(img_list):
+        logging.info("Masking %s images...", len(img_list))
+        for _, path in enumerate(img_list):
             _, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
             path_to_image_to_mask = \
@@ -473,7 +508,6 @@ class ReconstructionDirGenerator:
                 mask = cv2.imread(path_to_image_to_mask)
                 out = mask_image(img, mask)
                 cv2.imwrite(out_path, out)
-            print_progress(index, len(img_list))
 
     def generate_local_selection(self):
         """ Switch over to local coordinates. """
@@ -595,30 +629,28 @@ class ReconstructionDirGenerator:
 
     def generate(self):
         """ Generate the reconstruction directory. """
-        print("Generating reconstuction directory...")
-        print("Loading GPS data...")
+        logging.info("Generating reconstuction directory...")
+        logging.info("Loading GPS data...")
         self.load_gps_data()
-        print("Localising Ladybug GPS data...")
+        logging.info("Localising Ladybug GPS data...")
         self.make_localised_ladybug_gps_data()
-        print("Adding geometry...")
+        logging.info("Adding geometry...")
         self.make_geo_data_frame()
-        print("Calculating focal point...")
+        logging.info("Calculating focal point...")
         self.make_centroid()
-        print("Selecting subset...")
+        logging.info("Selecting subset...")
         self.select_the_subset()
-        print("Generating file dictionary...")
+        logging.info("Generating file dictionary...")
         self.generate_file_dict()
-        print("Selecting file paths...")
+        logging.info("Selecting file paths...")
         self.select_file_paths()
-        print("Generating output directory...")
+        logging.info("Generating output directory...")
         self.generate_output_directory()
-        print("Labelling images...")
         self.label_images()
-        print("Masking images...")
         self.mask_images()
-        print("Generating local selection...")
+        logging.info("Generating local selection...")
         self.generate_local_selection()
-        print("Creating CameraInit files.")
+        logging.info("Creating CameraInit files.")
         self.create_camera_init_file(
             self.CAMERA_INIT_FILENAME,
             self.path_to_output_images
@@ -627,9 +659,9 @@ class ReconstructionDirGenerator:
             self.CAMERA_INIT_LABEL_FILENAME,
             self.path_to_masked_images
         )
-        print("Renaming labelled images...")
+        logging.info("Renaming labelled images...")
         self.rename_labelled_images()
-        print("Reconstruction directory generated.")
+        logging.info("Reconstruction directory generated.")
 
 ################################
 # HELPER CLASSES AND FUNCTIONS #
@@ -676,36 +708,6 @@ def to_geo_data_frame(
                 data_frame["latitude"]),
                 crs=co_ref_sys
         )
-    return result
-
-def create_circle(
-        centroid,
-        radius=CONFIGS.reconstruction_dir.radius,
-        co_ref_sys=CONFIGS.general.coordinate_reference_system,
-        src_co_ref_sys=CONFIGS.general.source_coordinate_reference_system,
-        resolution=CONFIGS.reconstruction_dir.circle_resolution,
-        aspoints=False
-    ):
-    """ Return a circle object. """
-    centre = Point(centroid)
-    circle_data_frame = \
-        geopandas.GeoDataFrame(
-            { "geometry": [centre] },
-            crs=co_ref_sys
-        ).to_crs(src_co_ref_sys)
-    points = [
-        (
-            radius*numpy.sin(angle)+circle_data_frame.geometry.x[0],
-            radius*numpy.cos(angle)+circle_data_frame.geometry.y[0]
-        ) for angle in numpy.linspace(0, 2*numpy.pi, resolution)
-    ]
-    polygon = Polygon(points)
-    geometry = [Point(point) for point in points] if aspoints else [polygon]
-    result = \
-        geopandas.GeoDataFrame(
-            { "geometry": geometry },
-            crs=src_co_ref_sys
-        ).to_crs(co_ref_sys)
     return result
 
 def filter_by_view(data_frame, centroid):
@@ -764,14 +766,6 @@ def get_img_paths(
             if ext.lower() in image_extensions:
                 result.append(os.path.join(path_to_dir, path))
     return result
-
-def print_progress(index, loops):
-    """ Tell the user how far along the process we are. """
-    index_to_print = index+1
-    sys.stdout.write("\r    "+str(index_to_print)+"/"+str(loops))
-    sys.stdout.flush()
-    if index_to_print == loops:
-        print(" ")
 
 def mask_image(img, mask):
     """ Apply a given mask to a given image. """

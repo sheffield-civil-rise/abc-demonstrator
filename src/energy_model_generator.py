@@ -4,6 +4,7 @@ This code defines a class which generates the required Intermediate Data File
 """
 
 # Standard imports.
+import argparse
 import os
 from copy import deepcopy
 from dataclasses import dataclass
@@ -66,6 +67,7 @@ class EnergyModelGenerator:
     polygon: Polygon = None
     idf_obj: IDF = None
     materials: dict = None
+    constructions: dict = None
     thermostat: IDF = None
     hot_water_loop: IDF = None
     boiler: IDF = None
@@ -425,3 +427,67 @@ class EnergyModelGenerator:
 
 class EnergyModelGeneratorError(Exception):
     """ A custom exception. """
+
+def make_parser():
+    """ Return a parser argument. """
+    result = \
+        argparse.ArgumentParser(
+            description="Make and run an EnergyModelGenerator object"
+        )
+    result.add_argument(
+        "--height",
+        default=None,
+        dest="height",
+        help="The height of the building",
+        type=float
+    )
+    result.add_argument(
+        "--wwr",
+        default=None,
+        dest="wwr",
+        help="The window-to-wall ratio",
+        type=float
+    )
+    result.add_argument(
+        "--path-to-output-idf",
+        default=None,
+        dest="path_to_output_idf",
+        help="The path to the output IDF file",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-output-dir",
+        default=None,
+        dest="path_to_output_dir",
+        help="The path to the output directory",
+        type=str
+    )
+    result.add_argument(
+        "--path-to-polygon",
+        default=None,
+        dest="path_to_polygon",
+        help="The path to the polygon file",
+        type=str
+    )
+    return result
+
+###################
+# RUN AND WRAP UP #
+###################
+
+def run():
+    """ Run this file. """
+    parser = make_parser()
+    arguments = parser.parse_args()
+    energy_model_generator = \
+        EnergyModelGenerator(
+            height=arguments.height,
+            window_to_wall_ratio=arguments.wwr,
+            path_to_output_idf=arguments.path_to_output_idf,
+            path_to_output_dir=arguments.path_to_output_dir,
+            path_to_polygon=arguments.path_to_polygon
+        )
+    energy_model_generator.generate_and_run()
+
+if __name__ == "__main__":
+    run()

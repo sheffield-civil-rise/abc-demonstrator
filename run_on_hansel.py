@@ -6,6 +6,7 @@ This code defines a script which runs the demonstrator script on Hansel.
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 # Constants.
@@ -105,13 +106,30 @@ def run_on_hansel_with_auth(
         )
     return result
 
+def print_encased(message, symbol="#"):
+    """ Print the message encased in hashes. """
+    message_line = symbol+" "+message+" "+symbol
+    hashes = ""
+    for _ in range(len(message_line)):
+        hashes = hashes+symbol
+    print(" ")
+    print(hashes)
+    print(message_line)
+    print(hashes)
+    print(" ")
+
 ###################
 # RUN AND WRAP UP #
 ###################
 
 def run():
     """ Run this file. """
-    return run_on_hansel_with_auth()
+    print_encased("Running process on Hansel...")
+    if run_on_hansel_with_auth():
+        print_encased("The process which you ran on Hansel succeeded.")
+        sys.exit(0)
+    print_encased("Sorry, but the process which you ran on Hansel failed.")
+    sys.exit(1)
 
 if __name__ == "__main__":
     run()

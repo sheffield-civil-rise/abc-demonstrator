@@ -3,13 +3,20 @@ This code defines a class which demonstrates what the codebase can do.
 """
 
 # Standard imports.
+import logging
 import os
+import pathlib
 import shutil
+import subprocess
 
 # Local imports.
-from batch_processor import BatchProcessor
-from config import get_configs
-from energy_model_generator import EnergyModelGenerator
+from config import (
+    get_configs,
+    make_path_to_gps_data,
+    make_path_to_ladybug_gps_data,
+    make_path_to_ladybug_images,
+    INTERNAL_PYTHON_COMMAND
+)
 from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
 from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
@@ -25,29 +32,84 @@ class Demonstrator:
     """ The class in question. """
     def __init__(
             self,
+            path_to_input_override=None, # Overides several configs if set.
             path_to_output=CONFIGS.general.path_to_demo_output,
-            expedite=False
+            path_to_polygon=CONFIGS.general.path_to_polygon,
+            quiet=True
         ):
+        self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
-        self.expedite = expedite
+        self.path_to_polygon = path_to_polygon
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
+        self.quiet = quiet
         # Generated fields.
         self.rec_dir_gen = None
         self.paths_to_init_files = None
-        self.batch_processor = None
+        self.batch_process = None
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
-        self.energy_model_generator = None
+        self.energy_model_process = None
+        self.path_to_output_idf = \
+            os.path.join(self.path_to_output, "output.idf")
+        self.path_to_energy_model_output_dir = \
+            os.path.join(self.path_to_output, "energy_model_output")
+        self.start_logging()
+
+    def start_logging(self):
+        """ Configure logging, and log that we've started. """
+        logging.basicConfig(
+            level=logging.INFO,
+            format=CONFIGS.general.logging_format
+        )
+        logging.info("Initiating %s object...", self.__class__.__name__)
+
+    def run_subprocess(self, arguments, timeout=None):
+        """ Run a given subprocess - quietly or otherwise. """
+        if self.quiet:
+            result = \
+                subprocess.run(
+                    arguments,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=timeout
+                )
+        else:
+            result = \
+                subprocess.run(
+                    arguments,
+                    check=True,
+                    timeout=timeout
+                )
+        return result
+
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
         necessary. """
-        if os.path.exists(self.path_to_output) and not self.expedite:
+        if os.path.exists(self.path_to_output):
             shutil.rmtree(self.path_to_output)
-        self.rec_dir_gen = \
-            ReconstructionDirGenerator(
-                path_to_output=self.path_to_output, expedite=self.expedite
-            )
+        if self.path_to_input_override:
+            path_to_gps_data = \
+                make_path_to_gps_data(stem=self.path_to_input_override)
+            path_to_ladybug_gps_data = \
+                make_path_to_ladybug_gps_data(stem=self.path_to_input_override)
+            path_to_ladybug_images = \
+                make_path_to_ladybug_images(stem=self.path_to_input_override)
+            self.rec_dir_gen = \
+                ReconstructionDirGenerator(
+                    path_to_gps_data=path_to_gps_data,
+                    path_to_ladybug_gps_data=path_to_ladybug_gps_data,
+                    path_to_ladybug_images=path_to_ladybug_images,
+                    path_to_output=self.path_to_output,
+                    path_to_polygon=self.path_to_polygon
+                )
+        else:
+            self.rec_dir_gen = \
+                ReconstructionDirGenerator(
+                    path_to_output=self.path_to_output,
+                    path_to_polygon=self.path_to_polygon
+                )
         self.rec_dir_gen.generate()
         self.make_paths_to_init_files()
 
@@ -62,18 +124,32 @@ class Demonstrator:
             )
         ]
 
-    def make_and_run_batch_processor(self):
-        """ Build the batch processor object, and then run it. """
-        self.batch_processor = \
-            BatchProcessor(
-                search_recursively=True,
-                path_to_output_images=self.rec_dir_gen.path_to_output_images,
-                pipeline="custom",
-                path_to_cache=self.path_to_cache,
-                paths_to_init_files=self.paths_to_init_files,
-                path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
+    def make_and_run_batch_process(self):
+        """ Build the batch process, and run it. """
+        path_to_py_file = \
+            str(pathlib.Path(__file__).parent/"batch_processor.py")
+        if len(self.paths_to_init_files) >= 2:
+            path_to_init_file_a = self.paths_to_init_files[0]
+            path_to_init_file_b = self.paths_to_init_files[1]
+        elif len(self.paths_to_init_files) == 1:
+            path_to_init_file_a = self.paths_to_init_files[0]
+            path_to_init_file_b = None
+        else:
+            path_to_init_file_a = None
+            path_to_init_file_b = None
+        path_to_labelled_images = self.rec_dir_gen.path_to_labelled_images
+        arguments = [
+            INTERNAL_PYTHON_COMMAND, path_to_py_file,
+            "--path-to-output-images", self.rec_dir_gen.path_to_output_images,
+            "--path-to-cache", self.path_to_cache,
+            "--path-to-init-file-a", path_to_init_file_a,
+            "--path-to-init-file-b", path_to_init_file_b,
+            "--path-to-labelled-images", path_to_labelled_images
+        ]
+        self.batch_process = \
+            self.run_subprocess(
+                arguments, timeout=CONFIGS.batch_process.timeout
             )
-        self.batch_processor.start()
 
     def make_and_run_height_calculator(self):
         """ Build the height calculator object - it runs on its own. """
@@ -102,29 +178,34 @@ class Demonstrator:
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
 
-    def make_and_run_energy_model_generator(self):
+    def make_and_run_energy_model_process(self):
         """ Build the energy model generator object, and then run it. """
-        wwr = self.window_to_wall_ratio_calculator.result
-        path_to_output_idf = \
-            os.path.join(self.path_to_output, "output.idf")
-        path_to_output_dir = \
-            os.path.join(self.path_to_output, "energy_model_output")
-        self.energy_model_generator = \
-            EnergyModelGenerator(
-                height=self.height_calculator.result,
-                window_to_wall_ratio=wwr,
-                path_to_output_idf=path_to_output_idf,
-                path_to_output_dir=path_to_output_dir
-            )
-        self.energy_model_generator.generate_and_run()
+        path_to_py_file = \
+            str(pathlib.Path(__file__).parent/"energy_model_generator.py")
+        arguments = [
+            INTERNAL_PYTHON_COMMAND, path_to_py_file,
+            "--height", str(self.height_calculator.result),
+            "--wwr", str(self.window_to_wall_ratio_calculator.result),
+            "--path-to-output-idf", self.path_to_output_idf,
+            "--path-to-output-dir", self.path_to_energy_model_output_dir,
+            "--path-to-polygon", self.path_to_polygon
+        ]
+        self.energy_model_process = self.run_subprocess(arguments)
 
     def demonstrate(self):
         """ Run the demonstrator script. """
+        logging.info("Demonstation initiated.")
+        logging.info("Running reconstruction dir generator...")
         self.make_and_run_reconstruction_dir_generator()
-        self.make_and_run_batch_processor()
+        logging.info("Running batch process...")
+        self.make_and_run_batch_process()
+        logging.info("Running height calculator...")
         self.make_and_run_height_calculator()
+        logging.info("Running window-to-wall ratio calculator...")
         self.make_and_run_window_to_wall_ratio_calculator()
-        self.make_and_run_energy_model_generator()
+        logging.info("Running energy model process...")
+        self.make_and_run_energy_model_process()
+        logging.info("Demonstration complete.")
 
 ###################
 # RUN AND WRAP UP #

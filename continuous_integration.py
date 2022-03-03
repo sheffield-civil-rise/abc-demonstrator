@@ -9,16 +9,20 @@ import subprocess
 from glob import glob
 
 # Local imports.
-from run_on_hansel import run_on_hansel_with_auth, DEFAULT_PATH_TO_REPO
+from run_on_hansel import (
+    print_encased,
+    run_on_hansel_with_auth,
+    DEFAULT_PATH_TO_REPO
+)
 from validate import run_tests as run_tests_locally
 
 # Local constants.
 PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "validate_on_hansel.sh")
 DEFAULT_LINTER_CONFIGS = {
     "max_line_length": 80,
-    "messages_to_disable": ("import-error",),
+    "messages_to_disable": ("import-error", "too-many-instance-attributes"),
     "min_score": 9,
-    "paths_to_ignore": ("tests",)
+    "patterns_to_ignore": ("**/test_*.py",)
 }
 
 #############
@@ -59,6 +63,16 @@ def make_parser():
     )
     return result
 
+def make_files_to_ignore(patterns_to_ignore):
+    """ Make a string list of files from a list of patterns. """
+    file_set = set()
+    for pattern in patterns_to_ignore:
+        file_list = glob(pattern)
+        for file_path in file_list:
+            file_set.add(os.path.basename(file_path))
+    result = ",".join(list(file_set))
+    return result
+
 def run_linter(configs=None):
     """ Run PyLint on this repo. """
     if configs is None:
@@ -69,7 +83,7 @@ def run_linter(configs=None):
         "pylint",
         "--fail-under="+str(configs["min_score"]),
         "--disable="+(",".join(configs["messages_to_disable"])),
-        "--ignore="+(",".join(configs["paths_to_ignore"])),
+        "--ignore="+make_files_to_ignore(configs["patterns_to_ignore"]),
         "--max-line-length="+str(configs["max_line_length"])
     ]
     arguments = arguments+source_file_paths
@@ -86,14 +100,14 @@ def run_continuous_integration(
     lint_result, test_result = True, True
     if lint:
         lint_result = run_linter()
-        if (not lint_result) and crash_on_failure:
+        if (not lint_result) and stop_on_failure:
             return False
     if test:
         if test_locally:
-            test_result = run_tests_locally
+            test_result = run_tests_locally()
         else:
             test_result = run_on_hansel_with_auth(path_to_script=PATH_TO_SCRIPT)
-        if (not test_result) and crash_on_failure:
+        if (not test_result) and stop_on_failure:
             return False
     if lint_result and test_result:
         return True
@@ -107,6 +121,7 @@ def run():
     """ Run this file. """
     parser = make_parser()
     arguments = parser.parse_args()
+    print_encased("Starting continuous integration routine...")
     result = \
         run_continuous_integration(
             lint=(not arguments.no_lint),
@@ -114,6 +129,10 @@ def run():
             stop_on_failure=arguments.stop_on_failure,
             test_locally=arguments.test_locally
         )
+    if result:
+        print_encased("Continuous integration: PASS")
+    else:
+        print_encased("Continuous integration: FAIL")
     return result
 
 if __name__ == "__main__":

@@ -313,26 +313,39 @@ def mvs_pipeline(graph, sfm=None, label_dir=None):
     return custom_mvs_pipeline(graph, sfm, label_dir)
 
 def build_graph(
-        input_images=[], input_viewpoints=[],
-        input_intrinsics=[], output="",
-        graph=None, init=None, label_dir=None):
+        input_images=None,
+        input_viewpoints=None,
+        input_intrinsics=None,
+        output="",
+        graph=None,
+        init=None,
+        label_dir=None
+    ):
     """ Custom photogrammetry graph """
+    if input_images is None:
+        input_images = []
+    if input_viewpoints is None:
+        input_viewpoints = []
+    if input_intrinsics is None:
+        input_intrinsics = []
     if graph is None:
         graph = Graph("Custom photogrammetry")
     with GraphModification(graph):
         if init is None:
             sfm_nodes = sfm_pipeline(graph)
             camera_init = sfm_nodes[0]
-            camera_init.viewpoints.extend([{"path": img} for img in input_images])
+            camera_init.viewpoints.extend(
+                [{"path": img} for img in input_images]
+            )
             camera_init.viewpoints.extend(input_viewpoints)
             camera_init.intrinsics.extend(input_intrinsics)
         else:
             sfm_nodes = sfm_pipeline(graph, init)
-            if type(init) is list and len(init) > 1:
-                pass
-            else:
+            if not (isinstance(init, list) and (len(init) > 1)):
                 camera_init = sfm_nodes[0]
-                camera_init.viewpoints.extend([{"path": img} for img in input_images])
+                camera_init.viewpoints.extend(
+                    [{"path": img} for img in input_images]
+                )
                 camera_init.viewpoints.extend(input_viewpoints)
                 camera_init.intrinsics.extend(input_intrinsics)
 
@@ -340,11 +353,14 @@ def build_graph(
         if output:
             texturing = mvs_nodes[-1]
             graph.addNewNode(
-                "Publish", output=output,
+                "Publish",
+                output=output,
                 inputFiles=[
                     texturing.outputMesh,
                     texturing.outputMaterial,
-                    texturing.outputTextures])
+                    texturing.outputTextures
+                ]
+            )
     return graph
 
 def initialise_list_as_necessary(to_initialise):
