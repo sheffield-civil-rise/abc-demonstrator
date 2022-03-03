@@ -364,7 +364,9 @@ def build_graph(
         if init is None:
             sfm_nodes = sfm_pipeline(graph)
             camera_init = sfm_nodes[0]
-            camera_init.viewpoints.extend([{"path": img} for img in input_images])
+            camera_init.viewpoints.extend(
+                [{"path": img} for img in input_images]
+            )
             camera_init.viewpoints.extend(input_viewpoints)
             camera_init.intrinsics.extend(input_intrinsics)
         else:
@@ -373,7 +375,9 @@ def build_graph(
                 pass
             else:
                 camera_init = sfm_nodes[0]
-                camera_init.viewpoints.extend([{"path": img} for img in input_images])
+                camera_init.viewpoints.extend(
+                    [{"path": img} for img in input_images]
+                )
                 camera_init.viewpoints.extend(input_viewpoints)
                 camera_init.intrinsics.extend(input_intrinsics)
 
