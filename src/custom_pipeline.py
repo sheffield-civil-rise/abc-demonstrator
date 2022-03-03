@@ -312,7 +312,7 @@ def mvs_pipeline(graph, sfm=None, label_dir=None):
         return default_mvs_pipeline(graph, sfm)
     return custom_mvs_pipeline(graph, sfm, label_dir)
 
-def build_graph(
+def build_graph_old(
         input_images=[], input_viewpoints=[],
         input_intrinsics=[], output="",
         graph=None, init=None, label_dir=None):
