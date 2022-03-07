@@ -419,7 +419,7 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_labelled_images):
             os.makedirs(self.path_to_labelled_images)
         img_list = get_img_paths(self.path_to_output_images)
-        logging.info("Labelling "+str(len(img_list))+"images...")
+        logging.info("Labelling "+str(len(img_list))+" images...")
         model = self.make_model()
         model.load_weights(self.path_to_model)
         for index, path in enumerate(img_list):
@@ -468,7 +468,7 @@ class ReconstructionDirGenerator:
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
         img_list = get_img_paths(self.path_to_output_images)
-        logging.info("Masking "+str(len(img_list))+"images...")
+        logging.info("Masking "+str(len(img_list))+" images...")
         for index, path in enumerate(img_list):
             _, file_path = os.path.split(path)
             filename, _ = os.path.splitext(file_path)
