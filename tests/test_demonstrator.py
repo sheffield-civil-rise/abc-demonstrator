@@ -27,7 +27,11 @@ CONFIGS = config.get_configs()
 @pytest.fixture(scope="module")
 def demo_obj():
     """ Make an object of the Demonstrator class. """
-    result = Demonstrator(path_to_input_override=CONFIGS.test.path_to_input)
+    result = \
+        Demonstrator(
+            path_to_input_override=CONFIGS.test.path_to_input,
+            debug=True
+        )
     result.demonstrate()
     return result
 

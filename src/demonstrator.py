@@ -35,13 +35,13 @@ class Demonstrator:
             path_to_input_override=None, # Overides several configs if set.
             path_to_output=CONFIGS.general.path_to_demo_output,
             path_to_polygon=CONFIGS.general.path_to_polygon,
-            quiet=True
+            debug=False
         ):
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
-        self.quiet = quiet
+        self.debug = debug
         # Generated fields.
         self.rec_dir_gen = None
         self.paths_to_init_files = None
@@ -61,7 +61,14 @@ class Demonstrator:
 
     def run_subprocess(self, arguments, timeout=None):
         """ Run a given subprocess - quietly or otherwise. """
-        if self.quiet:
+        if self.debug:
+            result = \
+                subprocess.run(
+                    arguments,
+                    check=True,
+                    timeout=timeout
+                )
+        else:
             result = \
                 subprocess.run(
                     arguments,
@@ -70,15 +77,7 @@ class Demonstrator:
                     stderr=subprocess.DEVNULL,
                     timeout=timeout
                 )
-        else:
-            result = \
-                subprocess.run(
-                    arguments,
-                    check=True,
-                    timeout=timeout
-                )
         return result
-
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
