@@ -53,11 +53,16 @@ class Demonstrator:
 
     def start_logging(self):
         """ Configure logging, and log that we've started. """
+        log_level = logging.INFO
+        if self.debug:
+            log_level = logging.DEBUG
         logging.basicConfig(
-            level=logging.INFO,
+            level=log_level,
             format=CONFIGS.general.logging_format
         )
         logging.info("Initiating "+str(self.__class__.__name__)+" object...")
+        if self.debug:
+            logging.info("Switched to DEBUG mode.")
 
     def run_subprocess(self, arguments, timeout=None):
         """ Run a given subprocess - quietly or otherwise. """
@@ -183,8 +188,8 @@ class Demonstrator:
             os.path.join(self.path_to_output, "energy_model_output")
         arguments = [
             INTERNAL_PYTHON_COMMAND, path_to_py_file,
-            "--height", self.height_calculator.result,
-            "--wwr", self.window_to_wall_ratio_calculator.result,
+            "--height", str(self.height_calculator.result),
+            "--wwr", str(self.window_to_wall_ratio_calculator.result),
             "--path-to-output-idf", path_to_output_idf,
             "--path-to-output-dir", path_to_output_dir,
             "--path-to-polygon", self.path_to_polygon

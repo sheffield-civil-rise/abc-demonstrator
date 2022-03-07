@@ -14,8 +14,7 @@ DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\photogrammetry_e110a"
 DEFAULT_PATH_TO_ACTIVATE_SCRIPT = r"C:\Users\hansel\Anaconda3\Scripts\activate"
 DEFAULT_ENV_NAME = "demonstrator"
 DEFAULT_REPO_URL = "github.com/tomhosker/photogrammetry_e110a.git"
-DEFAULT_PATH_TO_SECURITY_FILE = \
-    os.path.join(PATH_TO_HOME, "hansel_security.json")
+DEFAULT_PATH_TO_SECURITY_FILE = str(Path.home()/"hansel_security.json")
 DEFAULT_ENCODING = "utf-8"
 
 #############
