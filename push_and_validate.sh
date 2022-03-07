@@ -3,7 +3,7 @@
 ### This code quickly pushes any changes and runs the new code on Hansel.
 
 # Constants.
-BRANCH="restructuring1"
+BRANCH="add_new_precise_window"
 
 # Fail on the first error.
 set -e

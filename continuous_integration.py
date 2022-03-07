@@ -103,7 +103,7 @@ def run_continuous_integration(
             test_result = run_tests_locally
         else:
             test_result = run_on_hansel_with_auth(path_to_script=PATH_TO_SCRIPT)
-        if (not test_result) and crash_on_failure:
+        if (not test_result) and stop_on_failure:
             return False
     if lint_result and test_result:
         return True
