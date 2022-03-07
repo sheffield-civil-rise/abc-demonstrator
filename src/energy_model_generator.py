@@ -92,13 +92,13 @@ class EnergyModelGenerator:
         "WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM"
     HOT_WATER_LOOP_IDF_OBJECT_KEY_STRING: ClassVar[str] = \
         "HVACTEMPLATE:PLANT:HOTWATERLOOP"
-    INFILTRATION_IDF_OBJECT_KEY_STRING: ClassVar[str]: \
+    INFILTRATION_IDF_OBJECT_KEY_STRING: ClassVar[str] = \
         "ZONEINFILTRATION:DESIGNFLOWRATE"
     LIGHTING_IDF_OBJECT_KEY_STRING: ClassVar[str] = "LIGHTS"
     MATERIAL_IDF_OBJECT_KEY_STRING: ClassVar[str] = "MATERIAL:NOMASS"
     PEOPLE_IDF_OBJECT_KEY_STRING: ClassVar[str] = "PEOPLE"
-    RADIATORS_IDF_OBJECT_KEY_STRING: ClassVar[str]: \
-        "HVACTEMPLATE:ZONE:BASEBOARDHEAT
+    RADIATORS_IDF_OBJECT_KEY_STRING: ClassVar[str] = \
+        "HVACTEMPLATE:ZONE:BASEBOARDHEAT"
     SCHEDULE_IDF_OBJECT_KEY_STRING = "SCHEDULE:COMPACT"
     THERMOSTAT_IDF_OBJECT_KEY_STRING: ClassVar[str] = "HVACTEMPLATE:THERMOSTAT"
     ZONE_IDF_OBJECT_KEY_STRING: ClassVar[str] = "ZONE"
@@ -120,15 +120,15 @@ class EnergyModelGenerator:
         NORTH: 0.1, EAST: 0.3, SOUTH: 0.5, WEST: 0.7
     }
     SCHEDULE_KEY_STRINGS: ClassVar[dict] = None
-
+    # IDF object names.
     WINDOW_IDF_OBJECT_NAME: ClassVar[str] = "Window"
-    THERMOSTAT_NAME: ClassVar[str] = "Zone Thermostat"
-    HOT_WATER_LOOP_NAME: ClassVar[str] = "Space heating hot water loop"
-    BOILER_NAME: ClassVar[str] = "Boiler""
-
-    DEFAULT_OUTDOOR_AIR_METHOD: ClassVar[str]: "Flow/Person"
-    DEFAULT_FLOW_RATE_CALCULATE_METHOD: ClassVar[str] = "AirChanges/Hour"
-
+    THERMOSTAT_IDF_OBJECT_NAME: ClassVar[str] = "Zone Thermostat"
+    HOT_WATER_LOOP_IDF_OBJECT_NAME: ClassVar[str] = \
+        "Space heating hot water loop"
+    BOILER_IDF_OBJECT_NAME: ClassVar[str] = "Boiler"
+    # Method names.
+    DEFAULT_OUTDOOR_AIR_METHOD: ClassVar[str] = "Flow/Person"
+    DEFAULT_FLOW_RATE_CALCULATION_METHOD: ClassVar[str] = "AirChanges/Hour"
     DEFAULT_POPULATION_CALCULATION_METHOD: ClassVar[str] = "People/Area"
     DEFAULT_DESIGN_LEVEL_CALCULATION_METHOD: ClassVar[str] = "Watts/Area"
 
@@ -172,7 +172,7 @@ class EnergyModelGenerator:
             self.PEOPLE_SCHEDULE_KEY: {
                 "name": "People schedule", "type_limits": "Fraction"
             },
-            self.ACTIVITY_SCHEDULE_KEY: { 
+            self.ACTIVITY_SCHEDULE_KEY: {
                 "name": "Activity level schedule", "type_limits": "Activity"
             },
             self.LIGHTING_SCHEDULE_KEY: {
@@ -337,12 +337,13 @@ class EnergyModelGenerator:
                 if key not in self.schedules:
                     self.schedules[key] = value
         result = {} # Output IDF objects.
-        for key, value in self.SCHEDULE_KEY_STRINGS:
+        for key in self.SCHEDULE_KEY_STRINGS.keys():
+            sub_dict = self.SCHEDULE_KEY_STRINGS[key]
             result[key] = \
                 self.idf_obj.newidfobject(
                     self.SCHEDULE_IDF_OBJECT_KEY_STRING,
-                    Name=value["name"],
-                    Schedule_Type_Limits_Name=value["type_limits"],
+                    Name=sub_dict["name"],
+                    Schedule_Type_Limits_Name=sub_dict["type_limits"],
                     Field_1=self.schedules[key]
                 )
         self.schedules = result
@@ -352,7 +353,7 @@ class EnergyModelGenerator:
         self.thermostat = \
             self.idf_obj.newidfobject(
                 self.THERMOSTAT_IDF_OBJECT_KEY_STRING,
-                Name=self.THERMOSTAT_NAME,
+                Name=self.THERMOSTAT_IDF_OBJECT_NAME,
                 Constant_Heating_Setpoint=self.setpoint_heating,
                 Constant_Cooling_Setpoint=self.setpoint_cooling
             )
@@ -362,7 +363,7 @@ class EnergyModelGenerator:
         self.hot_water_loop = \
             self.idf_obj.newidfobject(
                 self.HOT_WATER_LOOP_IDF_OBJECT_KEY_STRING,
-                Name=self.HOT_WATER_LOOP_NAME
+                Name=self.HOT_WATER_LOOP_IDF_OBJECT_NAME
             )
 
     def add_boiler(self):
@@ -370,7 +371,7 @@ class EnergyModelGenerator:
         self.boiler = \
             self.idf_obj.newidfobject(
                 self.BOILER_IDF_OBJECT_KEY_STRING,
-                Name=self.BOILER_NAME,
+                Name=self.BOILER_IDF_OBJECT_NAME,
                 Boiler_Type=self.boiler_type,
                 Efficiency=self.boiler_efficiency,
                 Fuel_Type=self.boiler_fuel
@@ -378,7 +379,7 @@ class EnergyModelGenerator:
 
     def populate_zones(self):
         """ Populate our model with stuff such as people and lights. """
-        for zone in self.idf_obj.idfobjects[self.ZONE_IDF_OBJECT_KEY]:
+        for zone in self.idf_obj.idfobjects[self.ZONE_IDF_OBJECT_KEY_STRING]:
             # Add radiator in every zone.
             self.idf_obj.newidfobject(
                 self.RADIATORS_IDF_OBJECT_KEY_STRING,
@@ -386,13 +387,13 @@ class EnergyModelGenerator:
                 Template_Thermostat_Name=self.thermostat.Name,
                 Baseboard_Heating_Availability_Schedule_Name=\
                     self.schedules[self.AVAILABILITY_SCHEDULE_KEY].Name,
-                Outdoor_Air_Method=DEFAULT_OUTDOOR_AIR_METHOD,
+                Outdoor_Air_Method=self.DEFAULT_OUTDOOR_AIR_METHOD,
                 Outdoor_Air_Flow_Rate_per_Person=0 # m3/s
             )
             # No additional outdoor air supply apart from the infiltration.
             # Define infiltration for each zone.
             self.idf_obj.newidfobject(
-                INFILTRATION_IDF_OBJECT_KEY_STRING,
+                self.INFILTRATION_IDF_OBJECT_KEY_STRING,
                 Name=self.INFILTRATION_SCHEDULE_KEY+": "+zone.Name,
                 Zone_or_ZoneList_Name=zone.Name,
                 Schedule_Name=\
