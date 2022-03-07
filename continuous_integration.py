@@ -14,8 +14,7 @@ from run_on_hansel import run_on_hansel_with_auth
 from validate import run_tests as run_tests_locally
 
 # Local constants.
-PATH_TO_SCRIPT = \
-    str(pathlib.Path(__file__).parent.resolve()/"validate_on_hansel.sh")
+PATH_TO_SCRIPT = str(Path(__file__).parent.resolve()/"validate_on_hansel.sh")
 DEFAULT_LINTER_CONFIGS = {
     "max_line_length": 80,
     "messages_to_disable": ("import-error",),

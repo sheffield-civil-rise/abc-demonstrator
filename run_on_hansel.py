@@ -9,8 +9,7 @@ import subprocess
 from pathlib import Path
 
 # Constants.
-DEFAULT_PATH_TO_SCRIPT = \
-    str(pathlib.Path(__file__).parent.resolve()/"run_on_hansel.sh")
+DEFAULT_PATH_TO_SCRIPT = str(Path(__file__).parent.resolve()/"run_on_hansel.sh")
 DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\photogrammetry_e110a"
 DEFAULT_PATH_TO_ACTIVATE_SCRIPT = r"C:\Users\hansel\Anaconda3\Scripts\activate"
 DEFAULT_ENV_NAME = "demonstrator"
