@@ -57,7 +57,7 @@ def test_custom_json():
     )
     with open(test_config_json_path, "w", encoding=expected.ENCODING) as jsonf:
         jsonf.write(test_config_json_str)
-    custom_config = config.Configs(test_config_json_path)
+    custom_config = config.Configs(path_to_json=test_config_json_path)
     immutable_custom_config = custom_config.export_as_immutable()
     assert immutable_custom_config.batch_process.byte_length == new_byte_length
     assert (
@@ -81,7 +81,7 @@ def test_path_overrides():
     )
     with open(test_config_json_path, "w", encoding=expected.ENCODING) as jsonf:
         jsonf.write(test_config_json_str)
-    custom_config = config.Configs(test_config_json_path)
+    custom_config = config.Configs(path_to_json=test_config_json_path)
     immutable_custom_config = custom_config.export_as_immutable()
     assert immutable_custom_config.paths.path_to_home == new_path_to_home
     assert immutable_custom_config.paths.path_to_output == new_path_to_output
