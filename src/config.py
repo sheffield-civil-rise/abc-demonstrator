@@ -265,7 +265,7 @@ class Configs:
     def set_paths_from_json(self):
         """ Set the paths from the config file, which has to be done in a
         slightly more crafty way than with the others. """
-        self.set_sub_dictionary_from_json(paths_key, self.paths)
+        self.set_sub_dictionary_from_json(self.PATHS_KEY, self.paths)
         if (
             (self.PATHS_KEY in self.json_dict) and
             self.json_dict[self.PATHS_KEY]
