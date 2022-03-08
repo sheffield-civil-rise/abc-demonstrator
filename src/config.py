@@ -211,6 +211,11 @@ class Configs:
             "boiler_efficiency": DEFAULT_BOILER_EFFICIENCY
         }
     }
+    GENERAL_KEY: ClassVar[str] = "general"
+    PATHS_KEY: ClassVar[str] = "paths"
+    RECONSTRUCTION_DIR_KEY: : ClassVar[str] = "reconstruction_dir"
+    BATCH_PROCESS_KEY: ClassVar[str] = "batch_process"
+    ENERGY_MODEL_KEY: ClassVar[str] = "energy_model"
 
     # Fields.
     path_to_json: str = EXPECTED_PATH_TO_CONFIG_JSON
@@ -223,11 +228,11 @@ class Configs:
     json_dict: dict = None
 
     def __post_init__(self):
-        self.general = self.DEFAULTS["general"]
-        self.paths = self.DEFAULTS["paths"]
-        self.reconstruction_dir = self.DEFAULTS["reconstruction_dir"]
-        self.batch_process = self.DEFAULTS["batch_process"]
-        self.energy_model = self.DEFAULTS["energy_model"]
+        self.general = self.DEFAULTS[self.GENERAL_KEY]
+        self.paths = self.DEFAULTS[self.PATHS_KEY]
+        self.reconstruction_dir = self.DEFAULTS[self.RECONSTRUCTION_DIR_KEY]
+        self.batch_process = self.DEFAULTS[self.BATCH_PROCESS_KEY]
+        self.energy_model = self.DEFAULTS[self.ENERGY_MODEL_KEY]
         self.set_from_json()
 
     def set_from_json(self):
@@ -236,16 +241,16 @@ class Configs:
             with open(self.path_to_json, "r", encoding=self.enc) as json_file:
                 json_str = json_file.read()
                 self.json_dict = json.loads(json_str)
-            self.set_sub_dictionary_from_json("general", self.general)
-            self.set_paths_from_json("paths")
+            self.set_sub_dictionary_from_json(self.GENERAL_KEY, self.general)
+            self.set_paths_from_json(self.PATHS_KEY)
             self.set_sub_dictionary_from_json(
-                "reconstruction_dir", self.reconstruction_dir
+                self.RECONSTRUCTION_DIR_KEY, self.reconstruction_dir
             )
             self.set_sub_dictionary_from_json(
-                "batch_process", self.batch_process
+                self.BATCH_PROCESS_KEY, self.batch_process
             )
             self.set_sub_dictionary_from_json(
-                "energy_model", self.energy_model
+                self.ENERGY_MODEL_KEY, self.energy_model
             )
 
     def set_sub_dictionary_from_json(self, sub_dict_key, sub_dict):
@@ -257,16 +262,20 @@ class Configs:
                     if self.json_dict[sub_dict_key][key] is not None:
                         sub_dict[key] = self.json_dict[sub_dict_key][key]
 
-    def set_paths_from_json(self, paths_key):
+    def set_paths_from_json(self):
         """ Set the paths from the config file, which has to be done in a
         slightly more crafty way than with the others. """
         self.set_sub_dictionary_from_json(paths_key, self.paths)
-        paths_dict = self.json_dict[paths_key]
-        for key, new_path in paths_dict.items():
-            if new_path:
-                old_path = self.paths[key]
-                self.paths = reroot(self.paths, new_path, old_path)
-        self.set_sub_dictionary_from_json(paths_key, self.paths)
+        if (
+            self.PATHS_KEY in self.json_dict) and
+            self.json_dict[self.PATHS_KEY]
+        ):
+            paths_dict = self.json_dict[self.PATHS_KEY]
+            for key, new_path in paths_dict.items():
+                if new_path:
+                    old_path = self.paths[key]
+                    self.paths = reroot(self.paths, new_path, old_path)
+        self.set_sub_dictionary_from_json(self.PATHS_KEY, self.paths)
 
     def export_as_immutable(self):
         """ Export the data in this class into an immutable form. """
@@ -274,11 +283,11 @@ class Configs:
             namedtuple(
                 "Config",
                 [
-                    "general",
-                    "paths",
-                    "reconstruction_dir",
-                    "batch_process",
-                    "energy_model",
+                    self.GENERAL_KEY,
+                    self.PATHS_KEY,
+                    self.RECONSTRUCTION_DIR_KEY,
+                    self.BATCH_PROCESS_KEY,
+                    self.ENERGY_MODEL_KEY
                 ]
             )
         result = \
@@ -334,5 +343,3 @@ def get_configs():
     config_obj = Configs()
     result = config_obj.export_as_immutable()
     return result
-
-#configs_obj = Configs()
