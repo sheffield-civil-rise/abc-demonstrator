@@ -5,7 +5,6 @@
 ### on Hansel's hardware and software.
 
 # Constants.
-PATH_TO_REPO="G:\photogrammetry_e110a"
 PATH_TO_ACTIVATE_SCRIPT="C:\Users\hansel\Anaconda3\Scripts\activate"
 ENV_NAME="demonstrator"
 PATH_TO_DEMONSTRATOR_SCRIPT="$PATH_TO_REPO\run_demonstrator.py"
@@ -53,6 +52,7 @@ for argument in $@; do
         next_is_path_to_repo=true
     elif $next_is_path_to_repo; then
         path_to_repo=$argument
+        path_to_demonstrator_script="$path_to_repo\run_demonstrator.py"
         next_is_path_to_repo=false
     elif [ $argument = "--path-to-activate-script" ]; then
         next_is_path_to_activate_script=true
@@ -74,11 +74,11 @@ fi
 
 # Let's get cracking.
 sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
-    git -C $PATH_TO_REPO checkout $branch
-    git -C $PATH_TO_REPO pull $git_url $branch
+    git -C $path_to_repo checkout $branch
+    git -C $path_to_repo pull $git_url $branch
     IF %ERRORLEVEL% NEQ 0 (
         exit 1
     )
-    $PATH_TO_ACTIVATE_SCRIPT $ENV_NAME
-    python $PATH_TO_DEMONSTRATOR_SCRIPT
+    $path_to_activate_script $env_name
+    python $path_to_demonstrator_script
 ENDSSH
