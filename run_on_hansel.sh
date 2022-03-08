@@ -4,11 +4,6 @@
 ### into Hansel's version of the repo, and (2) to run the demonstrator script
 ### on Hansel's hardware and software.
 
-# Constants.
-PATH_TO_ACTIVATE_SCRIPT="C:\Users\hansel\Anaconda3\Scripts\activate"
-ENV_NAME="demonstrator"
-PATH_TO_DEMONSTRATOR_SCRIPT="$PATH_TO_REPO\run_demonstrator.py"
-
 # Exit on first error.
 set -e
 
