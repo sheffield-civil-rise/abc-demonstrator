@@ -29,7 +29,7 @@ def demo_obj():
     """ Make an object of the Demonstrator class. """
     result = \
         Demonstrator(
-            path_to_input_override=CONFIGS.test.path_to_input,
+            path_to_input_override=CONFIGS.paths.path_to_test_input,
             debug=True
         )
     result.demonstrate()
