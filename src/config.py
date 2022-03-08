@@ -261,7 +261,8 @@ class Configs:
         """ Set the paths from the config file, which has to be done in a
         slightly more crafty way than with the others. """
         self.set_sub_dictionary_from_json(paths_key, self.paths)
-        for key, new_path in self.json_dict[paths_key].items():
+        paths_dict = self.json_dict[paths_key]
+        for key, new_path in paths_dict.items():
             if new_path:
                 old_path = self.paths[key]
                 self.paths = reroot(self.paths, new_path, old_path)
@@ -333,3 +334,5 @@ def get_configs():
     config_obj = Configs()
     result = config_obj.export_as_immutable()
     return result
+
+#configs_obj = Configs()
