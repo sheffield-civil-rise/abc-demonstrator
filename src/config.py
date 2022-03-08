@@ -228,7 +228,6 @@ class Configs:
         self.reconstruction_dir = self.DEFAULTS["reconstruction_dir"]
         self.batch_process = self.DEFAULTS["batch_process"]
         self.energy_model = self.DEFAULTS["energy_model"]
-        self.test = self.DEFAULTS["test"]
         self.set_from_json()
 
     def set_from_json(self):
