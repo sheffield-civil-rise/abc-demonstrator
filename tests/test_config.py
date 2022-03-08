@@ -50,7 +50,7 @@ def test_custom_json():
     test_config_json_str = (
         '{ '+
             '"batch_process": { '+
-                '"byte_length": '+new_byte_length+", "+
+                '"byte_length": '+str(new_byte_length)+", "+
                 '"timeout": null '+
             '} '+
         '}'
