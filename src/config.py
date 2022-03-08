@@ -237,7 +237,7 @@ class Configs:
                 json_str = json_file.read()
                 self.json_dict = json.loads(json_str)
             self.set_sub_dictionary_from_json("general", self.general)
-            self.set_paths_from_json()
+            self.set_paths_from_json("paths")
             self.set_sub_dictionary_from_json(
                 "reconstruction_dir", self.reconstruction_dir
             )
@@ -257,15 +257,15 @@ class Configs:
                     if self.json_dict[sub_dict_key][key] is not None:
                         sub_dict[key] = self.json_dict[sub_dict_key][key]
 
-    def set_paths_from_json(self):
+    def set_paths_from_json(self, paths_key):
         """ Set the paths from the config file, which has to be done in a
         slightly more crafty way than with the others. """
-        self.set_sub_dictionary_from_json("paths", self.paths)
-        for key, new_path in self.json_dict.items():
+        self.set_sub_dictionary_from_json(paths_key, self.paths)
+        for key, new_path in self.json_dict[paths_key].items():
             if new_path:
                 old_path = self.paths[key]
                 self.paths = reroot(self.paths, new_path, old_path)
-        self.set_sub_dictionary_from_json("paths", self.paths)
+        self.set_sub_dictionary_from_json(paths_key, self.paths)
 
     def export_as_immutable(self):
         """ Export the data in this class into an immutable form. """

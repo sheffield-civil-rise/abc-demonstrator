@@ -4,6 +4,7 @@ This code defines some unit tests for the Config class.
 
 # Standard imports.
 import os
+from pathlib import Path
 
 # Non-standard imports.
 import pytest
