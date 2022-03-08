@@ -267,7 +267,7 @@ class Configs:
         slightly more crafty way than with the others. """
         self.set_sub_dictionary_from_json(paths_key, self.paths)
         if (
-            self.PATHS_KEY in self.json_dict) and
+            (self.PATHS_KEY in self.json_dict) and
             self.json_dict[self.PATHS_KEY]
         ):
             paths_dict = self.json_dict[self.PATHS_KEY]
