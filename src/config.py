@@ -237,7 +237,7 @@ class Configs:
                 json_str = json_file.read()
                 self.json_dict = json.loads(json_str)
             self.set_sub_dictionary_from_json("general", self.general)
-            self.set_sub_dictionary_from_json("paths", self.paths)
+            self.set_paths_from_json()
             self.set_sub_dictionary_from_json(
                 "reconstruction_dir", self.reconstruction_dir
             )
