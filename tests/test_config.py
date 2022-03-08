@@ -29,7 +29,7 @@ def test_defaults(config_obj):
     """ Test that the expected defaults are present in the dictionary fields
     of the config object. """
     assert (
-        config_obj.general["path_to_output"] == config.DEFAULT_PATH_TO_OUTPUT
+        config_obj.general["encoding"] == config.DEFAULT_ENCODING
     )
     assert (
         config_obj.energy_model["boiler_efficiency"] ==
