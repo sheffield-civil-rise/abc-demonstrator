@@ -33,7 +33,7 @@ class Demonstrator:
     def __init__(
             self,
             path_to_input_override=None, # Overides several configs if set.
-            path_to_output=CONFIGS.general.path_to_demo_output,
+            path_to_output=CONFIGS.general.path_to_output,
             path_to_polygon=CONFIGS.general.path_to_polygon,
             debug=False
         ):

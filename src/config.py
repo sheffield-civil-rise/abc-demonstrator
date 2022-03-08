@@ -19,18 +19,13 @@ import numpy
 ############
 
 # General.
-#DEFAULT_PATH_TO_HOME = str(Path.home())
-DEFAULT_PATH_TO_HOME = "G:\\"
+DEFAULT_PATH_TO_HOME = str(Path.home())
 DEFAULT_PATH_TO_BINARIES = \
-    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_binaries_and_3rd_party")
+    os.path.join(DEFAULT_PATH_TO_HOME, "wp17demo_binaries_and_3rd_party")
 DEFAULT_PATH_TO_INPUT = \
-    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_input")
+    os.path.join(DEFAULT_PATH_TO_HOME, "wp17demo_input")
 DEFAULT_PATH_TO_OUTPUT = \
-    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_output")
-DEFAULT_PATH_TO_DEMO_OUTPUT = \
-    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_output_demo")
-DEFAULT_PATH_TO_REPO = \
-    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_e110a")
+    os.path.join(DEFAULT_PATH_TO_HOME, "wp17demo_output")
 DEFAULT_ENCODING = "utf-8"
 DEFAULT_MAX_RGB_CHANNEL = 255.0
 DEFAULT_LABEL_VALUE_DICT = {
@@ -80,7 +75,7 @@ DEFAULT_PATH_TO_WEATHER_DATA = \
     os.path.join(DEFAULT_PATH_TO_ENERGYPLUS, "WeatherData")
 DEFAULT_PATH_TO_ENERGYPLUS_WEATHER_FILE = \
     os.path.join(DEFAULT_PATH_TO_WEATHER_DATA, "GBR_Finningley.033600_IWEC.epw")
-DEFAULT_PATH_TO_IDF_FILES = os.path.join(DEFAULT_PATH_TO_REPO, "idf_files")
+DEFAULT_PATH_TO_IDF_FILES = str(Path(__file__).parent/"idf_files")
 DEFAULT_PATH_TO_STARTING_POINT_IDF = \
     os.path.join(DEFAULT_PATH_TO_IDF_FILES, "starting_point.idf")
 DEFAULT_PATH_TO_OUTPUT_IDF = os.path.join(DEFAULT_PATH_TO_OUTPUT, "output.idf")
@@ -141,8 +136,6 @@ class Configs:
             "path_to_binaries": DEFAULT_PATH_TO_BINARIES,
             "path_to_input": DEFAULT_PATH_TO_INPUT,
             "path_to_output": DEFAULT_PATH_TO_OUTPUT,
-            "path_to_demo_output": DEFAULT_PATH_TO_DEMO_OUTPUT,
-            "path_to_repo": DEFAULT_PATH_TO_REPO,
             "path_to_polygon": DEFAULT_PATH_TO_POLYGON,
             "coordinate_reference_system": DEFAULT_COORDINATE_REFERENCE_SYSTEM,
             "source_coordinate_reference_system": \
