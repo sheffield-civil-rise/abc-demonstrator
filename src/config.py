@@ -176,6 +176,7 @@ class Configs:
             "path_to_ladybug_gps_data": make_path_to_ladybug_gps_data(),
             "path_to_ladybug_images": make_path_to_ladybug_images(),
             "path_to_deeplab_binary": DEFAULT_PATH_TO_DEEPLAB_BINARY,
+            "path_to_vocab_tree": DEFAULT_PATH_TO_VOCAB_TREE,
             "path_to_energyplus": DEFAULT_PATH_TO_ENERGYPLUS,
             "path_to_energyplus_input_data_dictionary": \
                 DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY,
@@ -200,8 +201,7 @@ class Configs:
         },
         "batch_process": {
             "byte_length": DEFAULT_BYTE_LENGTH,
-            "timeout": DEFAULT_BATCH_PROCESS_TIMEOUT,
-            "path_to_vocab_tree": DEFAULT_PATH_TO_VOCAB_TREE
+            "timeout": DEFAULT_BATCH_PROCESS_TIMEOUT
         },
         "energy_model": {
             "window_shgc": DEFAULT_WINDOW_SHGC,

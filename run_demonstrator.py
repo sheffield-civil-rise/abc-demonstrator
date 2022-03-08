@@ -2,12 +2,13 @@
 This code defines a script which in turn runs the demonstrator script.
 """
 
-# Local imports.
-import subprocess
+# Standard imports.
+import sys
+from pathlib import Path
 
-# Local constants.
-HANSEL_PATH_TO_DEMONSTRATOR_SCRIPT = \
-    r"G:\photogrammetry_e110a\src\demonstrator.py"
+# Local imports.
+sys.path.append(str(Path(__file__).parent/"src"))
+from demonstrator import Demonstrator
 
 ###################
 # RUN AND WRAP UP #
@@ -15,11 +16,13 @@ HANSEL_PATH_TO_DEMONSTRATOR_SCRIPT = \
 
 def run():
     """ Run this file. """
+    debug = False
+    if "--debug" in sys.argv:
+        debug = True
+    demonstrator = Demonstrator(debug=debug)
     try:
-        subprocess.run(
-            ["python", HANSEL_PATH_TO_DEMONSTRATOR_SCRIPT], check=True
-        )
-    except subprocess.CalledProcessError:
+        demonstrator.demonstrate()
+    except:
         print("Sorry, but the demonstrator failed.")
         return False
     print("Demonstrator ran successfully!")

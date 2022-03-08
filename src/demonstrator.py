@@ -66,22 +66,28 @@ class Demonstrator:
 
     def run_subprocess(self, arguments, timeout=None):
         """ Run a given subprocess - quietly or otherwise. """
-        if self.debug:
-            result = \
-                subprocess.run(
-                    arguments,
-                    check=True,
-                    timeout=timeout
-                )
-        else:
-            result = \
-                subprocess.run(
-                    arguments,
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    timeout=timeout
-                )
+        try:
+            if self.debug:
+                result = \
+                    subprocess.run(
+                        arguments,
+                        check=True,
+                        timeout=timeout
+                    )
+            else:
+                result = \
+                    subprocess.run(
+                        arguments,
+                        check=True,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=timeout
+                    )
+        except subprocess.CalledProcessError:
+            logging.error(
+                "Error running subprocess with arguments:\n"+
+                str(arguments)
+            )
         return result
 
     def make_and_run_reconstruction_dir_generator(self):
@@ -210,15 +216,3 @@ class Demonstrator:
         logging.info("Running energy model process...")
         self.make_and_run_energy_model_process()
         logging.info("Demonstration complete.")
-
-###################
-# RUN AND WRAP UP #
-###################
-
-def run():
-    """ Run this file. """
-    demonstrator = Demonstrator()
-    demonstrator.demonstrate()
-
-if __name__ == "__main__":
-    run()

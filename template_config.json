@@ -26,7 +26,8 @@
         "path_to_starting_point_idf": null,
         "path_to_output_idf": null,
         "path_to_energy_model_output_dir": null,
-        "path_to_test_input": null
+        "path_to_test_input": null,
+        "path_to_vocab_tree": null
     },
     "reconstruction_dir": {
         "radius": null,
@@ -39,8 +40,7 @@
     },
     "batch_process": {
         "byte_length": null,
-        "timeout": null,
-        "path_to_vocab_tree": null
+        "timeout": null
     },
     "energy_model": {
         "window_shgc": null,
