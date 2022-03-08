@@ -213,7 +213,7 @@ class Configs:
     }
     GENERAL_KEY: ClassVar[str] = "general"
     PATHS_KEY: ClassVar[str] = "paths"
-    RECONSTRUCTION_DIR_KEY: : ClassVar[str] = "reconstruction_dir"
+    RECONSTRUCTION_DIR_KEY: ClassVar[str] = "reconstruction_dir"
     BATCH_PROCESS_KEY: ClassVar[str] = "batch_process"
     ENERGY_MODEL_KEY: ClassVar[str] = "energy_model"
 
