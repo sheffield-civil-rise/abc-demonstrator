@@ -42,15 +42,13 @@ CONFIGS = get_configs()
 class ReconstructionDirGenerator:
     """ The class in question. """
     # Fields.
-    path_to_gps_data: str = CONFIGS.reconstruction_dir.path_to_gps_data
-    path_to_ladybug_gps_data: str = \
-        CONFIGS.reconstruction_dir.path_to_ladybug_gps_data
-    path_to_ladybug_images: str = \
-        CONFIGS.reconstruction_dir.path_to_ladybug_images
-    path_to_polygon: str = CONFIGS.general.path_to_polygon
+    path_to_gps_data: str = CONFIGS.paths.path_to_gps_data
+    path_to_ladybug_gps_data: str = CONFIGS.paths.path_to_ladybug_gps_data
+    path_to_ladybug_images: str = CONFIGS.paths.path_to_ladybug_images
+    path_to_polygon: str = CONFIGS.paths.path_to_polygon
     path_to_input_override: str = None
-    path_to_output: str = CONFIGS.general.path_to_output
-    path_to_model: str = CONFIGS.reconstruction_dir.path_to_deeplab_binary
+    path_to_output: str = CONFIGS.paths.path_to_output
+    path_to_model: str = CONFIGS.paths.path_to_deeplab_binary
     co_ref_sys: str = CONFIGS.general.coordinate_reference_system
     src_co_ref_sys: str = CONFIGS.general.source_coordinate_reference_system
     radius: int = CONFIGS.reconstruction_dir.radius

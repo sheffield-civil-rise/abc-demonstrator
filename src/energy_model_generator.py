@@ -33,18 +33,14 @@ class EnergyModelGenerator:
     """ The class in question. """
     # Fields.
     id_str: str = "demo"
-    path_to_starting_point_idf: str = \
-        CONFIGS.energy_model.path_to_starting_point_idf
+    path_to_starting_point_idf: str = CONFIGS.paths.path_to_starting_point_idf
     height: float = None
     window_to_wall_ratio: float = None
-    path_to_polygon: str = CONFIGS.general.path_to_polygon
-    path_to_idd: str = \
-        CONFIGS.energy_model.path_to_energyplus_input_data_dictionary
-    path_to_weather_file: str = \
-        CONFIGS.energy_model.path_to_energyplus_weather_file
-    path_to_output_idf: str = CONFIGS.energy_model.path_to_output_idf
-    path_to_output_dir: str = \
-        CONFIGS.energy_model.path_to_energy_model_output_dir
+    path_to_polygon: str = CONFIGS.paths.path_to_polygon
+    path_to_idd: str = CONFIGS.paths.path_to_energyplus_input_data_dictionary
+    path_to_weather_file: str = CONFIGS.paths.path_to_energyplus_weather_file
+    path_to_output_idf: str = CONFIGS.paths.path_to_output_idf
+    path_to_output_dir: str = CONFIGS.paths.path_to_energy_model_output_dir
     num_stories: int = 2
     orientation: float = 0.0
     save_idf: bool = True
