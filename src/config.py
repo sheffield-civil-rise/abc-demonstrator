@@ -38,6 +38,8 @@ DEFAULT_PATH_TO_BINARIES = \
     os.path.join(DEFAULT_PATH_TO_HOME, "wp17demo_binaries_and_3rd_party")
 DEFAULT_PATH_TO_INPUT = \
     os.path.join(DEFAULT_PATH_TO_HOME, "wp17demo_input")
+DEFAULT_PATH_TO_TEST_INPUT = \
+    os.path.join(DEFAULT_PATH_TO_HOME, "wp17demo_input_test")
 DEFAULT_PATH_TO_OUTPUT = \
     os.path.join(DEFAULT_PATH_TO_HOME, "wp17demo_output")
 DEFAULT_PATH_TO_DEEPLAB_BINARY = \
@@ -63,8 +65,6 @@ DEFAULT_PATH_TO_STARTING_POINT_IDF = \
 DEFAULT_PATH_TO_OUTPUT_IDF = os.path.join(DEFAULT_PATH_TO_OUTPUT, "output.idf")
 DEFAULT_PATH_TO_ENERGY_MODEL_OUTPUT_DIR = \
     os.path.join(DEFAULT_PATH_TO_OUTPUT, "energy_model_output")
-DEFAULT_PATH_TO_TEST_INPUT = \
-    os.path.join(DEFAULT_PATH_TO_HOME, "photogrammetry_input_test")
 
 # Reconstruction dir.
 DEFAULT_GPS_DATA_FILENAME = "gps_data.csv"
@@ -111,7 +111,7 @@ def reroot_list(path_list, new_path, old_path):
             new_path_dash = str(Path(new_path)/Path(path_string).name)
             old_path_dash = path_string
             path_list[index] = new_path_dash
-            reroot(path_list, new_path_dash, old_path_dash)
+            reroot_list(path_list, new_path_dash, old_path_dash)
 
 def reroot(path_dict, new_path, old_path):
     """ As above, but for a dictionary. """
@@ -265,7 +265,6 @@ class Configs:
     def set_paths_from_json(self):
         """ Set the paths from the config file, which has to be done in a
         slightly more crafty way than with the others. """
-        self.set_sub_dictionary_from_json(self.PATHS_KEY, self.paths)
         if (
             (self.PATHS_KEY in self.json_dict) and
             self.json_dict[self.PATHS_KEY]
@@ -343,3 +342,5 @@ def get_configs():
     config_obj = Configs()
     result = config_obj.export_as_immutable()
     return result
+
+configs_obj = Configs()
