@@ -10,7 +10,7 @@ from glob import glob
 from pathlib import Path
 
 # Local imports.
-from run_on_hansel import run_on_hansel_with_auth
+from run_on_hansel import run_on_hansel_with_auth, print_encased
 from validate import run_tests as run_tests_locally
 
 # Local constants.
