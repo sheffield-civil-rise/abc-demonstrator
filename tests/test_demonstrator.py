@@ -39,7 +39,7 @@ def test_rec_dir_gen_fields(demo_obj):
     """ Test the FIELDS of the ReconstructionDirGenerator sub-object. """
     assert (
         demo_obj.rec_dir_gen.path_to_output ==
-            config.DEFAULT_PATH_TO_DEMO_OUTPUT
+            config.DEFAULT_PATH_TO_OUTPUT
     )
     assert (
         demo_obj.rec_dir_gen.path_to_output_images ==
