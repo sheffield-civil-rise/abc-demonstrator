@@ -31,7 +31,7 @@ def get_security_dict(
     result = json.loads(json_str)
     return result
 
-def get_current_branch():
+def get_current_branch(encoding=DEFAULT_ENCODING):
     """ Get the current branch checked out in THIS copy of the repo. """
     out = \
         subprocess.run(
@@ -39,7 +39,9 @@ def get_current_branch():
             check=True,
             capture_output=True
         )
-    result = out.stdout
+    result = out.stdout.decode(encoding)
+    while result.endswith("\n"):
+        result = result[:-1]
     return result
 
 def run_on_hansel(
