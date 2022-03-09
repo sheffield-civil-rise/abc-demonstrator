@@ -1,6 +1,6 @@
 """
-This code defines a class, "Amy's IDF", which holds the anticipated changes to
-the EnergyModelGenerator class.
+This code defines a class, which extends the EnergyModelGenerator class, and
+which holds the anticipated changes to it.
 """
 
 # Local imports.
