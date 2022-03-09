@@ -101,14 +101,14 @@ def test_window_to_wall_ratio_calculator(demo_obj):
 def test_energy_model_idf(demo_obj):
     """ Test that the energy model's IDF object has the fields we want. """
     actual_idf_sub_objects = \
-        list(demo_obj.energy_model_generator.idf_obj.idfobjects.keys())
+        list(demo_obj.energy_model_process.idf_obj.idfobjects.keys())
     for expected_sub_object in expected.IDF_SUB_OBJECTS:
         assert expected_sub_object in actual_idf_sub_objects
 
 def test_energy_model_output(demo_obj):
     """ Test that the energy model has produced an output. """
-    assert os.path.exists(demo_obj.energy_model_generator.path_to_output_idf)
-    assert os.path.exists(demo_obj.energy_model_generator.path_to_output_dir)
+    assert os.path.exists(demo_obj.energy_model_process.path_to_output_idf)
+    assert os.path.exists(demo_obj.energy_model_process.path_to_output_dir)
     assert (
-        len(os.listdir(demo_obj.energy_model_generator.path_to_output_dir)) > 0
+        len(os.listdir(demo_obj.energy_model_process.path_to_output_dir)) > 0
     )
