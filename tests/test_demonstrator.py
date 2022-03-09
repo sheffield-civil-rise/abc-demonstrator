@@ -43,15 +43,15 @@ def test_rec_dir_gen_fields(demo_obj):
     )
     assert (
         demo_obj.rec_dir_gen.path_to_output_images ==
-            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "images")
+            os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "images")
     )
     assert (
         demo_obj.rec_dir_gen.path_to_labelled_images ==
-            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "labelled")
+            os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "labelled")
     )
     assert (
         demo_obj.rec_dir_gen.path_to_masked_images ==
-            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "masked")
+            os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "masked")
     )
 
 def test_rec_dir_gen_files(demo_obj):
@@ -98,12 +98,10 @@ def test_window_to_wall_ratio_calculator(demo_obj):
     """ Test that the WWR calculator actually produces an output. """
     assert demo_obj.window_to_wall_ratio_calculator.result is not None
 
-def test_energy_model_idf(demo_obj):
+def test_energy_model_process(demo_obj):
     """ Test that the energy model's IDF object has the fields we want. """
-    actual_idf_sub_objects = \
-        list(demo_obj.energy_model_process.idf_obj.idfobjects.keys())
-    for expected_sub_object in expected.IDF_SUB_OBJECTS:
-        assert expected_sub_object in actual_idf_sub_objects
+    assert os.path.isfile(demo_obj.path_to_output_idf)
+    assert os.path.isdir(demo_obj.path_to_energy_model_output_dir)
 
 def test_energy_model_output(demo_obj):
     """ Test that the energy model has produced an output. """

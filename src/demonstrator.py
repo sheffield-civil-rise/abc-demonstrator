@@ -48,6 +48,10 @@ class Demonstrator:
         self.batch_process = None
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
+        self.path_to_output_idf = \
+            os.path.join(self.path_to_output, "output.idf")
+        self.path_to_energy_model_output_dir = \
+            os.path.join(self.path_to_output, "energy_model_output")
         self.energy_model_process = None
         self.start_logging()
 
@@ -188,16 +192,12 @@ class Demonstrator:
         """ Build the energy model generator object, and then run it. """
         path_to_py_file = \
             str(pathlib.Path(__file__).parent/"energy_model_generator.py")
-        path_to_output_idf = \
-            os.path.join(self.path_to_output, "output.idf")
-        path_to_output_dir = \
-            os.path.join(self.path_to_output, "energy_model_output")
         arguments = [
             INTERNAL_PYTHON_COMMAND, path_to_py_file,
             "--height", str(self.height_calculator.result),
             "--wwr", str(self.window_to_wall_ratio_calculator.result),
-            "--path-to-output-idf", path_to_output_idf,
-            "--path-to-output-dir", path_to_output_dir,
+            "--path-to-output-idf", self.path_to_output_idf,
+            "--path-to-output-dir", self.path_to_energy_model_output_dir,
             "--path-to-polygon", self.path_to_polygon
         ]
         self.energy_model_process = self.run_subprocess(arguments)
