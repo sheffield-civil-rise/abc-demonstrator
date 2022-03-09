@@ -53,6 +53,10 @@ class Demonstrator:
         self.path_to_energy_model_output_dir = \
             os.path.join(self.path_to_output, "energy_model_output")
         self.energy_model_process = None
+        self.path_to_output_idf = \
+            os.path.join(self.path_to_output, "output.idf")
+        self.path_to_energy_model_output_dir = \
+            os.path.join(self.path_to_output, "energy_model_output")
         self.start_logging()
 
     def start_logging(self):

@@ -17,7 +17,7 @@ from validate import run_tests as run_tests_locally
 PATH_TO_SCRIPT = str(Path(__file__).parent.resolve()/"validate_on_hansel.sh")
 DEFAULT_LINTER_CONFIGS = {
     "max_line_length": 80,
-    "messages_to_disable": ("import-error",),
+    "messages_to_disable": ("import-error", "too-many-instance-attributes"),
     "min_score": 9,
     "patterns_to_ignore": ("**/test_*.py",)
 }
@@ -101,7 +101,7 @@ def run_continuous_integration(
             return False
     if test:
         if test_locally:
-            test_result = run_tests_locally
+            test_result = run_tests_locally()
         else:
             test_result = run_on_hansel_with_auth(path_to_script=PATH_TO_SCRIPT)
         if (not test_result) and stop_on_failure:
@@ -118,6 +118,7 @@ def run():
     """ Run this file. """
     parser = make_parser()
     arguments = parser.parse_args()
+    print_encased("Starting continuous integration routine...")
     result = \
         run_continuous_integration(
             lint=(not arguments.no_lint),
@@ -125,6 +126,10 @@ def run():
             stop_on_failure=arguments.stop_on_failure,
             test_locally=arguments.test_locally
         )
+    if result:
+        print_encased("Continuous integration: PASS")
+    else:
+        print_encased("Continuous integration: FAIL")
     return result
 
 if __name__ == "__main__":
