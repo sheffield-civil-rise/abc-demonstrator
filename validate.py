@@ -18,7 +18,7 @@ DEFAULT_MIN_CODE_COVERAGE = 80
 
 def run_tests(min_code_coverage=DEFAULT_MIN_CODE_COVERAGE):
     """ Run PyTest. """
-    os.chdir(Path(__).parent)
+    os.chdir(Path(__file__).parent)
     arguments = [
         "--cov-report", "term",
         "--cov-fail-under="+str(min_code_coverage),
