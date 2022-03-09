@@ -18,9 +18,9 @@ DEFAULT_MESSAGE = "Debugging..."
 
 def push_and_validate(message=DEFAULT_MESSAGE):
     """ Push and run the continuous integration script. """
-    subprocess.run(["git", "add", "."])
+    subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", message])
-    subprocess.run(["git", "push", "origin", get_current_branch()])
+    subprocess.run(["git", "push", "origin", get_current_branch()], check=True)
     try:
         subprocess.run(["python3", "continuous_integration.py"], check=True)
     except subprocess.CalledProcessError:
