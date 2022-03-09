@@ -30,7 +30,7 @@ def demo_obj():
     result = \
         Demonstrator(
             path_to_input_override=CONFIGS.paths.path_to_test_input,
-            debug=True
+            debug=False
         )
     result.demonstrate()
     return result
