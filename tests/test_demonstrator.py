@@ -37,21 +37,19 @@ def demo_obj():
 
 def test_rec_dir_gen_fields(demo_obj):
     """ Test the FIELDS of the ReconstructionDirGenerator sub-object. """
-    assert (
-        demo_obj.rec_dir_gen.path_to_output ==
-            config.DEFAULT_PATH_TO_OUTPUT
-    )
+    path_to_output = CONFIGS.paths.path_to_output
+    assert demo_obj.rec_dir_gen.path_to_output == path_to_output
     assert (
         demo_obj.rec_dir_gen.path_to_output_images ==
-            os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "images")
+            os.path.join(path_to_output, "images")
     )
     assert (
         demo_obj.rec_dir_gen.path_to_labelled_images ==
-            os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "labelled")
+            os.path.join(path_to_output, "labelled")
     )
     assert (
         demo_obj.rec_dir_gen.path_to_masked_images ==
-            os.path.join(config.DEFAULT_PATH_TO_OUTPUT, "masked")
+            os.path.join(path_to_output, "masked")
     )
 
 def test_rec_dir_gen_files(demo_obj):
