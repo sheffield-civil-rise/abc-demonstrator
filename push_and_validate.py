@@ -16,16 +16,16 @@ DEFAULT_MESSAGE = "Debugging..."
 # FUNCTIONS #
 #############
 
-def quick_run(arguments, check=True):
-    """ Run some arguments, without any frills. """
-    subprocess.run(arguments, check=check)
-
 def push_and_validate(message=DEFAULT_MESSAGE):
     """ Push and run the continuous integration script. """
-    quick_run(["git", "add", "."])
-    quick_run(["git", "commit", "-m", message])
-    quick_run(["git", "push", "origin", get_current_branch()])
-    quick_run(["python3", "continuous_integration.py"])
+    subprocess.run(["git", "add", "."])
+    subprocess.run(["git", "commit", "-m", message])
+    subprocess.run(["git", "push", "origin", get_current_branch()])
+    try:
+        subprocess.run(["python3", "continuous_integration.py"], check=True)
+    except subprocess.CalledProcessError:
+        return False
+    return True
 
 ###################
 # RUN AND WRAP UP #
