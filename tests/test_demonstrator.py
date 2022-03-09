@@ -98,15 +98,8 @@ def test_window_to_wall_ratio_calculator(demo_obj):
     """ Test that the WWR calculator actually produces an output. """
     assert demo_obj.window_to_wall_ratio_calculator.result is not None
 
-def test_energy_model_process(demo_obj):
-    """ Test that the energy model's IDF object has the fields we want. """
-    assert os.path.isfile(demo_obj.path_to_output_idf)
-    assert os.path.isdir(demo_obj.path_to_energy_model_output_dir)
-
 def test_energy_model_output(demo_obj):
     """ Test that the energy model has produced an output. """
-    assert os.path.exists(demo_obj.energy_model_process.path_to_output_idf)
-    assert os.path.exists(demo_obj.energy_model_process.path_to_output_dir)
-    assert (
-        len(os.listdir(demo_obj.energy_model_process.path_to_output_dir)) > 0
-    )
+    assert os.path.isfile(demo_obj.path_to_output_idf)
+    assert os.path.isdir(demo_obj.path_to_energy_model_output_dir)
+    assert len(os.listdir(demo_obj.path_to_energy_model_output_dir)) > 0
