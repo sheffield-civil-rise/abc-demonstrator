@@ -1,12 +1,5 @@
 {
     "general": {
-        "path_to_home": null,
-        "path_to_binaries": null,
-        "path_to_input": null,
-        "path_to_output": null,
-        "path_to_demo_output": null,
-        "path_to_repo": null,
-        "path_to_polygon": null,
         "coordinate_reference_system": null,
         "source_coordinate_reference_system": null,
         "encoding": null,
@@ -15,13 +8,28 @@
         "rgb_max": null,
         "logging_format": null
     },
-    "reconstruction_dir": {
+    "paths": {
+        "path_to_home": null,
+        "path_to_binaries": null,
+        "path_to_input": null,
+        "path_to_output": null,
+        "path_to_polygon": null,
         "path_to_gps_data": null,
         "path_to_ladybug_gps_data": null,
         "path_to_ladybug_images": null,
         "path_to_deeplab_binary": null,
-        "coordinate_reference_system": null,
-        "source_coordinate_reference_system": null,
+        "path_to_energyplus": null,
+        "path_to_energyplus_input_data_dictionary": null,
+        "path_to_weather_data": null,
+        "path_to_energyplus_weather_file": null,
+        "path_to_idf_files": null,
+        "path_to_starting_point_idf": null,
+        "path_to_output_idf": null,
+        "path_to_energy_model_output_dir": null,
+        "path_to_test_input": null,
+        "path_to_vocab_tree": null
+    },
+    "reconstruction_dir": {
         "radius": null,
         "view_distance": null,
         "field_of_view": null,
@@ -35,21 +43,10 @@
         "timeout": null
     },
     "energy_model": {
-        "path_to_energyplus": null,
-        "path_to_energyplus_input_data_dictionary": null,
-        "path_to_weather_data": null,
-        "path_to_energyplus_weather_file": null,
-        "path_to_idf_files": null,
-        "path_to_starting_point_idf": null,
-        "path_to_output_idf": null,
-        "path_to_energy_model_output_dir": null,
         "window_shgc": null,
         "air_change_per_hour": null,
         "setpoint_heating": null,
         "setpoint_cooling": null,
         "boiler_efficiency": null
-    },
-    "test": {
-        "path_to_input": null
     }
 }

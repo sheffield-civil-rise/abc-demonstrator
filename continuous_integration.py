@@ -7,17 +7,14 @@ import argparse
 import os
 import subprocess
 from glob import glob
+from pathlib import Path
 
 # Local imports.
-from run_on_hansel import (
-    print_encased,
-    run_on_hansel_with_auth,
-    DEFAULT_PATH_TO_REPO
-)
+from run_on_hansel import run_on_hansel_with_auth
 from validate import run_tests as run_tests_locally
 
 # Local constants.
-PATH_TO_SCRIPT = os.path.join(DEFAULT_PATH_TO_REPO, "validate_on_hansel.sh")
+PATH_TO_SCRIPT = str(Path(__file__).parent.resolve()/"validate_on_hansel.sh")
 DEFAULT_LINTER_CONFIGS = {
     "max_line_length": 80,
     "messages_to_disable": ("import-error", "too-many-instance-attributes"),

@@ -10,16 +10,12 @@ import sys
 from pathlib import Path
 
 # Constants.
-PATH_TO_HOME = str(Path.home())
-DEFAULT_PATH_TO_REPO = os.path.join(PATH_TO_HOME, "photogrammetry_e110a")
-DEFAULT_PATH_TO_SCRIPT = \
-    os.path.join(DEFAULT_PATH_TO_REPO, "run_on_hansel.sh")
-DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\photogrammetry_e110a"
+DEFAULT_PATH_TO_SCRIPT = str(Path(__file__).parent.resolve()/"run_on_hansel.sh")
+DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\wp17_demonstrator"
 DEFAULT_PATH_TO_ACTIVATE_SCRIPT = r"C:\Users\hansel\Anaconda3\Scripts\activate"
 DEFAULT_ENV_NAME = "demonstrator"
-DEFAULT_REPO_URL = "github.com/tomhosker/photogrammetry_e110a.git"
-DEFAULT_PATH_TO_SECURITY_FILE = \
-    os.path.join(PATH_TO_HOME, "hansel_security.json")
+DEFAULT_REPO_URL = "github.com/tomhosker/wp17_demonstrator.git"
+DEFAULT_PATH_TO_SECURITY_FILE = str(Path.home()/"hansel_security.json")
 DEFAULT_ENCODING = "utf-8"
 
 #############
@@ -36,7 +32,7 @@ def get_security_dict(
     result = json.loads(json_str)
     return result
 
-def get_current_branch():
+def get_current_branch(encoding=DEFAULT_ENCODING):
     """ Get the current branch checked out in THIS copy of the repo. """
     out = \
         subprocess.run(
@@ -44,7 +40,9 @@ def get_current_branch():
             check=True,
             capture_output=True
         )
-    result = out.stdout
+    result = out.stdout.decode(encoding)
+    while result.endswith("\n"):
+        result = result[:-1]
     return result
 
 def run_on_hansel(

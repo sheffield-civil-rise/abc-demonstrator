@@ -27,7 +27,7 @@ def default_sfm_pipeline(graph):
     image_matching = graph.addNewNode(
         "ImageMatching", input=feature_extraction.input,
         featuresFolders=[feature_extraction.output],
-        tree=CONFIGS.batch_process.path_to_vocab_tree)
+        tree=CONFIGS.paths.path_to_vocab_tree)
     feature_matching = graph.addNewNode(
         "FeatureMatching", input=image_matching.input,
         featuresFolders=image_matching.featuresFolders,
@@ -74,14 +74,14 @@ def two_way_sfm_pipeline(graph, camera_init=None):
             "ImageMatching",
             input=feature_extraction.input,
             featuresFolders=[feature_extraction.output],
-            tree=CONFIGS.batch_process.path_to_vocab_tree
+            tree=CONFIGS.paths.path_to_vocab_tree
         )
     _image_matching = \
         graph.addNewNode(
             "ImageMatching",
             input=_feature_extraction.input,
             featuresFolders=[_feature_extraction.output],
-            tree=CONFIGS.batch_process.path_to_vocab_tree
+            tree=CONFIGS.paths.path_to_vocab_tree
         )
     out.append(image_matching)
     out.append(_image_matching)
@@ -157,7 +157,7 @@ def custom_sfm_pipeline(graph, camera_init=None):
             "ImageMatching",
             input=feature_extraction.input,
             featuresFolders=[feature_extraction.output],
-            tree=CONFIGS.batch_process.path_to_vocab_tree
+            tree=CONFIGS.paths.path_to_vocab_tree
         )
     out.append(image_matching)
     feature_matching = \

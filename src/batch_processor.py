@@ -36,7 +36,7 @@ class BatchProcessor:
     path_to_output_images: str = None
     pipeline: str = "custom"
     publisher_output: list = field(default_factory=list)
-    path_to_cache: str = os.path.join(CONFIGS.general.path_to_output, "cache")
+    path_to_cache: str = os.path.join(CONFIGS.paths.path_to_output, "cache")
     paths_to_init_files: list = field(default_factory=list) # I.e. SFM files.
     path_to_labelled_images: str = None
     # Generated fields.
@@ -214,7 +214,7 @@ def make_parser():
     )
     result.add_argument(
         "--path-to-cache",
-        default=os.path.join(CONFIGS.general.path_to_output, "cache"),
+        default=os.path.join(CONFIGS.paths.path_to_output, "cache"),
         dest="path_to_cache",
         help="The path to the cache",
         type=str

@@ -2,15 +2,13 @@
 This code defines a script which in turn runs the demonstrator script.
 """
 
-# Local imports.
-import pathlib
-import subprocess
+# Standard imports.
 import sys
+from pathlib import Path
 
-# Local constants.
-PYTHON_COMMAND = "python"
-PATH_TO_DEMONSTRATOR_SCRIPT = \
-    str(pathlib.Path(__file__).parent/"src"/"demonstrator.py")
+# Local imports.
+sys.path.append(str(Path(__file__).parent/"src"))
+from demonstrator import Demonstrator
 
 ###################
 # RUN AND WRAP UP #
@@ -18,13 +16,17 @@ PATH_TO_DEMONSTRATOR_SCRIPT = \
 
 def run():
     """ Run this file. """
+    debug = False
+    if "--debug" in sys.argv:
+        debug = True
+    demonstrator = Demonstrator(debug=debug)
     try:
-        subprocess.run(
-            [PYTHON_COMMAND, PATH_TO_DEMONSTRATOR_SCRIPT], check=True
-        )
-    except subprocess.CalledProcessError:
-        sys.exit(1)
-    sys.exit(0)
+        demonstrator.demonstrate()
+    except:
+        print("Sorry, but the demonstrator failed.")
+        return False
+    print("Demonstrator ran successfully!")
+    return True
 
 if __name__ == "__main__":
     run()

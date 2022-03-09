@@ -27,27 +27,29 @@ CONFIGS = config.get_configs()
 @pytest.fixture(scope="module")
 def demo_obj():
     """ Make an object of the Demonstrator class. """
-    result = Demonstrator(path_to_input_override=CONFIGS.test.path_to_input)
+    result = \
+        Demonstrator(
+            path_to_input_override=CONFIGS.paths.path_to_test_input,
+            debug=True
+        )
     result.demonstrate()
     return result
 
 def test_rec_dir_gen_fields(demo_obj):
     """ Test the FIELDS of the ReconstructionDirGenerator sub-object. """
-    assert (
-        demo_obj.rec_dir_gen.path_to_output ==
-            config.DEFAULT_PATH_TO_DEMO_OUTPUT
-    )
+    path_to_output = CONFIGS.paths.path_to_output
+    assert demo_obj.rec_dir_gen.path_to_output == path_to_output
     assert (
         demo_obj.rec_dir_gen.path_to_output_images ==
-            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "images")
+            os.path.join(path_to_output, "images")
     )
     assert (
         demo_obj.rec_dir_gen.path_to_labelled_images ==
-            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "labelled")
+            os.path.join(path_to_output, "labelled")
     )
     assert (
         demo_obj.rec_dir_gen.path_to_masked_images ==
-            os.path.join(config.DEFAULT_PATH_TO_DEMO_OUTPUT, "masked")
+            os.path.join(path_to_output, "masked")
     )
 
 def test_rec_dir_gen_files(demo_obj):
@@ -94,12 +96,8 @@ def test_window_to_wall_ratio_calculator(demo_obj):
     """ Test that the WWR calculator actually produces an output. """
     assert demo_obj.window_to_wall_ratio_calculator.result is not None
 
-def test_energy_model_process(demo_obj):
-    """ Test that the energy model's IDF object has the fields we want. """
-    assert demo_obj.energy_model_process.returncode == 0
-
 def test_energy_model_output(demo_obj):
     """ Test that the energy model has produced an output. """
-    assert os.path.exists(demo_obj.path_to_output_idf)
-    assert os.path.exists(demo_obj.path_to_energy_model_output_dir)
+    assert os.path.isfile(demo_obj.path_to_output_idf)
+    assert os.path.isdir(demo_obj.path_to_energy_model_output_dir)
     assert len(os.listdir(demo_obj.path_to_energy_model_output_dir)) > 0

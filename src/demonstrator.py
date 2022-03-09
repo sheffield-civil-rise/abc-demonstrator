@@ -33,21 +33,25 @@ class Demonstrator:
     def __init__(
             self,
             path_to_input_override=None, # Overides several configs if set.
-            path_to_output=CONFIGS.general.path_to_demo_output,
-            path_to_polygon=CONFIGS.general.path_to_polygon,
-            quiet=True
+            path_to_output=CONFIGS.paths.path_to_output,
+            path_to_polygon=CONFIGS.paths.path_to_polygon,
+            debug=False
         ):
         self.path_to_input_override = path_to_input_override
         self.path_to_output = path_to_output
         self.path_to_polygon = path_to_polygon
         self.path_to_cache = os.path.join(self.path_to_output, "cache")
-        self.quiet = quiet
+        self.debug = debug
         # Generated fields.
         self.rec_dir_gen = None
         self.paths_to_init_files = None
         self.batch_process = None
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
+        self.path_to_output_idf = \
+            os.path.join(self.path_to_output, "output.idf")
+        self.path_to_energy_model_output_dir = \
+            os.path.join(self.path_to_output, "energy_model_output")
         self.energy_model_process = None
         self.path_to_output_idf = \
             os.path.join(self.path_to_output, "output.idf")
@@ -57,32 +61,42 @@ class Demonstrator:
 
     def start_logging(self):
         """ Configure logging, and log that we've started. """
+        log_level = logging.INFO
+        if self.debug:
+            log_level = logging.DEBUG
         logging.basicConfig(
-            level=logging.INFO,
+            level=log_level,
             format=CONFIGS.general.logging_format
         )
-        logging.info("Initiating %s object...", self.__class__.__name__)
+        logging.info("Initiating "+str(self.__class__.__name__)+" object...")
+        if self.debug:
+            logging.info("Switched to DEBUG mode.")
 
     def run_subprocess(self, arguments, timeout=None):
         """ Run a given subprocess - quietly or otherwise. """
-        if self.quiet:
-            result = \
-                subprocess.run(
-                    arguments,
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    timeout=timeout
-                )
-        else:
-            result = \
-                subprocess.run(
-                    arguments,
-                    check=True,
-                    timeout=timeout
-                )
+        try:
+            if self.debug:
+                result = \
+                    subprocess.run(
+                        arguments,
+                        check=True,
+                        timeout=timeout
+                    )
+            else:
+                result = \
+                    subprocess.run(
+                        arguments,
+                        check=True,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                        timeout=timeout
+                    )
+        except subprocess.CalledProcessError:
+            logging.error(
+                "Error running subprocess with arguments:\n"+
+                str(arguments)
+            )
         return result
-
 
     def make_and_run_reconstruction_dir_generator(self):
         """ Run the generator object, deleting any existing output as
@@ -206,15 +220,3 @@ class Demonstrator:
         logging.info("Running energy model process...")
         self.make_and_run_energy_model_process()
         logging.info("Demonstration complete.")
-
-###################
-# RUN AND WRAP UP #
-###################
-
-def run():
-    """ Run this file. """
-    demonstrator = Demonstrator()
-    demonstrator.demonstrate()
-
-if __name__ == "__main__":
-    run()
