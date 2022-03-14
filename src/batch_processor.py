@@ -18,11 +18,8 @@ from meshroom.core.graph import Graph
 from meshroom.core.taskManager import TaskManager
 
 # Local imports.
-from config import get_configs
 from custom_pipeline import build_graph
-
-# Local constants.
-CONFIGS = get_configs()
+from local_configs import CONFIGS
 
 ##############
 # MAIN CLASS #
