@@ -6,7 +6,7 @@ This code defines some utility functions.
 import numpy
 
 # Local imports.
-from config import CONFIGS
+from local_configs import CONFIGS
 
 #############
 # FUNCTIONS #
