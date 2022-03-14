@@ -10,7 +10,7 @@ import shutil
 import subprocess
 
 # Local imports.
-from config import (
+from local_configs import (
     make_path_to_gps_data,
     make_path_to_ladybug_gps_data,
     make_path_to_ladybug_images,
