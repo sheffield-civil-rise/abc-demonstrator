@@ -67,9 +67,9 @@ DEFAULT_PATH_TO_OUTPUT_IDF = DEFAULT_PATH_TO_OUTPUT/"output.idf"
 DEFAULT_PATH_TO_ENERGY_MODEL_OUTPUT_DIR = \
     DEFAULT_PATH_TO_OUTPUT/"energy_model_output"
 # Path components.
-LADYBUG_GPS_DATA_FILENAME = "ladybug_gps_data.txt"
-GPS_DATA_FILENAME = "gps_data.csv"
-LADYBUG_IMAGES_DIRNAME = "ladybug_images"
+DEFAULT_LADYBUG_GPS_DATA_FILENAME = "ladybug_gps_data.txt"
+DEFAULT_GPS_DATA_FILENAME = "gps_data.csv"
+DEFAULT_LADYBUG_IMAGES_DIRNAME = "ladybug_images"
 
 # Reconstruction dir.
 DEFAULT_COORDINATE_REFERENCE_SYSTEM = "epsg:4326"
