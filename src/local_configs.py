@@ -131,7 +131,7 @@ def make_path_to_ladybug_images(
 #########################
 
 # Defaults dictionary.
-DEFAULTS: {
+DEFAULTS = {
     "general": {
         "coordinate_reference_system": DEFAULT_COORDINATE_REFERENCE_SYSTEM,
         "source_coordinate_reference_system": \
