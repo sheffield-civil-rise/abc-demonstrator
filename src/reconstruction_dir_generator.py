@@ -30,9 +30,6 @@ from config import (
 from deeplab.Deeplabv3 import Deeplabv3
 from utility_functions import make_label_color_dict
 
-# Local constants.
-CONFIGS = get_configs()
-
 ##############
 # MAIN CLASS #
 ##############

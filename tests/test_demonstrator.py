@@ -13,12 +13,9 @@ import pytest
 from demonstrator import Demonstrator
 
 # Local imports.
-import config
 import expected
+from local_configs import CONFIGS
 from make_checksum import make_checksum
-
-# Local constants.
-CONFIGS = config.get_configs()
 
 ###########
 # TESTING #

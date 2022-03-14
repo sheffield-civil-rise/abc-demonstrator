@@ -6,10 +6,7 @@ This code defines some utility functions.
 import numpy
 
 # Local imports.
-from config import get_configs
-
-# Local constants.
-CONFIGS = get_configs()
+from config import CONFIGS
 
 #############
 # FUNCTIONS #
