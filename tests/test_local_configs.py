@@ -10,7 +10,7 @@ from local_configs import (
     make_path_to_gps_data,
     make_path_to_ladybug_gps_data,
     make_path_to_ladybug_images,
-    DEFAULT_PATH_TO_INPUTS,
+    DEFAULT_PATH_TO_INPUT,
     DEFAULT_GPS_DATA_FILENAME,
     DEFAULT_LADYBUG_GPS_DATA_FILENAME,
     DEFAULT_LADYBUG_IMAGES_DIRNAME
