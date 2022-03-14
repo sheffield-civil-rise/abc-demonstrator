@@ -20,7 +20,7 @@ from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
 
 # Local imports.
-from config import (
+from local_configs import (
     make_path_to_gps_data,
     make_path_to_ladybug_gps_data,
     make_path_to_ladybug_images,
