@@ -15,7 +15,7 @@ import scipy
 from sklearn.decomposition import PCA
 
 # Local imports.
-from config import CONFIGS
+from local_configs import CONFIGS
 
 ##############
 # MAIN CLASS #
