@@ -18,7 +18,7 @@ from geomeppy import IDF
 from shapely.geometry import Polygon
 
 # Local imports.
-from config import CONFIGS
+from local_configs import CONFIGS
 
 # Local constants.
 NORTH, EAST, SOUTH, WEST = 0, 90, 180, 270

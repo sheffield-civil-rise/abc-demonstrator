@@ -7,7 +7,7 @@ BatchProcessor object.
 from meshroom.core.graph import Graph, GraphModification
 
 # Local imports.
-from config import CONFIGS
+from local_configs import CONFIGS
 
 # Local constants.
 SFM_TYPES = ("StructureFromMotion", "SfMAlignment", "SfMTransfer")
