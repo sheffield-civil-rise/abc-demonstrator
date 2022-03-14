@@ -11,18 +11,15 @@ import subprocess
 
 # Local imports.
 from config import (
-    get_configs,
     make_path_to_gps_data,
     make_path_to_ladybug_gps_data,
     make_path_to_ladybug_images,
+    CONFIGS,
     INTERNAL_PYTHON_COMMAND
 )
 from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
 from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
-
-# Local constants.
-CONFIGS = get_configs()
 
 ##############
 # MAIN CLASS #
