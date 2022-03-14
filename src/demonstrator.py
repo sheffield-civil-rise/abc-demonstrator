@@ -71,6 +71,7 @@ class Demonstrator:
 
     def run_subprocess(self, arguments, timeout=None):
         """ Run a given subprocess - quietly or otherwise. """
+        logging.error(arguments)
         try:
             if self.debug:
                 result = \
@@ -93,6 +94,7 @@ class Demonstrator:
                 "Error running subprocess with arguments:\n%s",
                 arguments
             )
+            return False
         return result
 
     def make_and_run_reconstruction_dir_generator(self):
