@@ -23,14 +23,14 @@ from local_configs import (
 def test_make_path_to_gps_data():
     """ Test that this function produces the desired path. """
     actual_result = make_path_to_gps_data()
-    expected_result = DEFAULT_PATH_TO_INPUTS/DEFAULT_GPS_DATA_FILENAME
+    expected_result = DEFAULT_PATH_TO_INPUT/DEFAULT_GPS_DATA_FILENAME
     assert actual_result == expected_result
 
 def test_make_path_to_ladybug_gps_data():
     """ Test that this function produces the desired path. """
     different_filename = "test.txt"
     actual_result = make_path_to_ladybug_gps_data(filename=different_filename)
-    expected_result = DEFAULT_PATH_TO_INPUTS/different_filename
+    expected_result = DEFAULT_PATH_TO_INPUT/different_filename
     assert actual_result == expected_result
 
 def test_make_path_to_ladybug_images():

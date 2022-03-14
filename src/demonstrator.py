@@ -65,7 +65,7 @@ class Demonstrator:
             level=log_level,
             format=CONFIGS.general.logging_format
         )
-        logging.info("Initiating "+str(self.__class__.__name__)+" object...")
+        logging.info("Initiating %s object...", self.__class__.__name__)
         if self.debug:
             logging.info("Switched to DEBUG mode.")
 
@@ -90,8 +90,8 @@ class Demonstrator:
                     )
         except subprocess.CalledProcessError:
             logging.error(
-                "Error running subprocess with arguments:\n"+
-                str(arguments)
+                "Error running subprocess with arguments:\n%s",
+                arguments
             )
         return result
 
