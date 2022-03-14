@@ -102,19 +102,11 @@ class Demonstrator:
             shutil.rmtree(self.path_to_output)
         if self.path_to_input_override:
             path_to_gps_data = \
-                str(make_path_to_gps_data(stem=self.path_to_input_override))
+                make_path_to_gps_data(stem=self.path_to_input_override)
             path_to_ladybug_gps_data = \
-                str(
-                    make_path_to_ladybug_gps_data(
-                        stem=self.path_to_input_override
-                    )
-                )
+                make_path_to_ladybug_gps_data(stem=self.path_to_input_override)
             path_to_ladybug_images = \
-                str(
-                    make_path_to_ladybug_images(
-                        stem=self.path_to_input_override
-                    )
-                )
+                make_path_to_ladybug_images(stem=self.path_to_input_override)
             self.rec_dir_gen = \
                 ReconstructionDirGenerator(
                     path_to_gps_data=path_to_gps_data,
