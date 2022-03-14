@@ -97,13 +97,13 @@ DEFAULT_BOILER_EFFICIENCY = 0.8
 # SPECIAL FUNCTIONS #
 #####################
 
-def merge_stem_and_filename(stem, filename):
+def join_stem_and_leaf(stem, leaf):
     """ Attach a stem, either a string or a path object, to a filename. """
     to_string = False
     if isinstance(stem, str):
         to_string = True
         stem = Path(stem)
-    result = stem/filename
+    result = stem/leaf
     if to_string:
         result = str(result)
     return result
@@ -112,19 +112,19 @@ def make_path_to_gps_data(
         stem=DEFAULT_PATH_TO_INPUT, filename=DEFAULT_GPS_DATA_FILENAME,
     ):
     """ Make the path, filling in the blanks with defaults. """
-    return merge_stem_and_filename(stem, filename)
+    return join_stem_and_leaf(stem, filename)
 
 def make_path_to_ladybug_gps_data(
         stem=DEFAULT_PATH_TO_INPUT, filename=DEFAULT_LADYBUG_GPS_DATA_FILENAME
     ):
     """ Make the path, filling in the blanks with defaults. """
-    return merge_stem_and_filename(stem, filename)
+    return join_stem_and_leaf(stem, filename)
 
 def make_path_to_ladybug_images(
         stem=DEFAULT_PATH_TO_INPUT, dirname=DEFAULT_LADYBUG_IMAGES_DIRNAME
     ):
     """ Make the path, filling in the blanks with defaults. """
-    return merge_stem_and_filename(stem, filename)
+    return join_stem_and_leaf(stem, dirname)
 
 #########################
 # CONFIGURATIONS OBJECT #
