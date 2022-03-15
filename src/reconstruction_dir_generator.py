@@ -277,10 +277,7 @@ class ReconstructionDirGenerator:
     def make_geo_data_frame(self):
         """ Add geometry to our localised data. """
         self.geo_data_frame = \
-            to_geo_data_frame(
-                self.localised_gps_data,
-                co_ref_sys=self.co_ref_sys
-            )
+            to_geo_data_frame(self.localised_gps_data, self.co_ref_sys)
 
     def calculate_focal_point(self):
         """ Calculate the central point from the polygon. """
@@ -431,13 +428,22 @@ class ReconstructionDirGenerator:
             )
         return result
 
+    def get_img_list(self):
+        """ Get a list of the images within the output directory. """
+        result = \
+            get_img_paths(
+                self.path_to_output_images,
+                CONFIGS.reconstruction_dir.image_extensions
+            )
+        return result
+
     def label_images(self):
         """ Make the directory holding the labelled images, and fill it. """
         self.path_to_labelled_images = \
             os.path.join(self.path_to_output, "labelled")
         if not os.path.exists(self.path_to_labelled_images):
             os.makedirs(self.path_to_labelled_images)
-        img_list = get_img_paths(self.path_to_output_images)
+        img_list = self.get_img_list()
         logging.info("Labelling %s images...", len(img_list))
         model = self.make_model()
         model.load_weights(self.path_to_model)
@@ -486,7 +492,7 @@ class ReconstructionDirGenerator:
             os.path.join(self.path_to_output, "masked")
         if not os.path.exists(self.path_to_masked_images):
             os.makedirs(self.path_to_masked_images)
-        img_list = get_img_paths(self.path_to_output_images)
+        img_list = self.get_img_list()
         logging.info("Masking %s images...", len(img_list))
         for _, path in enumerate(img_list):
             _, file_path = os.path.split(path)
@@ -501,7 +507,7 @@ class ReconstructionDirGenerator:
                 img = \
                     cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
                 mask = cv2.imread(path_to_image_to_mask)
-                out = mask_image(img, mask)
+                out = mask_image(img, mask, CONFIGS.general.max_rgb_channel)
                 cv2.imwrite(out_path, out)
 
     def generate_local_selection(self):
@@ -690,10 +696,7 @@ def get_maximum_channel(channel_vector):
     """ Get the maximum channel in a given channel vector. """
     return list(channel_vector).index(max(list(channel_vector)))
 
-def to_geo_data_frame(
-        data_frame,
-        co_ref_sys=CONFIGS.general.coordinate_reference_system
-    ):
+def to_geo_data_frame(data_frame, co_ref_sys):
     """ Add geometry to a given data frame. """
     result = \
         geopandas.GeoDataFrame(
@@ -739,11 +742,7 @@ def find_directions(heading, cam):
         result = th
     return result
 
-def get_img_paths(
-        path_to_dir,
-        recursive=True,
-        image_extensions=CONFIGS.reconstruction_dir.image_extensions
-    ):
+def get_img_paths(path_to_dir, image_extensions, recursive=True):
     """ Get the paths within a directory corresponding to image files. """
     result = []
     for path in os.listdir(path_to_dir):
@@ -752,8 +751,7 @@ def get_img_paths(
                 result = (
                     result+
                     get_img_paths(
-                        os.path.join(path_to_dir, path),
-                        image_extensions=image_extensions
+                        os.path.join(path_to_dir, path), image_extensions
                     )
                 )
         else:
@@ -762,10 +760,10 @@ def get_img_paths(
                 result.append(os.path.join(path_to_dir, path))
     return result
 
-def mask_image(img, mask):
+def mask_image(img, mask, max_rgb_channel):
     """ Apply a given mask to a given image. """
     binmask = numpy.any(mask, axis=2).astype("int")
     maskdim = img*numpy.stack(3*[binmask], axis=2)
     result = cv2.cvtColor(maskdim.astype("uint8"), cv2.COLOR_BGR2BGRA)
-    result[:, :, 3] = binmask*CONFIGS.general.max_rgb_channel
+    result[:, :, 3] = binmask*max_rgb_channel
     return result
