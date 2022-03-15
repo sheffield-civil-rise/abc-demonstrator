@@ -11,6 +11,7 @@ import subprocess
 
 # Local imports.
 from batch_processor import make_batch_processor
+from energy_model_generator import EnergyModelGenerator
 from height_calculator import HeightCalculator
 from local_configs import (
     make_path_to_gps_data,
@@ -50,7 +51,7 @@ class Demonstrator:
             os.path.join(self.path_to_output, "output.idf")
         self.path_to_energy_model_output_dir = \
             os.path.join(self.path_to_output, "energy_model_output")
-        self.energy_model_process = None
+        self.energy_model_generator = None
         self.path_to_output_idf = \
             os.path.join(self.path_to_output, "output.idf")
         self.path_to_energy_model_output_dir = \
@@ -228,19 +229,30 @@ class Demonstrator:
                 path_to_labelled_images=self.rec_dir_gen.path_to_labelled_images
             )
 
-    def make_and_run_energy_model_process(self):
+    def make_and_run_energy_model_generator(self):
         """ Build the energy model generator object, and then run it. """
         path_to_py_file = \
             str(pathlib.Path(__file__).parent/"energy_model_generator.py")
+        wwr = self.window_to_wall_ratio_calculator.result
         arguments = [
             INTERNAL_PYTHON_COMMAND, path_to_py_file,
             "--height", str(self.height_calculator.result),
-            "--wwr", str(self.window_to_wall_ratio_calculator.result),
+            "--wwr", str(wwr),
             "--path-to-output-idf", self.path_to_output_idf,
             "--path-to-output-dir", self.path_to_energy_model_output_dir,
             "--path-to-polygon", self.path_to_polygon
         ]
-        self.energy_model_process = self.run_subprocess(arguments)
+        if self.debug:
+            self.energy_model_generator =
+                EnergyModelGenerator(
+                    height=self.height_calculator.result,
+                    window_to_wall_ratio=wwr,
+                    path_to_output_idf=self.path_to_output_idf,
+                    path_to_output_dir=self.path_to_energy_model_output_dir,
+                    path_to_polygon=self.path_to_polygon
+                )
+        else:
+            self.energy_model_process = self.run_subprocess(arguments)
 
     def demonstrate(self):
         """ Run the demonstrator script. """
@@ -254,5 +266,5 @@ class Demonstrator:
         logging.info("Running window-to-wall ratio calculator...")
         self.make_and_run_window_to_wall_ratio_calculator()
         logging.info("Running energy model process...")
-        self.make_and_run_energy_model_process()
+        self.make_and_run_energy_model_generator()
         logging.info("Demonstration complete.")
