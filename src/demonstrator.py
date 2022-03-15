@@ -243,7 +243,7 @@ class Demonstrator:
             "--path-to-polygon", self.path_to_polygon
         ]
         if self.debug:
-            self.energy_model_generator =
+            self.energy_model_generator = \
                 EnergyModelGenerator(
                     height=self.height_calculator.result,
                     window_to_wall_ratio=wwr,
