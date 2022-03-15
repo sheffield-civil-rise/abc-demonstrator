@@ -239,19 +239,37 @@ def make_parser():
     )
     return result
 
-def make_batch_processor_from_args(arguments):
-    """ Make the arguments object. """
+def make_batch_processor(
+        path_to_output_images,
+        path_to_cache,
+        path_to_init_file_a,
+        path_to_init_file_b,
+        path_to_labelled_images
+    ):
+    """ Make the object from the parameters. """
     paths_to_init_files = []
-    if arguments.path_to_init_file_a:
-        paths_to_init_files.append(arguments.path_to_init_file_a)
-    if arguments.path_to_init_file_b:
-        paths_to_init_files.append(arguments.path_to_init_file_b)
+    if path_to_init_file_a:
+        paths_to_init_files.append(path_to_init_file_a)
+    if path_to_init_file_b:
+        paths_to_init_files.append(path_to_init_file_b)
     result = \
         BatchProcessor(
-            path_to_output_images=arguments.path_to_output_images,
-            path_to_cache=arguments.path_to_cache,
+            path_to_output_images=path_to_output_images,
+            path_to_cache=path_to_cache,
             paths_to_init_files=paths_to_init_files,
-            path_to_labelled_images=arguments.path_to_labelled_images
+            path_to_labelled_images=path_to_labelled_images
+        )
+    return result
+
+def make_batch_processor_from_args(arguments):
+    """ Make the object from the arguments. """
+    result = \
+        make_batch_processor(
+            arguments.path_to_output_images,
+            arguments.path_to_cache,
+            arguments.path_to_init_file_a,
+            arguments.path_to_init_file_b,
+            arguments.path_to_labelled_images
         )
     return result
 

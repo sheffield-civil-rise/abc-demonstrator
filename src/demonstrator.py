@@ -10,6 +10,8 @@ import shutil
 import subprocess
 
 # Local imports.
+from batch_processor import make_batch_processor
+from height_calculator import HeightCalculator
 from local_configs import (
     make_path_to_gps_data,
     make_path_to_ladybug_gps_data,
@@ -17,7 +19,6 @@ from local_configs import (
     CONFIGS,
     INTERNAL_PYTHON_COMMAND
 )
-from height_calculator import HeightCalculator
 from reconstruction_dir_generator import ReconstructionDirGenerator
 from window_to_wall_ratio_calculator import WindowToWallRatioCalculator
 
@@ -42,7 +43,7 @@ class Demonstrator:
         # Generated fields.
         self.rec_dir_gen = None
         self.paths_to_init_files = None
-        self.batch_process = None
+        self.batch_processor = None
         self.height_calculator = None
         self.window_to_wall_ratio_calculator = None
         self.path_to_output_idf = \
@@ -71,7 +72,6 @@ class Demonstrator:
 
     def run_subprocess(self, arguments, timeout=None):
         """ Run a given subprocess - quietly or otherwise. """
-        logging.error(arguments)
         try:
             if self.debug:
                 result = \
@@ -94,7 +94,7 @@ class Demonstrator:
                 "Error running subprocess with arguments:\n%s",
                 arguments
             )
-            return False
+            raise
         return result
 
     def make_and_run_reconstruction_dir_generator(self):
@@ -137,10 +137,8 @@ class Demonstrator:
             )
         ]
 
-    def make_and_run_batch_process(self):
-        """ Build the batch process, and run it. """
-        path_to_py_file = \
-            str(pathlib.Path(__file__).parent/"batch_processor.py")
+    def make_and_run_batch_processor(self):
+        """ Run the batch processor, either as a process or an object. """
         if len(self.paths_to_init_files) >= 2:
             path_to_init_file_a = self.paths_to_init_files[0]
             path_to_init_file_b = self.paths_to_init_files[1]
@@ -151,6 +149,45 @@ class Demonstrator:
             path_to_init_file_a = None
             path_to_init_file_b = None
         path_to_labelled_images = self.rec_dir_gen.path_to_labelled_images
+        if self.debug:
+            self.make_and_run_batch_processor_object(
+                path_to_init_file_a,
+                path_to_init_file_b,
+                path_to_labelled_images
+            )
+        else:
+            self.make_and_run_batch_process(
+                path_to_init_file_a,
+                path_to_init_file_b,
+                path_to_labelled_images
+            )
+
+    def make_and_run_batch_processor_object(
+            self,
+            path_to_init_file_a,
+            path_to_init_file_b,
+            path_to_labelled_images
+        ):
+        """ Build the required object, and run it. """
+        self.batch_processor = \
+            make_batch_processor(
+                self.rec_dir_gen.path_to_output_images,
+                self.path_to_cache,
+                path_to_init_file_a,
+                path_to_init_file_b,
+                path_to_labelled_images
+            )
+        self.batch_processor.start()
+
+    def make_and_run_batch_process(
+            self,
+            path_to_init_file_a,
+            path_to_init_file_b,
+            path_to_labelled_images
+        ):
+        """ Build the batch process, and run it. """
+        path_to_py_file = \
+            str(pathlib.Path(__file__).parent/"batch_processor.py")
         arguments = [
             INTERNAL_PYTHON_COMMAND, path_to_py_file,
             "--path-to-output-images", self.rec_dir_gen.path_to_output_images,
@@ -159,7 +196,7 @@ class Demonstrator:
             "--path-to-init-file-b", path_to_init_file_b,
             "--path-to-labelled-images", path_to_labelled_images
         ]
-        self.batch_process = \
+        self.batch_processor = \
             self.run_subprocess(
                 arguments, timeout=CONFIGS.batch_process.timeout
             )
@@ -211,7 +248,7 @@ class Demonstrator:
         logging.info("Running reconstruction dir generator...")
         self.make_and_run_reconstruction_dir_generator()
         logging.info("Running batch process...")
-        self.make_and_run_batch_process()
+        self.make_and_run_batch_processor()
         logging.info("Running height calculator...")
         self.make_and_run_height_calculator()
         logging.info("Running window-to-wall ratio calculator...")
