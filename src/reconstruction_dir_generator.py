@@ -20,18 +20,15 @@ from scipy.interpolate import interp1d
 from shapely.geometry import Point, Polygon
 
 # Local imports.
-from config import (
-    get_configs,
+from local_configs import (
     make_path_to_gps_data,
     make_path_to_ladybug_gps_data,
     make_path_to_ladybug_images,
+    CONFIGS,
     SEMICIRCLE_DEGREES
 )
 from deeplab.Deeplabv3 import Deeplabv3
 from utility_functions import make_label_color_dict
-
-# Local constants.
-CONFIGS = get_configs()
 
 ##############
 # MAIN CLASS #

@@ -69,11 +69,8 @@ fi
 
 # Let's get cracking.
 sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
-    git -C $path_to_repo checkout $branch
-    git -C $path_to_repo pull $git_url $branch
-    IF %ERRORLEVEL% NEQ 0 (
-        exit 1
-    )
-    $path_to_activate_script $env_name
-    python $path_to_test_script
+    git -C $path_to_repo checkout $branch || exit 1
+    git -C $path_to_repo pull $git_url $branch || exit 1
+    $path_to_activate_script $env_name || exit 1
+    python $path_to_test_script || exit 1
 ENDSSH

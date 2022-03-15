@@ -15,10 +15,7 @@ import scipy
 from sklearn.decomposition import PCA
 
 # Local imports.
-from config import get_configs
-
-# Local constants.
-CONFIGS = get_configs()
+from local_configs import CONFIGS
 
 ##############
 # MAIN CLASS #
