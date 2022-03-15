@@ -251,6 +251,7 @@ class Demonstrator:
                     path_to_output_dir=self.path_to_energy_model_output_dir,
                     path_to_polygon=self.path_to_polygon
                 )
+            self.energy_model_generator.generate_and_run()
         else:
             self.energy_model_process = self.run_subprocess(arguments)
 
