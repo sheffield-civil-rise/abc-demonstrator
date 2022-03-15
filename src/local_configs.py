@@ -152,7 +152,7 @@ DEFAULTS = {
         "path_to_ladybug_gps_data": str(make_path_to_ladybug_gps_data()),
         "path_to_ladybug_images": str(make_path_to_ladybug_images()),
         "path_to_deeplab_binary": str(DEFAULT_PATH_TO_DEEPLAB_BINARY),
-        "path_to_vocab_tree": DEFAULT_PATH_TO_VOCAB_TREE,
+        "path_to_vocab_tree": str(DEFAULT_PATH_TO_VOCAB_TREE),
         "path_to_energyplus": str(DEFAULT_PATH_TO_ENERGYPLUS),
         "path_to_energyplus_input_data_dictionary": \
             str(DEFAULT_PATH_TO_ENERGYPLUS_INPUT_DATA_DICTIONARY),
