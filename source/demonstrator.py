@@ -1,4 +1,4 @@
-"""
+ """
 This code defines a class which demonstrates what the codebase can do.
 """
 
@@ -253,7 +253,7 @@ class Demonstrator:
                 )
             self.energy_model_generator.generate_and_run()
         else:
-            self.energy_model_process = self.run_subprocess(arguments)
+            self.energy_model_generator = self.run_subprocess(arguments)
 
     def demonstrate(self):
         """ Run the demonstrator script. """
