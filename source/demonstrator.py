@@ -1,4 +1,4 @@
- """
+"""
 This code defines a class which demonstrates what the codebase can do.
 """
 
