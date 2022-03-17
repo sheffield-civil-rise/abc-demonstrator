@@ -69,6 +69,7 @@ fi
 
 # Let's get cracking.
 sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
+    git -C $path_to_repo fetch --all
     git -C $path_to_repo checkout $branch || exit 1
     git -C $path_to_repo pull $git_url $branch || exit 1
     $path_to_activate_script $env_name || exit 1
