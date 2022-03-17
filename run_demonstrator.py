@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 # Local imports.
-sys.path.append(str(Path(__file__).parent/"src"))
+sys.path.append(str(Path(__file__).parent/"source"))
 from demonstrator import Demonstrator
 
 ###################
