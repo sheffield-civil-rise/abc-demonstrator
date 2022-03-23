@@ -461,6 +461,8 @@ class ReconstructionDirGenerator:
                     CONFIGS.general.max_rgb_channel
             )
             prediction = model.predict(numpy.asarray([numpy.array(new_img)]))
+            logging.info("DIGIT MAP:")
+            logging.info(numpy.squeeze(prediction, 0))
             bgr_mask = \
                 DigitMapToBGR(
                     self.PALETTE, digit_map=numpy.squeeze(prediction, 0)
