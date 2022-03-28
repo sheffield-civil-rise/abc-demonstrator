@@ -4,6 +4,7 @@ This code defines a script which in turn runs the demonstrator script.
 
 # Standard imports.
 import sys
+import traceback
 from pathlib import Path
 
 # Local imports.
@@ -22,7 +23,8 @@ def run():
     demonstrator = Demonstrator(debug=debug)
     try:
         demonstrator.demonstrate()
-    except:
+    except Exception:
+        traceback.print_exc()
         print("Sorry, but the demonstrator failed.")
         return False
     print("Demonstrator ran successfully!")

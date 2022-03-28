@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import ClassVar
 
+import sys
+
 # Non-standard imports.
 import cv2
 import geopandas
