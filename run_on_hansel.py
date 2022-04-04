@@ -12,7 +12,6 @@ from pathlib import Path
 # Constants.
 DEFAULT_PATH_TO_SCRIPT = str(Path(__file__).parent.resolve()/"run_on_hansel.sh")
 DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\wp17_demonstrator"
-DEFAULT_PATH_TO_ACTIVATE_SCRIPT = r"C:\Users\hansel\Anaconda3\Scripts\activate"
 DEFAULT_ENV_NAME = "demonstrator"
 DEFAULT_REPO_URL = "github.com/tomhosker/wp17_demonstrator.git"
 DEFAULT_PATH_TO_SECURITY_FILE = str(Path.home()/"hansel_security.json")
@@ -50,7 +49,6 @@ def run_on_hansel(
         ssh_id,
         ssh_password,
         path_to_repo=DEFAULT_PATH_TO_REPO_ON_HANSEL,
-        path_to_activate_script=DEFAULT_PATH_TO_ACTIVATE_SCRIPT,
         env_name=DEFAULT_ENV_NAME,
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
@@ -66,7 +64,6 @@ def run_on_hansel(
         "--git-url", git_url,
         "--branch", branch,
         "--path-to-repo", path_to_repo,
-        "--path-to-activate-script", path_to_activate_script,
         "--env-name", env_name
     ]
     try:
@@ -80,7 +77,6 @@ def run_on_hansel(
 
 def run_on_hansel_with_auth(
         path_to_repo=DEFAULT_PATH_TO_REPO_ON_HANSEL,
-        path_to_activate_script=DEFAULT_PATH_TO_ACTIVATE_SCRIPT,
         env_name=DEFAULT_ENV_NAME,
         repo_url=DEFAULT_REPO_URL,
         path_to_script=DEFAULT_PATH_TO_SCRIPT,
@@ -95,7 +91,6 @@ def run_on_hansel_with_auth(
             security_dict["ssh_id"],
             security_dict["ssh_password"],
             path_to_repo=path_to_repo,
-            path_to_activate_script=path_to_activate_script,
             env_name=env_name,
             repo_url=repo_url,
             path_to_script=path_to_script,

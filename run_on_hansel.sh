@@ -4,6 +4,9 @@
 ### into Hansel's version of the repo, and (2) to run the demonstrator script
 ### on Hansel's hardware and software.
 
+# Local constants.
+PATH_TO_ACTIVATE_SCRIPT = "%HOMEPATH%\anaconda3\Scripts\activate"
+
 # Exit on first error.
 set -e
 
@@ -18,8 +21,6 @@ next_is_branch=false
 branch="master"
 next_is_path_to_repo=false
 path_to_repo=false
-next_is_path_to_activate_script=false
-path_to_activate_script=false
 next_is_env_name=false
 env_name=false
 for argument in $@; do
@@ -49,11 +50,6 @@ for argument in $@; do
         path_to_repo=$argument
         path_to_demonstrator_script="$path_to_repo\run_demonstrator.py"
         next_is_path_to_repo=false
-    elif [ $argument = "--path-to-activate-script" ]; then
-        next_is_path_to_activate_script=true
-    elif $next_is_path_to_activate_script; then
-        path_to_activate_script=$argument
-        next_is_path_to_activate_script=false
     elif [ $argument = "--env-name" ]; then
         next_is_env_name=true
     elif $next_is_env_name; then
@@ -72,6 +68,6 @@ sshpass -p$ssh_password ssh $ssh_id <<ENDSSH
     git -C $path_to_repo fetch --all
     git -C $path_to_repo checkout $branch || exit 1
     git -C $path_to_repo pull $git_url $branch || exit 1
-    $path_to_activate_script $env_name || exit 1
+    $PATH_TO_ACTIVATE_SCRIPT $env_name || exit 1
     python $path_to_demonstrator_script || exit 1
 ENDSSH
