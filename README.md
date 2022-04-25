@@ -1,5 +1,7 @@
 # UFO Demonstrator
 
+*UFO stands for Urban Flow Observatory. Calm down, conspiracy theorists!*
+
 This repository holds the code for the **Demonstrator**, a prototype for various functionalities in the WP17 project.
 
 ## Installation
