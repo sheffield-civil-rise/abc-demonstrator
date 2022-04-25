@@ -1,6 +1,6 @@
-# Photogrammetry E110A
+# UFO Demonstrator
 
-This repository holds the code which I worked on for a photogrammetry project in room E110A at the University of Sheffield.
+This repository holds the code for the **Demonstrator**, a prototype for various functionalities in the WP17 project.
 
 ## Installation
 
