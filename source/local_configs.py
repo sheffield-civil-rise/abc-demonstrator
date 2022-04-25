@@ -7,14 +7,14 @@ files in this directory.
 from pathlib import Path
 
 # Non-standard imports.
-from wp17_configs import get_configs_object
+from ufo_configs import get_configs_object
 import numpy
 
 #############################
 # NON-OBJECT CONFIGURATIONS #
 #############################
 
-EXPECTED_PATH_TO_CONFIG_JSON = str(Path.home()/"wp17demo_config.json")
+EXPECTED_PATH_TO_CONFIG_JSON = str(Path.home()/"ufodemo_config.json")
 SEMICIRCLE_DEGREES = 180
 INTERNAL_PYTHON_COMMAND = "python"
 
@@ -39,11 +39,11 @@ DEFAULT_LOGGING_FORMAT = "[%(asctime)s] %(levelname)s: %(message)s"
 # Paths.
 DEFAULT_PATH_TO_HOME = Path.home()
 DEFAULT_PATH_TO_BINARIES = \
-    DEFAULT_PATH_TO_HOME/"wp17demo_binaries_and_3rd_party"
-DEFAULT_PATH_TO_INPUT = DEFAULT_PATH_TO_HOME/"wp17demo_input"
-DEFAULT_PATH_TO_TEST_INPUT = DEFAULT_PATH_TO_HOME/"wp17demo_input_test"
-DEFAULT_PATH_TO_OUTPUT = DEFAULT_PATH_TO_HOME/"wp17demo_output"
-DEFAULT_PATH_TO_TEST_OUTPUT = DEFAULT_PATH_TO_HOME/"wp17demo_output_test"
+    DEFAULT_PATH_TO_HOME/"ufo_binaries_and_3rd_party"
+DEFAULT_PATH_TO_INPUT = DEFAULT_PATH_TO_HOME/"ufodemo_input"
+DEFAULT_PATH_TO_TEST_INPUT = DEFAULT_PATH_TO_HOME/"ufodemo_input_test"
+DEFAULT_PATH_TO_OUTPUT = DEFAULT_PATH_TO_HOME/"ufodemo_output"
+DEFAULT_PATH_TO_TEST_OUTPUT = DEFAULT_PATH_TO_HOME/"ufodemo_output_test"
 DEFAULT_PATH_TO_DEEPLAB_BINARY = \
     DEFAULT_PATH_TO_BINARIES/"Deeplabv3plus-xception-ce.hdf5"
 DEFAULT_PATH_TO_POLYGON = DEFAULT_PATH_TO_BINARIES/"polygon0.poly"

@@ -11,9 +11,9 @@ from pathlib import Path
 
 # Constants.
 DEFAULT_PATH_TO_SCRIPT = str(Path(__file__).parent.resolve()/"run_on_hansel.sh")
-DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\wp17_demonstrator"
+DEFAULT_PATH_TO_REPO_ON_HANSEL = r"G:\ufo_demonstrator"
 DEFAULT_ENV_NAME = "demonstrator"
-DEFAULT_REPO_URL = "github.com/tomhosker/wp17_demonstrator.git"
+DEFAULT_REPO_URL = "github.com/tomhosker/ufo_demonstrator.git"
 DEFAULT_PATH_TO_SECURITY_FILE = str(Path.home()/"hansel_security.json")
 DEFAULT_ENCODING = "utf-8"
 
